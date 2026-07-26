@@ -1,0 +1,44 @@
+{
+  "validated": true,
+  "write_enabled": true,
+  "evaluation_seed_start": 8000042,
+  "main_episodes_per_method": 1000,
+  "robustness_episodes_per_condition": 200,
+  "deployment_threshold": 0.2,
+  "recovery_definition": "task_success_while_recovery_active_per_intervention",
+  "operation_trace_seed": 8300042,
+  "operation_trace_schema": "reim-paired-simulation-rollout-figure-v3",
+  "matched_gate_episode_seed_start": 8200042,
+  "matched_gate_episode_bank_sha256": "bce931c8f7f4b2ca6d96ac63f5e3bd3c7b1a2d9a694728801ff6b1a12baf8802",
+  "paired_reim_gain": 0.17,
+  "paired_reim_gain_ci": [
+    0.147,
+    0.193
+  ],
+  "paired_reim_gain_vs_random_reset": 0.091,
+  "paired_reim_gain_vs_random_reset_ci": [
+    0.061,
+    0.121
+  ],
+  "paired_reim_delta_vs_rl": 0.027,
+  "paired_reim_delta_vs_rl_ci": [
+    0.007,
+    0.048
+  ],
+  "rescued_episodes": 170,
+  "harmed_episodes": 0,
+  "reim_intervened_episodes": 655,
+  "rl_intervened_episodes": 731,
+  "inputs": {
+    "/home/diy/bonus_track/REIM/results/tables/baseline.csv": "6766fb8df2ad027a058ca602aa2161bba435cff9c964d20c2db5547810d51215",
+    "/home/diy/bonus_track/REIM/results/tables/baseline_episodes.csv": "8d462c542cc3de6239d25ce52e69361d6722ade4a296c604ad35ea6b32e44575",
+    "/home/diy/bonus_track/REIM/results/tables/ablation.csv": "b8cd25f01b6005434239b54b602889cd22c8536c873f81485b8f84f7febe110d",
+    "/home/diy/bonus_track/REIM/results/tables/ablation_episodes.csv": "d34237178f2909f113ea330283d7df30187e4c1cef89732f4af2b0cb4cbea654",
+    "/home/diy/bonus_track/REIM/results/tables/robustness.csv": "6016bd3cf2d457b9f1001f897ceda2bc30e1acab891b570901962876ddd5cd00",
+    "/home/diy/bonus_track/REIM/results/tables/robustness_episodes.csv": "970d3fb1872b53dfb603cf1d460ea47e4bf4c3d5f1933dc922b892c90c2e2caa",
+    "/home/diy/bonus_track/REIM/results/tables/detector_metrics.json": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
+    "/home/diy/bonus_track/REIM/results/figures/recovery_operation_sequence.json": "11b1f6f98c380c7bc51bf65407dca98e06e523ef977217e5e1174a08e8e366f8",
+    "/home/diy/bonus_track/REIM/results/tables/gate_matched_comparison.json": "b9fe916cf96cb54a09d4f11e1318c06aab175a05cc00de3c54d350477e88c275",
+    "/home/diy/bonus_track/REIM/results/tables/comparison.csv": "2e75071cb2c4bcb6366a78e0f819f6abdad40abcad2c0254a1949316e367a8a3"
+  }
+}

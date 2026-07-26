@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-07-26T11:19:48Z",
+  "purpose": "Isolated seed-43 PPO recovery continuation to the 500000-step training budget",
+  "seed": 43,
+  "backend": "metaworld",
+  "state_mode": "semantic",
+  "training_budget": {
+    "target_timesteps": 500000,
+    "starting_timesteps": 53248,
+    "minimum_requested_additional_timesteps": 446752,
+    "actual_additional_timesteps": 450560,
+    "trained_timesteps": 503808,
+    "rollout_quantum_timesteps": 4096,
+    "budget_overshoot_timesteps": 3808,
+    "device": "cpu",
+    "torch_num_threads": 4
+  },
+  "frozen_hyperparameters": {
+    "n_envs": 4,
+    "n_steps": 1024,
+    "batch_size": 512,
+    "n_epochs": 5,
+    "learning_rate": 3e-05,
+    "clip_range": 0.1,
+    "entropy_coefficient": 0.0001,
+    "target_kl": 0.01,
+    "policy_net_arch": [
+      256,
+      256
+    ],
+    "validation_frequency_timesteps": 10000,
+    "validation_episodes": 50,
+    "checkpoint_frequency_timesteps": 25000,
+    "minimum_selection_timesteps": 10000
+  },
+  "snapshot_banks": {
+    "training": {
+      "npz": "datasets/recovery_starts/train.npz",
+      "npz_sha256": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+      "metadata": "datasets/recovery_starts/train.json",
+      "metadata_sha256": "9fc126f609da32aa5c0336e70fd015592202a4b7a30cea15ee7305fcf9efa836"
+    },
+    "validation": {
+      "npz": "datasets/recovery_starts/validation.npz",
+      "npz_sha256": "88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa",
+      "metadata": "datasets/recovery_starts/validation.json",
+      "metadata_sha256": "97cbc3bad9629291f5f5480e884c38ce57181ef256e2277e1f1826d95220cc75"
+    }
+  },
+  "resume_provenance": {
+    "checkpoint": "checkpoints/ppo_trigger_seed43_full/recovery_53248_steps.zip",
+    "checkpoint_timesteps": 53248,
+    "checkpoint_sha256": "bc73b432033eb346e7f59a5645dea66d1ea54ec42d581581c19637ce50cabdbc",
+    "source_checkpoint": "checkpoints/recovery_trigger_seed43_v2_final.zip",
+    "source_checkpoint_sha256": "bc73b432033eb346e7f59a5645dea66d1ea54ec42d581581c19637ce50cabdbc",
+    "pretraining_manifest": "checkpoints/ppo_trigger_seed43_full/lineage_manifest_pretrain.json",
+    "pretraining_manifest_sha256": "585fc240369e7e359cc95c8f9d1b17cd3b5eecb04a785772b35782ac9d4c1d50"
+  },
+  "model_selection": {
+    "rule": "lexicographic(task_success, recovery_rate, mean_episode_reward)",
+    "selected_model_type": "validation_best",
+    "selected_model_timesteps": 40000,
+    "selected_validation_metrics": {
+      "episodes": 50,
+      "task_success": 1.0,
+      "recovery_rate": 1.0,
+      "failure_rate": 0.0,
+      "mean_episode_reward": 87.99622816488252,
+      "mean_episode_steps": 37.52
+    },
+    "post_training_selected_model_recheck": {
+      "episodes": 50,
+      "task_success": 1.0,
+      "recovery_rate": 1.0,
+      "failure_rate": 0.0,
+      "mean_episode_reward": 87.99614582303795,
+      "mean_episode_steps": 37.52
+    },
+    "selected_output": "checkpoints/recovery_trigger_seed43_500k.zip",
+    "selected_output_sha256": "23ccadbc6eef8be9cd557202c319274d9ad519b96f6e93049a7aebd9034b6656",
+    "isolated_best_checkpoint": "checkpoints/ppo_trigger_seed43_full/best/best_model.zip",
+    "isolated_best_checkpoint_sha256": "23ccadbc6eef8be9cd557202c319274d9ad519b96f6e93049a7aebd9034b6656",
+    "selection_note": "The frozen selector retained the historical 40000-step held-out optimum; the independently continued endpoint is preserved separately and was not substituted for the selected model."
+  },
+  "final_endpoint": {
+    "checkpoint": "checkpoints/recovery_trigger_seed43_500k_final.zip",
+    "checkpoint_timesteps": 503808,
+    "checkpoint_sha256": "af468961fd59d896ffb096a193b5c4f142e325ef95d25de09e5713b56b1f49bf",
+    "nearest_periodic_validation_timesteps": 503248,
+    "nearest_periodic_validation_metrics": {
+      "episodes": 50,
+      "task_success": 0.64,
+      "recovery_rate": 0.68,
+      "failure_rate": 0.36,
+      "mean_episode_reward": 198.34426346387772,
+      "mean_episode_steps": 77.66
+    }
+  },
+  "validation_history_audit": {
+    "records": 52,
+    "first_timesteps": 0,
+    "last_timesteps": 503248,
+    "strictly_unique_timesteps": true,
+    "sorted_timesteps": true,
+    "all_core_metrics_finite": true,
+    "selected_events_timesteps": [
+      10000,
+      20000,
+      40000
+    ]
+  },
+  "periodic_checkpoint_audit": {
+    "count": 21,
+    "timesteps": [
+      25000,
+      50000,
+      53248,
+      78248,
+      103248,
+      128248,
+      153248,
+      178248,
+      203248,
+      228248,
+      253248,
+      278248,
+      303248,
+      328248,
+      353248,
+      378248,
+      403248,
+      428248,
+      453248,
+      478248,
+      503248
+    ],
+    "continuation_cadence_25000_exact": true
+  },
+  "logging_audit": {
+    "tensorboard_isolated": true,
+    "new_tensorboard_event": "results/logs/ppo_trigger_seed43_full/PPO_1/events.out.tfevents.1785063854.diy01.407263.0",
+    "new_tensorboard_event_sha256": "c2217ef318233f07060a7813d355a900ac8f104e04bb915ba3cbe372881fa6f3",
+    "monitor_episode_rows": [
+      947,
+      941,
+      952,
+      947
+    ],
+    "monitor_rows_all_finite": true,
+    "console_log": "results/logs/train_recovery_seed43_500k_console.log",
+    "console_log_sha256": "ac6064c25bf7121a2665595d9b53d565373115b82c0dbc6a0405f071714fc8d3"
+  },
+  "source_isolation_audit": {
+    "source_artifacts_checked": 12,
+    "all_source_sizes_unchanged": true,
+    "all_source_mtime_ns_unchanged": true,
+    "all_source_sha256_unchanged": true,
+    "canonical_or_paper_outputs_modified": false
+  },
+  "artifact_sha256": {
+    "config": "9b75b6318c287725b4e977b9f1c66c1da6edc0ccde00cfa338f493e71cf16f63",
+    "environment_config": "3e4ec50951c02daca2b176cc29cb1098654b062b25ce75fa05889fa5d412737f",
+    "trainer": "71968a36aca6c656b8e2e68cb4ea66c2b04fd13728aa7213faa0e0051fa8985d",
+    "metrics": "a0be3be5aa217c387dfded91632e01ccd2c024bd5f5962ff2307cdedd3c908e5",
+    "validation_history": "3aadff4d53be7eaf7759490a1233af70a78af87f4c574ad0cdccac4b21756264",
+    "training_curve": "0854d33f33a006f30e8bd3aea16bef19da340eabbf60bd99b5024f35e0bf5308"
+  }
+}

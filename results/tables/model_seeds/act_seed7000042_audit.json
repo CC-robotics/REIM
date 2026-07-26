@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "method": "ACT",
+  "backend": "metaworld",
+  "episodes": 200,
+  "evaluation_seed_start": 7000042,
+  "evaluation_seed_end": 7000241,
+  "protocol": {
+    "noise_level": 0.2,
+    "max_steps": 200,
+    "failure_threshold": 0.2,
+    "recovery_exit_threshold": 0.0,
+    "recovery_budget": 150,
+    "recovery_min_steps": 150,
+    "recovery_clear_steps": 200
+  },
+  "checkpoint_sha256": {
+    "act": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "failure_detector_supplied_but_unused": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34"
+  },
+  "results": {
+    "successes": 151,
+    "success_rate": 0.755,
+    "recovery_attempts": 0,
+    "recovery_successes": 0,
+    "recovery_rate": 0.0
+  },
+  "raw_validation": {
+    "rows": 200,
+    "continuous_exact_ordered_seed_range": true,
+    "unique_evaluation_seeds": 200,
+    "no_duplicate_seeds": true,
+    "no_literal_nan": true,
+    "core_numeric_fields_finite": true,
+    "optional_not_applicable_fields_blank": [
+      "recovery_definition",
+      "failure_reason_on_success"
+    ],
+    "summary_recomputed_from_raw": true
+  },
+  "output_sha256": {
+    "summary": "5c42a7a57e7744adff4e94eef4a2ba9b28a9758647f2c9d057ccbb13c607a216",
+    "episodes": "f0c8c2c4c19fe5977c670d5682b49b1cb319f7ceefe61dd10e6d412b51de9569",
+    "controller_traces": null
+  },
+  "trace_note": "ACT has no recovery intervention, so the evaluator correctly emitted no recovery trace."
+}

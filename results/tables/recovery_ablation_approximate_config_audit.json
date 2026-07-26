@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "audit_result": "pass",
+  "comparison": {
+    "exact_config": "configs/ppo_trigger.yaml",
+    "exact_config_sha256": "9b75b6318c287725b4e977b9f1c66c1da6edc0ccde00cfa338f493e71cf16f63",
+    "approximate_config": "configs/ppo_approximate_starts.yaml",
+    "approximate_config_sha256": "c3e7dd9c80358f5a11bf31ad388cb596c0a9253fad2484460dabdb5d56cf1d43",
+    "recursive_yaml_differences": 11,
+    "isolated_output_path_differences": 6,
+    "intentional_reset_source_field_differences": 5,
+    "unexpected_differences": 0
+  },
+  "isolated_output_path_fields": [
+    "checkpoint",
+    "checkpoint_dir",
+    "curve_path",
+    "metrics_path",
+    "monitor_dir",
+    "tensorboard_log"
+  ],
+  "single_scientific_factor": {
+    "name": "ppo_training_reset_distribution",
+    "exact_online_trigger_starts": {
+      "recovery.initialize_with_failure_states": false,
+      "recovery.start_state_dataset": "datasets/recovery_starts/train.npz"
+    },
+    "approximate_scripted_starts": {
+      "recovery.initialize_with_failure_states": true,
+      "recovery.start_state_dataset": null,
+      "recovery.initialization_disturbance": 0.03,
+      "recovery.warmup_min_steps": 45,
+      "recovery.warmup_max_steps": 45
+    },
+    "note": "The exact configuration inherits disturbance 0.03 and warmup 45/45 defaults, but snapshot restoration takes precedence so those values do not affect exact-start training."
+  },
+  "frozen_invariants": {
+    "seed_42": true,
+    "training_500000_steps": true,
+    "ppo_section_byte_equivalent_after_yaml_parse": true,
+    "reward_section_byte_equivalent_after_yaml_parse": true,
+    "expert_pretraining_section_byte_equivalent_after_yaml_parse": true,
+    "actor_warm_start_dataset": "datasets/recovery_starts/train.npz",
+    "actor_warm_start_dataset_sha256": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+    "validation_start_state_dataset": "datasets/recovery_starts/validation.npz",
+    "validation_start_state_dataset_sha256": "88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa",
+    "validation_uses_exact_snapshot_bank": true,
+    "validation_snapshot_precedes_approximate_warmup": true
+  }
+}

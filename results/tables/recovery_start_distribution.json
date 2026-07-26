@@ -1,0 +1,102 @@
+{
+  "artifact": "recovery_start_phase_audit",
+  "audit": {
+    "counts_recomputed_from_raw_arrays": true,
+    "raw_npz_and_sidecar_hashes_verified": true,
+    "training_validation_seeds_disjoint": true
+  },
+  "interpretation": "The 0.10 collection gate primarily captures pre-grasp, post-displacement early-warning states. It is not a bank of post-drop or terminal failure states.",
+  "schema_version": 1,
+  "train": {
+    "episodes_attempted": 1000,
+    "episodes_triggered": 985,
+    "failure_threshold": 0.10000000149011612,
+    "manifest": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.json",
+    "manifest_sha256": "9fc126f609da32aa5c0336e70fd015592202a4b7a30cea15ee7305fcf9efa836",
+    "noise_level": 0.20000000298023224,
+    "npz": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "npz_sha256": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+    "scripted_continuation_success": {
+      "count": 978,
+      "rate": 0.9928934010152284,
+      "total": 985
+    },
+    "seed_max": 3001041,
+    "seed_min": 3000042,
+    "snapshot_ever_lifted": {
+      "count": 11,
+      "rate": 0.01116751269035533,
+      "total": 985
+    },
+    "snapshot_failure_latched": {
+      "count": 10,
+      "rate": 0.01015228426395939,
+      "total": 985
+    },
+    "snapshot_object_already_displaced": {
+      "count": 985,
+      "rate": 1.0,
+      "total": 985
+    },
+    "trigger_probability": {
+      "maximum": 0.16403406858444214,
+      "mean": 0.11019783745411084,
+      "minimum": 0.10000263899564743
+    },
+    "trigger_rate": 0.985,
+    "trigger_step": {
+      "maximum": 35,
+      "mean": 11.040609137055837,
+      "median": 10.0,
+      "minimum": 5,
+      "q10": 6.0,
+      "q90": 17.0
+    }
+  },
+  "validation": {
+    "episodes_attempted": 200,
+    "episodes_triggered": 193,
+    "failure_threshold": 0.10000000149011612,
+    "manifest": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.json",
+    "manifest_sha256": "97cbc3bad9629291f5f5480e884c38ce57181ef256e2277e1f1826d95220cc75",
+    "noise_level": 0.20000000298023224,
+    "npz": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "npz_sha256": "88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa",
+    "scripted_continuation_success": {
+      "count": 192,
+      "rate": 0.9948186528497409,
+      "total": 193
+    },
+    "seed_max": 4000241,
+    "seed_min": 4000042,
+    "snapshot_ever_lifted": {
+      "count": 2,
+      "rate": 0.010362694300518135,
+      "total": 193
+    },
+    "snapshot_failure_latched": {
+      "count": 2,
+      "rate": 0.010362694300518135,
+      "total": 193
+    },
+    "snapshot_object_already_displaced": {
+      "count": 193,
+      "rate": 1.0,
+      "total": 193
+    },
+    "trigger_probability": {
+      "maximum": 0.1606517732143402,
+      "mean": 0.10874401677612196,
+      "minimum": 0.1000150591135025
+    },
+    "trigger_rate": 0.965,
+    "trigger_step": {
+      "maximum": 31,
+      "mean": 11.818652849740932,
+      "median": 12.0,
+      "minimum": 5,
+      "q10": 7.0,
+      "q90": 17.0
+    }
+  }
+}

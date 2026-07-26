@@ -1,0 +1,28 @@
+seed: 42
+device: cpu
+data_dir: datasets/smoke/failures
+checkpoint: checkpoints/smoke/failure_detector.pt
+latest_checkpoint: checkpoints/smoke/failure_detector_latest.pt
+curve_path: results/smoke/figures/detector_training_curve.png
+confusion_matrix_path: results/smoke/figures/confusion_matrix.png
+history_path: results/smoke/tables/detector_training_history.csv
+metrics_path: results/smoke/tables/detector_metrics.json
+
+model:
+  sequence_length: 10
+  hidden_size: 32
+  num_layers: 1
+  mlp_hidden: 16
+  dropout: 0.1
+
+training:
+  epochs: 5
+  batch_size: 128
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  validation_fraction: 0.25
+  positive_weight: auto
+  patience: 0
+  checkpoint_every: 1
+  grad_clip_norm: 5.0
+  threshold: 0.5

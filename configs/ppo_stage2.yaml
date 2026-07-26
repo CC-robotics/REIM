@@ -1,0 +1,48 @@
+# Stage-2 PPO continuation used to align recovery with dropped/ungrasped
+# deployment states.  It resumes the 500k-step policy and keeps all artifacts
+# isolated until validation selects it over the original checkpoint.
+seed: 42
+device: cpu
+checkpoint: checkpoints/recovery_policy_stage2.zip
+checkpoint_dir: checkpoints/ppo_stage2
+tensorboard_log: results/logs/ppo_stage2
+monitor_dir: results/logs/ppo_stage2_monitor
+curve_path: results/figures/recovery_stage2_training_curve.png
+metrics_path: results/tables/recovery_stage2_metrics.json
+
+training:
+  total_timesteps: 750000
+  n_envs: 4
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 256
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  checkpoint_freq: 25000
+  eval_freq: 10000
+  eval_episodes: 20
+  progress_bar: false
+  select_best_model: true
+
+reward:
+  task_success: 10.0
+  successful_recovery: 5.0
+  terminal_failure: -10.0
+  time_penalty: -0.01
+  distance_progress_scale: 2.0
+  reach_progress_scale: 4.0
+  lift_progress_scale: 6.0
+
+recovery:
+  initialize_with_failure_states: true
+  max_recovery_steps: 50
+  recovered_distance: 0.08
+  warmup_min_steps: 25
+  warmup_max_steps: 45
+  relift_height: 0.03
+  terminate_on_recovery: true

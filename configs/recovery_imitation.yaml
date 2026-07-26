@@ -1,0 +1,52 @@
+# Canonical standalone trigger-aligned imitation recovery artifact.
+#
+# The source checkpoint is an SB3 container only: it has zero PPO environment
+# steps and zero PPO updates. The exporter strips the unused critic, log_std,
+# optimizer, and framework-specific state while proving action equivalence.
+seed: 42
+
+source:
+  checkpoint: checkpoints/recovery_ablation_warmstart_only.zip
+  checkpoint_sha256: 44819f7c381bf072000e79f62894c500ef082de893499c236f15eda4a53db122
+  metrics: results/tables/recovery_ablation_warmstart_only_metrics.json
+  metrics_sha256: 7a59391d2157bdb2354663e8574082ccf1ef2419d6b5c6c78ea120668025fda5
+  training_config: configs/ppo_trigger.yaml
+  training_config_sha256: 9b75b6318c287725b4e977b9f1c66c1da6edc0ccde00cfa338f493e71cf16f63
+  require_num_timesteps: 0
+  require_n_updates: 0
+  require_empty_optimizer: true
+
+data:
+  train_npz: datasets/recovery_starts/train.npz
+  train_npz_sha256: b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d
+  train_manifest: datasets/recovery_starts/train.json
+  train_manifest_sha256: 9fc126f609da32aa5c0336e70fd015592202a4b7a30cea15ee7305fcf9efa836
+  validation_npz: datasets/recovery_starts/validation.npz
+  validation_npz_sha256: 88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa
+  validation_manifest: datasets/recovery_starts/validation.json
+  validation_manifest_sha256: 97cbc3bad9629291f5f5480e884c38ce57181ef256e2277e1f1826d95220cc75
+  bank_audit: results/tables/recovery_start_distribution.json
+  bank_audit_sha256: ba78a61c5e2eaab02ff22cdfab926909ddc271aaf1622e56b387fa866be454fc
+  act_checkpoint: checkpoints/bc_policy.pt
+  act_checkpoint_sha256: da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33
+  detector_checkpoint: checkpoints/failure_detector.pt
+  detector_checkpoint_sha256: 62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34
+
+model:
+  state_dim: 21
+  action_dim: 4
+  hidden_dims: [256, 256]
+  activation: tanh
+  observation_normalization: identity
+  action_clipping: true
+
+export:
+  checkpoint: checkpoints/imitation_recovery.pt
+  audit: checkpoints/imitation_recovery.audit.json
+
+equivalence:
+  tolerance: 1.0e-7
+  batch_size: 4096
+  random_samples: 10000
+  random_seed: 20260726
+  random_support_expansion: 0.25

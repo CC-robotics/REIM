@@ -1,0 +1,244 @@
+{
+  "act_reference": {
+    "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+    "checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "episodes": 200,
+    "failure_detector_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/failure_detector.pt",
+    "failure_detector_checkpoint_sha256": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "raw_episodes": "/home/diy/bonus_track/REIM/results/tables/model_seeds/act_seed7000042_episodes.csv",
+    "raw_episodes_sha256": "f0c8c2c4c19fe5977c670d5682b49b1cb319f7ceefe61dd10e6d412b51de9569",
+    "success_rate": 0.755,
+    "success_wilson_95_ci": [
+      0.6909575644379659,
+      0.8094313191096282
+    ],
+    "successes": 151
+  },
+  "aggregate_mean_and_sample_std": {
+    "n_training_seeds": 3,
+    "paired_gain_vs_act_percentage_points_mean": 9.333333333333334,
+    "paired_gain_vs_act_percentage_points_sample_std": 3.329164059239693,
+    "recovery_rate_mean": 0.7055016181229773,
+    "recovery_rate_sample_std": 0.06464396231533388,
+    "success_rate_mean": 0.8483333333333333,
+    "success_rate_sample_std": 0.033291640592396934,
+    "training_seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "analysis_id": "equal_budget_500k_n3",
+  "benchmark_eligible": false,
+  "bootstrap": {
+    "base_seed": 7000042,
+    "confidence_level": 0.95,
+    "per_model_seed": "base_seed + recovery_training_seed",
+    "samples": 20000,
+    "type": "paired_episode_nonparametric"
+  },
+  "disclaimer": "Equal-budget recovery-policy seed stability on 200 paired development episodes per seed. ACT and the failure detector are fixed; only the PPO recovery training seed changes. This is not a three-seed full-system result and is not the primary benchmark.",
+  "equal_budget_and_frozen_config_validation": {
+    "all_actual_training_timesteps_at_least_500000": true,
+    "all_selected_and_final_checkpoint_internal_timesteps_match_metrics": true,
+    "all_selected_checkpoints_match_audited_sha256": true,
+    "all_targets_equal_500000": true,
+    "all_validation_histories_sorted_unique_and_finite": true,
+    "config": "/home/diy/bonus_track/REIM/configs/ppo_trigger.yaml",
+    "config_sha256": "9b75b6318c287725b4e977b9f1c66c1da6edc0ccde00cfa338f493e71cf16f63",
+    "frozen_training_config": {
+      "batch_size": 512,
+      "checkpoint_freq": 25000,
+      "clip_range": 0.1,
+      "ent_coef": 0.0001,
+      "eval_episodes": 50,
+      "eval_freq": 10000,
+      "gae_lambda": 0.95,
+      "gamma": 0.99,
+      "learning_rate": 3e-05,
+      "max_grad_norm": 0.5,
+      "minimum_selection_timesteps": 10000,
+      "n_envs": 4,
+      "n_epochs": 5,
+      "n_steps": 1024,
+      "target_kl": 0.01,
+      "torch_num_threads": 4,
+      "total_timesteps": 500000,
+      "vf_coef": 0.5
+    },
+    "training_snapshot_bank": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "training_snapshot_bank_sha256": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+    "validation_snapshot_bank": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "validation_snapshot_bank_sha256": "88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa"
+  },
+  "models": [
+    {
+      "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed42_500k.zip",
+      "checkpoint_sha256": "55d92acfdd98061e198c4e27fac882e735f5ef4a1336c578e520f1ee8df0ffe7",
+      "episodes": 200,
+      "evaluation_audit": "/home/diy/bonus_track/REIM/results/tables/model_seeds/reim_seed42_canonical_seed7000042_audit.json",
+      "evaluation_audit_sha256": "960adbe095b554509bd6793fc6a1b4208cd283e5689ca58b378ab3305258d2b3",
+      "exact_mcnemar_p_value": 2.9802322387695312e-06,
+      "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed42_500k_final.zip",
+      "final_training_checkpoint_sha256": "d015c0d4cfc40cc918deed526d46d5e7f15df3112cbe82c883b74c065aa0cd8e",
+      "harmed": 1,
+      "paired_gain_bootstrap_95_ci_percentage_points": [
+        6.499999999999995,
+        15.500000000000004
+      ],
+      "paired_gain_vs_act_percentage_points": 10.999999999999998,
+      "raw_episodes": "/home/diy/bonus_track/REIM/results/tables/model_seeds/reim_seed42_canonical_seed7000042_episodes.csv",
+      "raw_episodes_sha256": "8056407daa459bd4b1bc38844fcd2d5e733af22dc51f1a91b626a125ad75851f",
+      "recovery_attempts": 103,
+      "recovery_rate": 0.7378640776699029,
+      "recovery_successes": 76,
+      "recovery_training_seed": 42,
+      "recovery_wilson_95_ci": [
+        0.6454813295611582,
+        0.8131421349708442
+      ],
+      "rescued": 23,
+      "selected_model_timesteps": 118248,
+      "selected_model_type": "validation_best",
+      "success_rate": 0.865,
+      "success_wilson_95_ci": [
+        0.8107086162924745,
+        0.9055342954521209
+      ],
+      "successes": 173,
+      "training_actual_additional_timesteps": 421888,
+      "training_actual_timesteps": 500136,
+      "training_metrics": "/home/diy/bonus_track/REIM/results/tables/recovery_trigger_seed42_500k_metrics.json",
+      "training_metrics_sha256": "0e9763badce6e8c605173d97ad79f07b53946343399ef62a440036c40fe16291",
+      "training_starting_timesteps": 78248,
+      "training_target_timesteps": 500000,
+      "validation_history_records": 52
+    },
+    {
+      "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed43_500k.zip",
+      "checkpoint_sha256": "23ccadbc6eef8be9cd557202c319274d9ad519b96f6e93049a7aebd9034b6656",
+      "episodes": 200,
+      "evaluation_audit": "/home/diy/bonus_track/REIM/results/tables/model_seeds/reim_seed43_500k_seed7000042_audit.json",
+      "evaluation_audit_sha256": "bfdcbd831265988d79c13e90229c4e5c0a763bdffd1cb01ec01773e32c2c8196",
+      "exact_mcnemar_p_value": 0.00738525390625,
+      "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed43_500k_final.zip",
+      "final_training_checkpoint_sha256": "af468961fd59d896ffb096a193b5c4f142e325ef95d25de09e5713b56b1f49bf",
+      "harmed": 2,
+      "paired_gain_bootstrap_95_ci_percentage_points": [
+        2.0000000000000018,
+        9.499999999999996
+      ],
+      "paired_gain_vs_act_percentage_points": 5.500000000000005,
+      "raw_episodes": "/home/diy/bonus_track/REIM/results/tables/model_seeds/reim_seed43_500k_seed7000042_episodes.csv",
+      "raw_episodes_sha256": "806dadac981eb45bfb681c864a94d1db9ae78446adc50d3745e5f82cc7c09153",
+      "recovery_attempts": 103,
+      "recovery_rate": 0.6310679611650486,
+      "recovery_successes": 65,
+      "recovery_training_seed": 43,
+      "recovery_wilson_95_ci": [
+        0.5347408308679622,
+        0.7179700577517127
+      ],
+      "rescued": 13,
+      "selected_model_timesteps": 40000,
+      "selected_model_type": "validation_best",
+      "success_rate": 0.81,
+      "success_wilson_95_ci": [
+        0.7499876129240015,
+        0.8583282847220932
+      ],
+      "successes": 162,
+      "training_actual_additional_timesteps": 450560,
+      "training_actual_timesteps": 503808,
+      "training_metrics": "/home/diy/bonus_track/REIM/results/tables/recovery_trigger_seed43_500k_metrics.json",
+      "training_metrics_sha256": "a0be3be5aa217c387dfded91632e01ccd2c024bd5f5962ff2307cdedd3c908e5",
+      "training_starting_timesteps": 53248,
+      "training_target_timesteps": 500000,
+      "validation_history_records": 52
+    },
+    {
+      "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed44_500k.zip",
+      "checkpoint_sha256": "dbc5cb5c787d7b48568ef91e207633622f24ec4c9081cfd0b6d4b871ecf86746",
+      "episodes": 200,
+      "evaluation_audit": "/home/diy/bonus_track/REIM/results/tables/model_seeds/reim_seed44_500k_seed7000042_audit.json",
+      "evaluation_audit_sha256": "0e90a44faad60624ac6077916ebde4312009c4204c5df81144a3e05153aed7fc",
+      "exact_mcnemar_p_value": 2.384185791015625e-07,
+      "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed44_500k_final.zip",
+      "final_training_checkpoint_sha256": "bb55cc606df9b6ef32677bb2ce3e63da9786332ff15cb8366f0ba02953148004",
+      "harmed": 0,
+      "paired_gain_bootstrap_95_ci_percentage_points": [
+        7.499999999999996,
+        16.000000000000004
+      ],
+      "paired_gain_vs_act_percentage_points": 11.5,
+      "raw_episodes": "/home/diy/bonus_track/REIM/results/tables/model_seeds/reim_seed44_500k_seed7000042_episodes.csv",
+      "raw_episodes_sha256": "2d96111c4142db518aa9485e342712276a93c8123ff67e6ae884059f3020e135",
+      "recovery_attempts": 103,
+      "recovery_rate": 0.7475728155339806,
+      "recovery_successes": 77,
+      "recovery_training_seed": 44,
+      "recovery_wilson_95_ci": [
+        0.6558210776288516,
+        0.8215217119860896
+      ],
+      "rescued": 23,
+      "selected_model_timesteps": 10000,
+      "selected_model_type": "validation_best",
+      "success_rate": 0.87,
+      "success_wilson_95_ci": [
+        0.8163364812775159,
+        0.9097179772033067
+      ],
+      "successes": 174,
+      "training_actual_additional_timesteps": 450560,
+      "training_actual_timesteps": 503808,
+      "training_metrics": "/home/diy/bonus_track/REIM/results/tables/recovery_trigger_seed44_500k_metrics.json",
+      "training_metrics_sha256": "37b99e350ab8e7aad4e812c19b8f3c9c91dace8d9d02a475ff610602bd406535",
+      "training_starting_timesteps": 53248,
+      "training_target_timesteps": 500000,
+      "validation_history_records": 52
+    }
+  ],
+  "protocol": {
+    "backend": "metaworld",
+    "episodes_per_training_seed": 200,
+    "evaluation_seed_end": 7000241,
+    "evaluation_seed_start": 7000042,
+    "failure_threshold": 0.2,
+    "fixed_components": [
+      "ACT checkpoint",
+      "failure-detector checkpoint",
+      "PPO configuration",
+      "recovery training snapshot bank",
+      "recovery validation snapshot bank",
+      "paired evaluation episodes"
+    ],
+    "max_steps": 200,
+    "noise_level": 0.2,
+    "recovery_budget": 150,
+    "recovery_clear_steps": 200,
+    "recovery_exit_threshold": 0.0,
+    "recovery_min_steps": 150,
+    "training_budget_minimum_actual_env_steps": 500000,
+    "varied_component": "PPO recovery policy training seed only"
+  },
+  "raw_validation": {
+    "benchmark_eligible": false,
+    "checkpoint_sha256_checked": true,
+    "continuous_exact_ordered_evaluation_seed_range": true,
+    "core_numeric_fields_finite": true,
+    "evaluation_audit_sha256_checked": true,
+    "expected_training_seeds": [
+      42,
+      43,
+      44
+    ],
+    "no_literal_nan": true,
+    "paired_with_same_act_episode_order": true,
+    "summaries_recomputed_from_raw": true,
+    "training_metrics_checked": true,
+    "unique_evaluation_seeds_per_run": 200
+  },
+  "result_scope": "equal_budget_500k_model_seed_stability_not_primary_benchmark",
+  "schema_version": 2
+}

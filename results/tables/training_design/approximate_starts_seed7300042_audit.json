@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-07-26T11:44:21Z",
+  "audit_result": "pass",
+  "ablation": "approximate_scripted_failure_starts",
+  "scope": "training_design_ablation_not_primary_benchmark",
+  "config_isolation": {
+    "exact_config": "configs/ppo_trigger.yaml",
+    "approximate_config": "configs/ppo_approximate_starts.yaml",
+    "exact_config_sha256": "9b75b6318c287725b4e977b9f1c66c1da6edc0ccde00cfa338f493e71cf16f63",
+    "approximate_config_sha256": "c3e7dd9c80358f5a11bf31ad388cb596c0a9253fad2484460dabdb5d56cf1d43",
+    "machine_audit_path": "results/tables/recovery_ablation_approximate_config_audit.json",
+    "machine_audit_sha256": "2ee24a925f69dd87e92e3b348306e7430848f7bc0a284700c506c5a0dac8046d",
+    "recursive_yaml_difference_count": 11,
+    "isolated_output_path_difference_count": 6,
+    "intentional_reset_source_field_difference_count": 5,
+    "unexpected_differences": [],
+    "only_scientific_factor": "PPO training reset source: exact online detector-trigger snapshots -> approximate scripted 45-step warm-up states with 0.03 m initialization disturbance",
+    "actor_warm_start_equal": true,
+    "ppo_equal": true,
+    "reward_equal": true,
+    "seed_42": true,
+    "cpu_threads_4": true,
+    "validation_exact_snapshot_bank_equal": true
+  },
+  "dataset_sha256": {
+    "actor_warm_start_train": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+    "frozen_validation_starts": "88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa"
+  },
+  "training": {
+    "backend": "metaworld",
+    "seed": 42,
+    "device": "cpu",
+    "torch_num_threads": 4,
+    "target_timesteps": 500000,
+    "trained_timesteps": 503808,
+    "starting_timesteps": 0,
+    "additional_timesteps": 503808,
+    "resume_checkpoint": null,
+    "selected_model_type": "validation_best",
+    "selected_model_timesteps": 40000,
+    "selection_metric": "task_success",
+    "minimum_selection_timesteps": 10000,
+    "selected_validation": {
+      "episodes": 50,
+      "failure_rate": 0.02,
+      "mean_episode_reward": 111.89378320990741,
+      "mean_episode_steps": 48.3,
+      "recovery_rate": 0.98,
+      "selected": true,
+      "selection_eligible": true,
+      "std_episode_reward": 43.29603966982201,
+      "success_rate": 0.98,
+      "timesteps": 40000
+    },
+    "final_500k_validation": {
+      "episodes": 50,
+      "failure_rate": 0.98,
+      "mean_episode_reward": 101.19392844654985,
+      "mean_episode_steps": 147.9,
+      "recovery_rate": 0.6,
+      "selected": false,
+      "selection_eligible": true,
+      "std_episode_reward": 228.6249302298112,
+      "success_rate": 0.02,
+      "timesteps": 500000
+    },
+    "validation_history_points": 51,
+    "ppo": {
+      "learning_rate": 3e-05,
+      "n_steps": 1024,
+      "batch_size": 512,
+      "n_epochs": 5,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "clip_range": 0.1,
+      "ent_coef": 0.0001,
+      "observation_shape": [
+        21
+      ],
+      "action_shape": [
+        4
+      ]
+    },
+    "periodic_checkpoint_count": 20,
+    "periodic_checkpoint_sha256": {
+      "checkpoints/ppo_ablation_approximate/recovery_100000_steps.zip": "917608fd8b187f11a1504be04f76c469593fc4d57211186938469581d8e6c64d",
+      "checkpoints/ppo_ablation_approximate/recovery_125000_steps.zip": "c51fad58e173a63b305ff76c6009e88e6a9dc417e9fd9de9a94634d61bb0ed58",
+      "checkpoints/ppo_ablation_approximate/recovery_150000_steps.zip": "33e69a7d6bc00686b8ae46636d3e095973ca086c1fcdbfd8d2175f51a89900f7",
+      "checkpoints/ppo_ablation_approximate/recovery_175000_steps.zip": "4ae97206ac2632d4386c3b5f1fdcd731261390ebbf83a8ee917f115751078284",
+      "checkpoints/ppo_ablation_approximate/recovery_200000_steps.zip": "7fb62d17f1c7a8521fa0b5808f57cde4e40db668911a51c3d72db3833aa1e041",
+      "checkpoints/ppo_ablation_approximate/recovery_225000_steps.zip": "9582e97546303cd879b1895941c431ea8cc45f57e7fab6c2aaa715b40324c137",
+      "checkpoints/ppo_ablation_approximate/recovery_250000_steps.zip": "7e0b6caa413056700ef57d5babcf2e3aff2408c0643bff547883e14de77acc4e",
+      "checkpoints/ppo_ablation_approximate/recovery_25000_steps.zip": "b8e67710546e0883429f7332afd8c90c6357e599269a62254f1c2a9c4a883349",
+      "checkpoints/ppo_ablation_approximate/recovery_275000_steps.zip": "a1c54044a37ee7dc604b2e3972f4b910a6a42d5034dde113e064fb71fd464403",
+      "checkpoints/ppo_ablation_approximate/recovery_300000_steps.zip": "0d2fb133c0a7ab67d57650868b5dc762c7c221abe5f3b5a0a249cb32afb6b40e",
+      "checkpoints/ppo_ablation_approximate/recovery_325000_steps.zip": "3bd515b68966128780de6f93f6bbcd32fe8785e496ff0a3fec2281d9d0445982",
+      "checkpoints/ppo_ablation_approximate/recovery_350000_steps.zip": "6ef5344d35f272d78fc2ab3bed5fe311add890553651f1c56b8e86cb1ce6556a",
+      "checkpoints/ppo_ablation_approximate/recovery_375000_steps.zip": "e93eef3efb70b6e5e64b6f29186f25648c32a2fdf0e282878866f8861dc08f1b",
+      "checkpoints/ppo_ablation_approximate/recovery_400000_steps.zip": "814cbe1c7b3eb9bcdf3add4c82685ce0205bdeb837c10d64c2f0077477328d8a",
+      "checkpoints/ppo_ablation_approximate/recovery_425000_steps.zip": "4ff565de9cd5ecf16ab115a9bde5c226f47e67e8e5414f3cfe8e4d39ca438366",
+      "checkpoints/ppo_ablation_approximate/recovery_450000_steps.zip": "bd5a2c2a64d3279acdeea929944d9867aae0e1c1d3b8c55407cf667fbc7d2d01",
+      "checkpoints/ppo_ablation_approximate/recovery_475000_steps.zip": "3f3fbc84ead512fd6bbb3c09b74f254fcd2125ca5ae0e03f1578376bd9dc0f96",
+      "checkpoints/ppo_ablation_approximate/recovery_500000_steps.zip": "9432dcf352f3739322e4239d409f0437a65b3dbfe43a7cf98effd0c69dd54d76",
+      "checkpoints/ppo_ablation_approximate/recovery_50000_steps.zip": "bd1bc63e6e776a8091ca4e81b2014c57eed10f918446fb426a7ba9258342c1e9",
+      "checkpoints/ppo_ablation_approximate/recovery_75000_steps.zip": "919895c2d97d69b98174a053af3a22b66b7a81c01bec58c3600f96338cd35dba"
+    }
+  },
+  "evaluation_protocol": {
+    "independent_environment_rollout": true,
+    "backend": "metaworld",
+    "episodes": 200,
+    "seed_start": 7300042,
+    "seed_end": 7300241,
+    "paired_seed_bank": true,
+    "noise_level": 0.2,
+    "action_noise_std": 0.08,
+    "observation_noise_std": 0.005,
+    "object_impulse_std_m": 0.02,
+    "failure_threshold": 0.2,
+    "recovery_exit_threshold": 0.0,
+    "recovery_budget": 150,
+    "recovery_min_steps": 150,
+    "recovery_clear_steps": 200,
+    "max_steps": 200,
+    "bootstrap_samples": 2000,
+    "gate_and_checkpoints_frozen": true
+  },
+  "results": {
+    "successes": 179,
+    "success_rate": 0.895,
+    "success_reported_95_ci": [
+      0.8448196800887696,
+      0.9302925120731899
+    ],
+    "recovery_attempts": 124,
+    "recovery_successes": 103,
+    "recovery_rate": 0.8306451612903226,
+    "recovery_reported_95_ci": [
+      0.7580582157258065,
+      0.8931297709923665
+    ],
+    "recovery_definition": "task_success_while_recovery_active_per_intervention",
+    "detector_triggers": 124,
+    "intervened_episodes": 124,
+    "post_intervention_task_successes": 103,
+    "post_intervention_task_success_rate": 0.8306451612903226,
+    "average_steps": 71.385,
+    "steps_reported_95_ci": [
+      65.579875,
+      78.0015
+    ]
+  },
+  "raw_validation": {
+    "rows": 200,
+    "episode_indices_exact_0_to_199": true,
+    "continuous_exact_ordered_seed_range": true,
+    "unique_evaluation_seeds": 200,
+    "no_duplicate_seeds": true,
+    "no_literal_nan_or_inf": true,
+    "core_numeric_fields_finite": true,
+    "summary_recomputed_from_raw": true,
+    "summary_matches_recomputed_raw": true,
+    "recovery_successes_do_not_exceed_attempts": true,
+    "controller_trace_count": 4,
+    "controller_trace_seeds": [
+      7300042,
+      7300044,
+      7300045,
+      7300046
+    ],
+    "controller_traces_all_numeric_values_finite": true
+  },
+  "benchmark_eligibility": {
+    "profile": "custom",
+    "benchmark_eligible": false,
+    "reason": "This isolated training-design ablation uses 200 paired episodes, not the 1000-episode full benchmark profile."
+  },
+  "checkpoint_sha256": {
+    "act": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "failure_detector": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "approximate_selected_40k": "2d9e5f4d3e616edc181763a3cafcd257efd6987a9d6293988afa6efdc1bdf577",
+    "approximate_validation_best_copy": "2d9e5f4d3e616edc181763a3cafcd257efd6987a9d6293988afa6efdc1bdf577",
+    "approximate_final_503808": "c6ecdfe621a82920c61927bf1db68253c6e938b75b47c12abd47b19dc58610e7"
+  },
+  "artifact_sha256": {
+    "training_metrics": "5fb3dcdce83ef7dcd03a40a0b4e720a4af5c00ae1373ac1b9ad5ca66dcbf9f22",
+    "training_curve_png": "a93052c1d8c14baec40a6b5c30d1a01c551211af0b79fc8cd9fedb9aaabbb565",
+    "validation_history": "d45896f688565c56db79ebce34529e2a6646693351d982a9f60dd1db93ff5675",
+    "evaluation_summary": "48c333ebb9811460f176c84bc3df01bac3d89be277f7d9f25c26ba3e18f51c09",
+    "evaluation_episodes": "bd3bca12795a92aeddf89d65457c9648b98c6e8840e5ab881d01fbd03bb3354c",
+    "controller_traces": "5166d4b4f83c7188c78486a5de0fed7825e937f7804a5e56c96354b982d4a1da",
+    "tensorboard_events": {
+      "results/logs/ppo_ablation_approximate/PPO_1/events.out.tfevents.1785064934.diy01.413528.0": "5148d8e3bcd3fa1e31527085205faf7c846b746f8b4471acee21aca12ceed698"
+    },
+    "monitor_csv": {
+      "results/logs/ppo_ablation_approximate_monitor/train_0.monitor.csv": "7194084defa47af28444366b7f3c01fec74c4b15ac8d7437ec24f70649a6ab35",
+      "results/logs/ppo_ablation_approximate_monitor/train_1.monitor.csv": "d062eed16e4595a865fc13c615caf35c2e4aef98d8f8c5a6e798bc4cc5d1a590",
+      "results/logs/ppo_ablation_approximate_monitor/train_2.monitor.csv": "087abf36e431647ecf90cdd5540b94af317609d6e391753ccfc9afbd367eaac3",
+      "results/logs/ppo_ablation_approximate_monitor/train_3.monitor.csv": "f6dad5bccc326f2816813bce54aabe5b0bb90aeaf260509c0bf4f5fb30e3cc09"
+    }
+  },
+  "paths": {
+    "selected_checkpoint": "checkpoints/recovery_ablation_approximate.zip",
+    "final_checkpoint": "checkpoints/recovery_ablation_approximate_final.zip",
+    "validation_best_checkpoint": "checkpoints/ppo_ablation_approximate/best/best_model.zip",
+    "training_metrics": "results/tables/recovery_ablation_approximate_metrics.json",
+    "training_curve_png": "results/figures/recovery_ablation_approximate_training_curve.png",
+    "config_audit": "results/tables/recovery_ablation_approximate_config_audit.json",
+    "evaluation_summary": "results/tables/training_design/approximate_starts_seed7300042.csv",
+    "evaluation_episodes": "results/tables/training_design/approximate_starts_seed7300042_episodes.csv",
+    "controller_traces": "results/traces/training_design/approximate_starts.json"
+  }
+}

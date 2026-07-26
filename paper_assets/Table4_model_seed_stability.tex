@@ -1,0 +1,29 @@
+% Auto-generated from measured equal-budget episode CSVs by experiments/model_seed_stability.py.
+\begin{table*}[t]
+\centering
+\caption{Legacy PPO negative-control seed stability with the ACT policy and
+failure detector fixed. Only the PPO training seed changes. Each row uses 200
+paired Meta-World development episodes (noise level 0.2; seeds
+7000042--7000241). This unreferenced development diagnostic is not part of
+REIM's supervised recovery method or primary benchmark. Success and recovery
+are percentages; $\Delta$ is the paired gain over the fixed ACT reference
+(75.5\%).}
+\label{tab:model-seed-stability}
+\small
+\setlength{\tabcolsep}{4.2pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+Recovery seed & Actual steps & Selected step & Success (\%) & Recovery (\%) & $\Delta$ vs. ACT [95\% CI] (pp) & Rescued/Harmed \\
+\midrule
+42 & 500,136 & 118,248 & 86.5 & 73.8 & +11.0 [6.5, 15.5] & 23/1 \\
+43 & 503,808 & 40,000 & 81.0 & 63.1 & +5.5 [2.0, 9.5] & 13/2 \\
+44 & 503,808 & 10,000 & 87.0 & 74.8 & +11.5 [7.5, 16.0] & 23/0 \\
+\midrule
+Mean $\pm$ s.d. & all $\geq$500k & -- & 84.8 $\pm$ 3.3 & 70.6 $\pm$ 6.5 & +9.3 $\pm$ 3.3 & -- \\
+\bottomrule
+\end{tabular}
+\vspace{1mm}
+\begin{minipage}{0.98\textwidth}
+\footnotesize Recovery rate is task success while recovery is active per intervention. Confidence intervals for $\Delta$ use 20,000 paired episode bootstrap samples; s.d. is the sample standard deviation across the three recovery seeds. This table does not represent three independently trained full REIM systems.
+\end{minipage}
+\end{table*}

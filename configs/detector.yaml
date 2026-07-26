@@ -1,0 +1,29 @@
+seed: 42
+device: auto
+data_dir: datasets/failures
+checkpoint: checkpoints/failure_detector.pt
+latest_checkpoint: checkpoints/failure_detector_latest.pt
+curve_path: results/figures/detector_training_curve.png
+confusion_matrix_path: results/figures/confusion_matrix.png
+
+model:
+  sequence_length: 10
+  hidden_size: 128
+  num_layers: 1
+  mlp_hidden: 64
+  dropout: 0.1
+
+training:
+  epochs: 50
+  batch_size: 512
+  learning_rate: 0.0005
+  weight_decay: 0.00001
+  validation_fraction: 0.2
+  positive_weight: auto
+  patience: 10
+  checkpoint_every: 5
+  grad_clip_norm: 5.0
+  threshold: 0.5
+  # Report conventional classification metrics at 0.5 and the controller's
+  # development-set-selected early-warning operating point separately.
+  deployment_threshold: 0.2

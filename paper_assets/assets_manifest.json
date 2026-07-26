@@ -1,0 +1,116 @@
+{
+  "generated_at_utc": "2026-07-26T13:02:06.290198+00:00",
+  "backend": "metaworld",
+  "profile": "full",
+  "benchmark_eligible": true,
+  "warning": "",
+  "inputs": {
+    "/home/diy/bonus_track/REIM/results/tables/baseline.csv": {
+      "sha256": "6766fb8df2ad027a058ca602aa2161bba435cff9c964d20c2db5547810d51215",
+      "bytes": 2704
+    },
+    "/home/diy/bonus_track/REIM/results/tables/robustness.csv": {
+      "sha256": "6016bd3cf2d457b9f1001f897ceda2bc30e1acab891b570901962876ddd5cd00",
+      "bytes": 5135
+    },
+    "/home/diy/bonus_track/REIM/results/tables/ablation.csv": {
+      "sha256": "b8cd25f01b6005434239b54b602889cd22c8536c873f81485b8f84f7febe110d",
+      "bytes": 2664
+    },
+    "/home/diy/bonus_track/REIM/results/tables/detector_metrics.json": {
+      "sha256": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
+      "bytes": 1105
+    },
+    "/home/diy/bonus_track/REIM/results/traces/formal_crn/robustness_n20.json": {
+      "sha256": "b6f30b6c68ccdfafc7dfd8ed339c3508b117ed135c4d3404430b40e1515dcfc4",
+      "bytes": 307567
+    }
+  },
+  "outputs": {
+    "framework": {
+      "path": "results/figures/framework_architecture.png",
+      "sha256": "a9fc6be26e9f5e992364f11b85c2cc5bfac2e9894b152a349f9f7f948aaf56b2",
+      "bytes": 461624
+    },
+    "paper_figure_1": {
+      "path": "paper_assets/Figure1_final_framework.png",
+      "sha256": "a9fc6be26e9f5e992364f11b85c2cc5bfac2e9894b152a349f9f7f948aaf56b2",
+      "bytes": 461624
+    },
+    "legacy_figure_1": {
+      "path": "paper_assets/Figure1_framework.png",
+      "sha256": "a9fc6be26e9f5e992364f11b85c2cc5bfac2e9894b152a349f9f7f948aaf56b2",
+      "bytes": 461624
+    },
+    "success": {
+      "path": "results/figures/success_comparison.png",
+      "sha256": "e8bca662433c33be4a89d46730e15d72059bb6166d87a07a083c76a069c394ec",
+      "bytes": 141468
+    },
+    "robustness": {
+      "path": "results/figures/robustness.png",
+      "sha256": "2e7a2379d6ccfb1e9db4f2969ff9d44cc54b1b37c2326a5cb111af42f7322181",
+      "bytes": 160049
+    },
+    "ablation": {
+      "path": "results/figures/ablation.png",
+      "sha256": "0223124e8ff1e48deec683dfc06ba40b1ba03962aa0d8caae055cb6fff7cfbe9",
+      "bytes": 102293
+    },
+    "confusion": {
+      "path": "results/figures/confusion_matrix.png",
+      "sha256": "c12cfaa73a78c1b3ef5cf34d95a046419c6c4b421168d7b7bc40fe26ffebf087",
+      "bytes": 139717
+    },
+    "recovery_examples": {
+      "path": "results/figures/recovery_examples.png",
+      "sha256": "22cc754fff2a39db9bb87185bceb5b6570ddc6e23c188610539b6c02859dc7e4",
+      "bytes": 307429
+    },
+    "paper_confusion": {
+      "path": "paper_assets/Figure3_detector.png",
+      "sha256": "c12cfaa73a78c1b3ef5cf34d95a046419c6c4b421168d7b7bc40fe26ffebf087",
+      "bytes": 139717
+    },
+    "paper_recovery_examples": {
+      "path": "paper_assets/Figure4_recovery.png",
+      "sha256": "22cc754fff2a39db9bb87185bceb5b6570ddc6e23c188610539b6c02859dc7e4",
+      "bytes": 307429
+    },
+    "paper_ablation": {
+      "path": "paper_assets/Figure5_ablation.png",
+      "sha256": "0223124e8ff1e48deec683dfc06ba40b1ba03962aa0d8caae055cb6fff7cfbe9",
+      "bytes": 102293
+    },
+    "paper_figure_2": {
+      "path": "paper_assets/Figure2_final_results.png",
+      "sha256": "5d4906e75b45eddad48cded5073ef74c83f9662a8fb60ed011913fc8ad6fe25d",
+      "bytes": 324283
+    },
+    "legacy_figure_2": {
+      "path": "paper_assets/Figure2_result.png",
+      "sha256": "5d4906e75b45eddad48cded5073ef74c83f9662a8fb60ed011913fc8ad6fe25d",
+      "bytes": 324283
+    },
+    "paper_figure_3": {
+      "path": "paper_assets/Figure3_final_ablation.png",
+      "sha256": "0223124e8ff1e48deec683dfc06ba40b1ba03962aa0d8caae055cb6fff7cfbe9",
+      "bytes": 102293
+    },
+    "paper_table_1": {
+      "path": "paper_assets/Table1_baseline.tex",
+      "sha256": "6e9ea4d9b76e94748fb9b1f3d3fd7ac127f978957acbc9cfad37f685de81145b",
+      "bytes": 954
+    },
+    "paper_table_2": {
+      "path": "paper_assets/Table2_ablation.tex",
+      "sha256": "11e64dfb2eb479c8b57d7c873eba6b9d93e874b14fd88ba42d197f711c6c85d5",
+      "bytes": 762
+    }
+  },
+  "figure_design": {
+    "paper_type": "embodied robot method paper",
+    "structure": "closed-loop feedback",
+    "style": "flat vector, white background, functional three-color palette"
+  }
+}

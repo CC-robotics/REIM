@@ -1,0 +1,19 @@
+\begin{table}[t]
+  \centering
+  \caption{Recovery and gate ablation under the paired protocol of
+  Table~\ref{tab:final-baseline}. The heuristic and LSTM rows use the same
+  trigger-aligned recovery actor, isolating the arbitration rule.}
+  \label{tab:final-ablation}
+  \small
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{lcc}
+    \toprule
+    Configuration & Success $\uparrow$ & Intervention \\
+    \midrule
+    ACT (no recovery) & \AblationASuccess & -- \\
+    Heuristic gate + recovery & \AblationCSuccess &
+      \FinalRLRecoveryIntervention \\
+    REIM (LSTM gate) & \AblationDSuccess & \FinalREIMIntervention \\
+    \bottomrule
+  \end{tabular}
+\end{table}

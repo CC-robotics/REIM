@@ -1,0 +1,31 @@
+{
+  "backend": "metaworld",
+  "condition_key_fields": [
+    "Method"
+  ],
+  "conditions": [
+    [
+      "ACT + Detector"
+    ]
+  ],
+  "crn_episode_specifications_verified": true,
+  "episode_bank_sha256s": [
+    "8c503c07dc6dcdd904e948f14d270410c2fbd4d9796f8d9e08451dc34c7d4399"
+  ],
+  "episode_rows": 1000,
+  "episodes_per_condition": 1000,
+  "evaluation_seed_end": 8001041,
+  "evaluation_seed_start": 8000042,
+  "inputs": {
+    "results/tables/formal_crn/baseline_detector_only.csv": "765e1e857f27444316c62ce71d8395ec8c610180a00f0a568a8d6a50a4bc0c5a",
+    "results/tables/formal_crn/baseline_detector_only_episodes.csv": "eb71eb1eacadb540047ab67782afabf03358460313bf7691c2a1814a5c8ea559"
+  },
+  "outputs": {
+    "episodes": "results/tables/detector_only_episodes.csv",
+    "summary": "results/tables/detector_only.csv"
+  },
+  "profile": "full",
+  "strategy": "validated_parallel_shard_merge",
+  "summary_recomputed_from_raw_episodes": true,
+  "summary_rows": 1
+}

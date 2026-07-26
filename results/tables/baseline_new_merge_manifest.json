@@ -1,0 +1,42 @@
+{
+  "backend": "metaworld",
+  "condition_key_fields": [
+    "Method"
+  ],
+  "conditions": [
+    [
+      "ACT + RL Recovery"
+    ],
+    [
+      "ACT"
+    ],
+    [
+      "ACT + Random Reset"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)"
+    ]
+  ],
+  "episode_rows": 4000,
+  "episodes_per_condition": 1000,
+  "evaluation_seed_end": 6001041,
+  "evaluation_seed_start": 6000042,
+  "inputs": {
+    "results/tables/shards/baseline_act_new.csv": "75e4d01e464d2d7958a7565e24bce690370fac76616aba8c1d243ac5584ffcab",
+    "results/tables/shards/baseline_act_new_episodes.csv": "3acb4f18a2039b1c524093e5d96b493863039b926f8df3e1e526edc85d103eb4",
+    "results/tables/shards/baseline_act_random_reset_new.csv": "7f8f85cb39c98c2cac996dfd92dd0270f81b781c8f4079c15585890b71d87d70",
+    "results/tables/shards/baseline_act_random_reset_new_episodes.csv": "bdfc65af2090d15900b4096bb3ed94cd707b6d23952b9245abfc2f91d20de529",
+    "results/tables/shards/baseline_act_rl_recovery_new.csv": "5a77d43285216d4c994b9754abb399812598420bd9233b8b6193bd3ec4359e2f",
+    "results/tables/shards/baseline_act_rl_recovery_new_episodes.csv": "b0670226fa7365eade5bde0e278166dd661af53fba30b5379764f5a0c57a287b",
+    "results/tables/shards/baseline_reim_new.csv": "aae2d61b29541596ec9fea7dfe45c51b5d42d1887c93ab3b3137b83714ffc97c",
+    "results/tables/shards/baseline_reim_new_episodes.csv": "9c92f6e5029936b958dcb667beecd2fb228d3c8d81881dd9b69ad90dbbc82c0d"
+  },
+  "outputs": {
+    "episodes": "results/tables/baseline_new_episodes.csv",
+    "summary": "results/tables/baseline_new.csv"
+  },
+  "profile": "full",
+  "strategy": "validated_parallel_shard_merge",
+  "summary_recomputed_from_raw_episodes": true,
+  "summary_rows": 4
+}

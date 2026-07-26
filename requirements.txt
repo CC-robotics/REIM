@@ -1,0 +1,20 @@
+# REIM runtime dependencies (Python 3.10--3.13)
+# Meta-World 3.1.1 is the maintained Gymnasium release. The historical
+# PickPlace-v2 task is exposed as pick-place-v3 in this release.
+torch>=2.7
+gymnasium>=1.1,<1.3
+metaworld==3.1.1
+mujoco==3.3.0
+stable-baselines3[extra]==2.9.0
+numpy>=1.26,<3
+scipy>=1.11
+pandas>=2.1
+scikit-learn>=1.4
+matplotlib>=3.8
+seaborn>=0.13
+PyYAML>=6.0
+tqdm>=4.66
+tensorboard>=2.16
+imageio>=2.34
+imageio-ffmpeg>=0.5
+

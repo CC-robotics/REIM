@@ -1,0 +1,536 @@
+{
+  "aggregate": {
+    "all_episode_specification_hashes_unique": true,
+    "commanded_actions_bitwise_equal_episodes": 8,
+    "control_sources_equal_episodes": 8,
+    "episodes_audited": 8,
+    "episodes_expected": 8,
+    "forbidden_recovery_calls": 0,
+    "only_act_control_episodes": 8,
+    "passed_episodes": 8,
+    "states_bitwise_equal_episodes": 8,
+    "steps_equal_episodes": 8,
+    "success_equal_episodes": 8,
+    "zero_detector_calls": 700
+  },
+  "audit_type": "strict_no_intervention_equivalence",
+  "configuration": {
+    "act_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+    "act_checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "act_loaded_model_sha256": "19469a03339ed424e903e0e3abb4087997f9c8c13e1de13db75a398fb9823241",
+    "action_dim": 4,
+    "arrays_embedded_in_json": false,
+    "backend": "metaworld",
+    "comparison": "complete finite C-contiguous float32 trajectories compared byte-for-byte; success and executed steps compared exactly",
+    "constructor_seed_act": 6000042,
+    "constructor_seed_reim": 9000091,
+    "constructor_seeds_deliberately_different": true,
+    "device": "cpu",
+    "env_name": "pick-place-v3",
+    "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_crn_seed6000042_n1000_noise020.json",
+    "episode_bank_file_sha256": "2ffcf9c52af5256ad94cfcb342098deb46837f544da1f21355abeaa15cf40f7e",
+    "episode_bank_sha256": "4584dcb582c80843b471bfa82b7710014bd88550606a5f03ea2024e43890639d",
+    "episode_count": 8,
+    "episode_offset": 0,
+    "independent_model_loads_equal": true,
+    "max_steps": 200,
+    "numpy": "2.0.2",
+    "python": "3.10.20",
+    "reim_loaded_model_sha256": "19469a03339ed424e903e0e3abb4087997f9c8c13e1de13db75a398fb9823241",
+    "state_dim": 21
+  },
+  "generated_at_utc": "2026-07-26T12:15:59.731965+00:00",
+  "passed": true,
+  "per_episode": [
+    {
+      "act": {
+        "commanded_action_sha256": "ee686a97dfd1951559a203b5cc2b69a9f6e1902a5b9ba2ba5869fa948561458d",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "ffcda7412f69628e30620721cd4c53680bcee8df7e40bf0bdab881ee63809b44",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 0,
+      "episode_seed": 6000042,
+      "episode_specification_sha256": "0a5050af84816ee6a92cbdfb6c160487ce02fb5134492dd427e3ce8b21a5bf8a",
+      "metaworld_task_sha256": "6a703e6788777b0dea8248cdfeb1ebc4a1643016980e8ccb7647674d49a3d0ee",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "ee686a97dfd1951559a203b5cc2b69a9f6e1902a5b9ba2ba5869fa948561458d",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "ffcda7412f69628e30620721cd4c53680bcee8df7e40bf0bdab881ee63809b44",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "81db60f93918873f2ca41e79e5b18c3777b2397ca70dd5079f62f417e45a4191",
+        "commanded_action_shape": [
+          53,
+          4
+        ],
+        "control_sources_sha256": "421487edbaea481ee9ddbc27d639c7c1e92cc83de4fbe67e96b014d3b2b3840f",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "83fcd6541bdaaa9e4bcece1be68dcbf9c4307580264dce774cdadad9e9d5885f",
+        "state_shape": [
+          54,
+          21
+        ],
+        "steps": 53,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 1,
+      "episode_seed": 6000043,
+      "episode_specification_sha256": "d5730391c8e5fab67319f7e0f6b8dddc28888e592c916da9fb98882ad3e13323",
+      "metaworld_task_sha256": "941d793de49252044660182763b6e7cb0d90ec573e52490efff5caa4c025bc76",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "81db60f93918873f2ca41e79e5b18c3777b2397ca70dd5079f62f417e45a4191",
+        "commanded_action_shape": [
+          53,
+          4
+        ],
+        "control_sources_sha256": "421487edbaea481ee9ddbc27d639c7c1e92cc83de4fbe67e96b014d3b2b3840f",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "83fcd6541bdaaa9e4bcece1be68dcbf9c4307580264dce774cdadad9e9d5885f",
+        "state_shape": [
+          54,
+          21
+        ],
+        "steps": 53,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "6ab5d6c6016354d5570244823b8aa78025dee8ca6e219f765d2015df4704b8ef",
+        "commanded_action_shape": [
+          51,
+          4
+        ],
+        "control_sources_sha256": "ec59ad2ba35874b259885fb8f32cbe508e0e9e0fe4d4645b0e23d697bfe9cb4a",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "a33304455ede3da7e0c5f537dae6a9686808c1f5982504fecf76e9931f254259",
+        "state_shape": [
+          52,
+          21
+        ],
+        "steps": 51,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 2,
+      "episode_seed": 6000044,
+      "episode_specification_sha256": "9b9d32f1f7c6c0dc878024ac1dd3e4b57de7564ab2c693fee07855dee5c032a4",
+      "metaworld_task_sha256": "33efaab0d1ddc98a2fd61fc3b60e446e29539a15fbe893ce18dc2ecee98ea41c",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "6ab5d6c6016354d5570244823b8aa78025dee8ca6e219f765d2015df4704b8ef",
+        "commanded_action_shape": [
+          51,
+          4
+        ],
+        "control_sources_sha256": "ec59ad2ba35874b259885fb8f32cbe508e0e9e0fe4d4645b0e23d697bfe9cb4a",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "a33304455ede3da7e0c5f537dae6a9686808c1f5982504fecf76e9931f254259",
+        "state_shape": [
+          52,
+          21
+        ],
+        "steps": 51,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "2317691951c8a4590999c86b538067a159397f848f543215b1f66ccecf60e427",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "7eb9262fc107e3606ae241ec1b09a3552d803442b8523da89b4dde0d8d257cfe",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 3,
+      "episode_seed": 6000045,
+      "episode_specification_sha256": "4144e8516ffd20c88da30c8ce8bba5e4c56238601abc9cb6162fca90b52a8288",
+      "metaworld_task_sha256": "31eaa098ea04a7cfd8ae23ef698513e3522a19b40d985d6b95ec475484382149",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "2317691951c8a4590999c86b538067a159397f848f543215b1f66ccecf60e427",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "7eb9262fc107e3606ae241ec1b09a3552d803442b8523da89b4dde0d8d257cfe",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "5ad5bb09fbcd62115765136175531fa113ef983b700329a2a12e6b2dad865aa2",
+        "commanded_action_shape": [
+          52,
+          4
+        ],
+        "control_sources_sha256": "b626f4511af2c1bc0ceb9b66eab7bf98a50c9e41beafde7f563fe4a6e49e2014",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "50aa2768935bb928a0c389b0e969eb47f056b3e9f17d998b301ddc4b1c2203d5",
+        "state_shape": [
+          53,
+          21
+        ],
+        "steps": 52,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 4,
+      "episode_seed": 6000046,
+      "episode_specification_sha256": "5f13f26386ae0f81984124038c2c93b86c9f1fdd0d2e6f15bddf578213d9e221",
+      "metaworld_task_sha256": "8d366a26125b2de21889a86905bcea29e653869c040a2ef66625e56e190dfef3",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "5ad5bb09fbcd62115765136175531fa113ef983b700329a2a12e6b2dad865aa2",
+        "commanded_action_shape": [
+          52,
+          4
+        ],
+        "control_sources_sha256": "b626f4511af2c1bc0ceb9b66eab7bf98a50c9e41beafde7f563fe4a6e49e2014",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "50aa2768935bb928a0c389b0e969eb47f056b3e9f17d998b301ddc4b1c2203d5",
+        "state_shape": [
+          53,
+          21
+        ],
+        "steps": 52,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "e7a5158cdd65e71d5bc397f6bb3467b81c6235e0aa3c052a3bb54aa7b05e6175",
+        "commanded_action_shape": [
+          47,
+          4
+        ],
+        "control_sources_sha256": "0949c1d85574b4e10b098e8501122d56321b3b207d18c65d0e9c23b8a3d4c284",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "6da2c1eb33a05109c8adc8ac4581e1ce116ba5352046859b681d668be78d1154",
+        "state_shape": [
+          48,
+          21
+        ],
+        "steps": 47,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 5,
+      "episode_seed": 6000047,
+      "episode_specification_sha256": "447902a145aa27eeb4bb6577140fde6ac3342c1bd59ba0d70fd4779e244bebbc",
+      "metaworld_task_sha256": "4177cfbb19e52e4affa0adf4f381ee6216964e87990cf1b8d64c120fa5fa3419",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "e7a5158cdd65e71d5bc397f6bb3467b81c6235e0aa3c052a3bb54aa7b05e6175",
+        "commanded_action_shape": [
+          47,
+          4
+        ],
+        "control_sources_sha256": "0949c1d85574b4e10b098e8501122d56321b3b207d18c65d0e9c23b8a3d4c284",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "6da2c1eb33a05109c8adc8ac4581e1ce116ba5352046859b681d668be78d1154",
+        "state_shape": [
+          48,
+          21
+        ],
+        "steps": 47,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "9ce6881d3e235a2a3809d63b00bc216de9098ee9e841a7183507f8d9b6fb9c40",
+        "commanded_action_shape": [
+          51,
+          4
+        ],
+        "control_sources_sha256": "ec59ad2ba35874b259885fb8f32cbe508e0e9e0fe4d4645b0e23d697bfe9cb4a",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "8cac87993d8cc0b315bcdb89d1672fed74035ce100c3e47a1a048c9b123f993d",
+        "state_shape": [
+          52,
+          21
+        ],
+        "steps": 51,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 6,
+      "episode_seed": 6000048,
+      "episode_specification_sha256": "3abb5524d23322c0715e3e0d253317ab83cb3ce344a98509a827cc0bfc32c6c1",
+      "metaworld_task_sha256": "9c975dc7eede54acb0a81cdf90dab5878d151d2eb2b65b1e11a70343c69802ea",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "9ce6881d3e235a2a3809d63b00bc216de9098ee9e841a7183507f8d9b6fb9c40",
+        "commanded_action_shape": [
+          51,
+          4
+        ],
+        "control_sources_sha256": "ec59ad2ba35874b259885fb8f32cbe508e0e9e0fe4d4645b0e23d697bfe9cb4a",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "8cac87993d8cc0b315bcdb89d1672fed74035ce100c3e47a1a048c9b123f993d",
+        "state_shape": [
+          52,
+          21
+        ],
+        "steps": 51,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "146a42436c237517fdb43df8c0ba85186313b5b64f4857ebc679a3ed44fdcb56",
+        "commanded_action_shape": [
+          54,
+          4
+        ],
+        "control_sources_sha256": "64e15afeafec083c3c566f0dbe9ed55dec7f9202396a8a90fb66ecbd3c090691",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "d9f4b08a179e5d9b201b705256a2991098b208ab1cd7b39d5dbf1b1997a71ec7",
+        "state_shape": [
+          55,
+          21
+        ],
+        "steps": 54,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 7,
+      "episode_seed": 6000049,
+      "episode_specification_sha256": "704c2e4485c1fb1ec0b3cc0cb73d6376cdba5f4dc0bce3220c00bd021b92859b",
+      "metaworld_task_sha256": "a1f7eaa6ba5e5d7f5f08b41b9b8284e46420f00f53c65f88bbf636047521844e",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "146a42436c237517fdb43df8c0ba85186313b5b64f4857ebc679a3ed44fdcb56",
+        "commanded_action_shape": [
+          54,
+          4
+        ],
+        "control_sources_sha256": "64e15afeafec083c3c566f0dbe9ed55dec7f9202396a8a90fb66ecbd3c090691",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "d9f4b08a179e5d9b201b705256a2991098b208ab1cd7b39d5dbf1b1997a71ec7",
+        "state_shape": [
+          55,
+          21
+        ],
+        "steps": 54,
+        "success": true
+      }
+    }
+  ],
+  "schema_version": 1,
+  "status": "passed"
+}

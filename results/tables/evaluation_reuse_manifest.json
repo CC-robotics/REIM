@@ -1,0 +1,18 @@
+{
+  "bootstrap_samples": 10000,
+  "episodes_per_condition": 1000,
+  "evaluation_seed_end": 8001041,
+  "evaluation_seed_start": 8000042,
+  "inputs": {
+    "results/tables/baseline.csv": "6766fb8df2ad027a058ca602aa2161bba435cff9c964d20c2db5547810d51215",
+    "results/tables/baseline_episodes.csv": "8d462c542cc3de6239d25ce52e69361d6722ade4a296c604ad35ea6b32e44575",
+    "results/tables/detector_only.csv": "c7a6aa664eecee6bb7eb0e291635cb390d12f8dbba009b3fe0eaa73696ef281d",
+    "results/tables/detector_only_episodes.csv": "eb71eb1eacadb540047ab67782afabf03358460313bf7691c2a1814a5c8ea559"
+  },
+  "outputs": {
+    "ablation": "results/tables/ablation.csv",
+    "comparison": "results/tables/comparison.csv"
+  },
+  "seed": 8000042,
+  "strategy": "paired_episode_reuse"
+}

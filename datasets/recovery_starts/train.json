@@ -1,0 +1,28 @@
+{
+  "act_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+  "act_checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+  "backend": "metaworld",
+  "detector_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/failure_detector.pt",
+  "detector_checkpoint_sha256": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+  "disturbance": {
+    "action_noise_std": 0.08000000000000002,
+    "object_impulse_std_m": 0.020000000000000004,
+    "observation_noise_std": 0.005000000000000001
+  },
+  "episodes_attempted": 1000,
+  "episodes_triggered": 985,
+  "expert_demonstration_steps": 42386,
+  "expert_success_rate": 0.9928934010152284,
+  "expert_successes": 978,
+  "failure_threshold": 0.1,
+  "mean_expert_steps": 44.29543147208122,
+  "mean_trigger_step": 11.040609137055837,
+  "noise_level": 0.2,
+  "npz": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+  "npz_sha256": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+  "recovery_starts": 985,
+  "schema_version": "reim-recovery-starts-v1",
+  "seed_max": 3001041,
+  "seed_min": 3000042,
+  "trigger_rate": 0.985
+}

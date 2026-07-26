@@ -1,0 +1,213 @@
+{
+  "analysis_only": true,
+  "audit_type": "strict_matched_gate_paired_comparison",
+  "inputs": {
+    "heuristic_gate": {
+      "method": "ACT + Heuristic Recovery",
+      "path": "/home/diy/bonus_track/REIM/results/tables/formal_crn/gate_matched_heuristic_episodes.csv",
+      "rows": 200,
+      "sha256": "b8f47c0ebf0f0de4558ccbbe41d2a74f2bacb857d82de65b070a52e912378474"
+    },
+    "reim_tau_0.175": {
+      "method": "REIM (ACT + Detector + Recovery)",
+      "path": "/home/diy/bonus_track/REIM/results/tables/gate_calibration_tau0175_episodes.csv",
+      "rows": 200,
+      "sha256": "1253dc77cf135f0a7bfaac4f4d549eefad557f49b9458d4af43f55f558ad6f57"
+    },
+    "reim_tau_0.20": {
+      "method": "REIM (ACT + Detector + Recovery)",
+      "path": "/home/diy/bonus_track/REIM/results/tables/gate_calibration_tau020_episodes.csv",
+      "rows": 200,
+      "sha256": "f55240326f58743a4341204ce8cb8cbaa67f3d089dd50bc86a389080c816687f"
+    }
+  },
+  "methods": {
+    "heuristic_gate": {
+      "analysis_name": "heuristic_gate",
+      "detector_triggers": 152,
+      "episodes": 200,
+      "intervened_episodes": 152,
+      "intervention_attempts": 152,
+      "intervention_rate": 0.76,
+      "intervention_rate_definition": "episodes_with_at_least_one_recovery_attempt / episodes",
+      "mean_interventions_per_episode": 0.76,
+      "method": "ACT + Heuristic Recovery",
+      "post_intervention_episode_success_rate": 0.8157894736842105,
+      "post_intervention_episode_successes": 124,
+      "recovery_rate": 0.8157894736842105,
+      "recovery_rate_definition": "sum(recovery_successes) / sum(recovery_attempts)",
+      "recovery_rate_per_attempt": 0.8157894736842105,
+      "recovery_successes": 124,
+      "success_rate": 0.86,
+      "successes": 172
+    },
+    "reim_tau_0.175": {
+      "analysis_name": "reim_tau_0.175",
+      "detector_triggers": 153,
+      "episodes": 200,
+      "intervened_episodes": 153,
+      "intervention_attempts": 153,
+      "intervention_rate": 0.765,
+      "intervention_rate_definition": "episodes_with_at_least_one_recovery_attempt / episodes",
+      "mean_interventions_per_episode": 0.765,
+      "method": "REIM (ACT + Detector + Recovery)",
+      "post_intervention_episode_success_rate": 0.9019607843137255,
+      "post_intervention_episode_successes": 138,
+      "recovery_rate": 0.9019607843137255,
+      "recovery_rate_definition": "sum(recovery_successes) / sum(recovery_attempts)",
+      "recovery_rate_per_attempt": 0.9019607843137255,
+      "recovery_successes": 138,
+      "success_rate": 0.925,
+      "successes": 185
+    },
+    "reim_tau_0.20": {
+      "analysis_name": "reim_tau_0.20",
+      "detector_triggers": 127,
+      "episodes": 200,
+      "intervened_episodes": 127,
+      "intervention_attempts": 127,
+      "intervention_rate": 0.635,
+      "intervention_rate_definition": "episodes_with_at_least_one_recovery_attempt / episodes",
+      "mean_interventions_per_episode": 0.635,
+      "method": "REIM (ACT + Detector + Recovery)",
+      "post_intervention_episode_success_rate": 0.8503937007874016,
+      "post_intervention_episode_successes": 108,
+      "recovery_rate": 0.8503937007874016,
+      "recovery_rate_definition": "sum(recovery_successes) / sum(recovery_attempts)",
+      "recovery_rate_per_attempt": 0.8503937007874016,
+      "recovery_successes": 108,
+      "success_rate": 0.905,
+      "successes": 181
+    }
+  },
+  "paired_success_comparisons": {
+    "reim_tau_0.175_minus_heuristic": {
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 8200042,
+      "both_failure": 12,
+      "both_success": 169,
+      "candidate": "reim_tau_0.175",
+      "candidate_rate": 0.925,
+      "discordant_pairs": 19,
+      "episodes": 200,
+      "exact_two_sided_mcnemar_binomial_p": 0.004425048828125,
+      "losses": 3,
+      "paired_delta": 0.065,
+      "paired_delta_bootstrap_95_ci": [
+        0.025,
+        0.11
+      ],
+      "paired_delta_bootstrap_95_ci_percentage_points": [
+        2.5,
+        11.0
+      ],
+      "paired_delta_percentage_points": 6.5,
+      "reference": "heuristic_gate",
+      "reference_rate": 0.86,
+      "wins": 16
+    },
+    "reim_tau_0.175_minus_reim_tau_0.20": {
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 8200044,
+      "both_failure": 15,
+      "both_success": 181,
+      "candidate": "reim_tau_0.175",
+      "candidate_rate": 0.925,
+      "discordant_pairs": 4,
+      "episodes": 200,
+      "exact_two_sided_mcnemar_binomial_p": 0.125,
+      "losses": 0,
+      "paired_delta": 0.02,
+      "paired_delta_bootstrap_95_ci": [
+        0.005,
+        0.04
+      ],
+      "paired_delta_bootstrap_95_ci_percentage_points": [
+        0.5,
+        4.0
+      ],
+      "paired_delta_percentage_points": 2.0,
+      "reference": "reim_tau_0.20",
+      "reference_rate": 0.905,
+      "wins": 4
+    },
+    "reim_tau_0.20_minus_heuristic": {
+      "bootstrap_samples": 10000,
+      "bootstrap_seed": 8200043,
+      "both_failure": 15,
+      "both_success": 168,
+      "candidate": "reim_tau_0.20",
+      "candidate_rate": 0.905,
+      "discordant_pairs": 17,
+      "episodes": 200,
+      "exact_two_sided_mcnemar_binomial_p": 0.049041748046875,
+      "losses": 4,
+      "paired_delta": 0.045,
+      "paired_delta_bootstrap_95_ci": [
+        0.005,
+        0.085
+      ],
+      "paired_delta_bootstrap_95_ci_percentage_points": [
+        0.5,
+        8.5
+      ],
+      "paired_delta_percentage_points": 4.5,
+      "reference": "heuristic_gate",
+      "reference_rate": 0.86,
+      "wins": 13
+    }
+  },
+  "protocol": {
+    "backend": "metaworld",
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 8200042,
+    "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_gate_task20260726_ep8200042_n200_noise020.json",
+    "episode_bank_file_sha256": "63679756c58e9f92045f137509620db649c1f612a4711bf15cd73cb3adbf2fa8",
+    "episode_bank_sha256": "bce931c8f7f4b2ca6d96ac63f5e3bd3c7b1a2d9a694728801ff6b1a12baf8802",
+    "episode_seed_end": 8200241,
+    "episode_seed_start": 8200042,
+    "episodes": 200,
+    "noise_level": 0.2,
+    "task_bank_seed": 20260726
+  },
+  "schema_version": 1,
+  "tau_0.175_minus_heuristic_intervention_rate": {
+    "bootstrap_samples": 10000,
+    "bootstrap_seed": 8200045,
+    "both_failure": 13,
+    "both_success": 118,
+    "candidate": "reim_tau_0.175",
+    "candidate_rate": 0.765,
+    "discordant_pairs": 69,
+    "episodes": 200,
+    "exact_two_sided_mcnemar_binomial_p": 1.0,
+    "losses": 34,
+    "paired_delta": 0.005,
+    "paired_delta_bootstrap_95_ci": [
+      -0.08,
+      0.085
+    ],
+    "paired_delta_bootstrap_95_ci_percentage_points": [
+      -8.0,
+      8.5
+    ],
+    "paired_delta_percentage_points": 0.5,
+    "reference": "heuristic_gate",
+    "reference_rate": 0.76,
+    "wins": 35
+  },
+  "validation": {
+    "all_checks_passed": true,
+    "backend_equal": true,
+    "episode_bank_sha256_equal": true,
+    "episode_ids_equal": true,
+    "episode_seeds_equal": true,
+    "episode_specification_sha256_equal": true,
+    "expected_method_per_input_verified": true,
+    "heuristic_method_distinct_by_design": true,
+    "metaworld_task_sha256_equal": true,
+    "noise_level_equal": true,
+    "raw_rows_match_serialized_bank": true,
+    "reim_method_equal_across_thresholds": true
+  }
+}

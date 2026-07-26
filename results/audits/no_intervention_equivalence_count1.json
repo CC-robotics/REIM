@@ -1,0 +1,109 @@
+{
+  "aggregate": {
+    "all_episode_specification_hashes_unique": true,
+    "commanded_actions_bitwise_equal_episodes": 1,
+    "control_sources_equal_episodes": 1,
+    "episodes_audited": 1,
+    "episodes_expected": 1,
+    "forbidden_recovery_calls": 0,
+    "only_act_control_episodes": 1,
+    "passed_episodes": 1,
+    "states_bitwise_equal_episodes": 1,
+    "steps_equal_episodes": 1,
+    "success_equal_episodes": 1,
+    "zero_detector_calls": 199
+  },
+  "audit_type": "strict_no_intervention_equivalence",
+  "configuration": {
+    "act_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+    "act_checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "act_loaded_model_sha256": "19469a03339ed424e903e0e3abb4087997f9c8c13e1de13db75a398fb9823241",
+    "action_dim": 4,
+    "arrays_embedded_in_json": false,
+    "backend": "metaworld",
+    "comparison": "complete finite C-contiguous float32 trajectories compared byte-for-byte; success and executed steps compared exactly",
+    "constructor_seed_act": 6000042,
+    "constructor_seed_reim": 9000091,
+    "constructor_seeds_deliberately_different": true,
+    "device": "cpu",
+    "env_name": "pick-place-v3",
+    "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_crn_seed6000042_n1000_noise020.json",
+    "episode_bank_file_sha256": "2ffcf9c52af5256ad94cfcb342098deb46837f544da1f21355abeaa15cf40f7e",
+    "episode_bank_sha256": "4584dcb582c80843b471bfa82b7710014bd88550606a5f03ea2024e43890639d",
+    "episode_count": 1,
+    "episode_offset": 0,
+    "independent_model_loads_equal": true,
+    "max_steps": 200,
+    "numpy": "2.0.2",
+    "python": "3.10.20",
+    "reim_loaded_model_sha256": "19469a03339ed424e903e0e3abb4087997f9c8c13e1de13db75a398fb9823241",
+    "state_dim": 21
+  },
+  "generated_at_utc": "2026-07-26T12:15:49.698114+00:00",
+  "passed": true,
+  "per_episode": [
+    {
+      "act": {
+        "commanded_action_sha256": "ee686a97dfd1951559a203b5cc2b69a9f6e1902a5b9ba2ba5869fa948561458d",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "ffcda7412f69628e30620721cd4c53680bcee8df7e40bf0bdab881ee63809b44",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 0,
+      "episode_seed": 6000042,
+      "episode_specification_sha256": "0a5050af84816ee6a92cbdfb6c160487ce02fb5134492dd427e3ce8b21a5bf8a",
+      "metaworld_task_sha256": "6a703e6788777b0dea8248cdfeb1ebc4a1643016980e8ccb7647674d49a3d0ee",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "ee686a97dfd1951559a203b5cc2b69a9f6e1902a5b9ba2ba5869fa948561458d",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "ffcda7412f69628e30620721cd4c53680bcee8df7e40bf0bdab881ee63809b44",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      }
+    }
+  ],
+  "schema_version": 1,
+  "status": "passed"
+}

@@ -1,0 +1,23 @@
+{
+  "action_dim": 4,
+  "backend": "metaworld",
+  "demo_success_rate": 1.0,
+  "env_name": "pick-place-v3",
+  "episodes_collected": 500,
+  "episodes_requested": 500,
+  "expert_algorithm": "Sawyer scripted",
+  "failed_trajectories": 0,
+  "imitation_target": "ACT",
+  "max_trajectory_length": 62,
+  "mean_return": 71.61165285163702,
+  "mean_trajectory_length": 51.938,
+  "min_trajectory_length": 44,
+  "schema_version": "reim-demonstrations-v1",
+  "seed": 42,
+  "state_dim": 21,
+  "state_mode": "semantic",
+  "std_return": 22.926910475491177,
+  "std_trajectory_length": 3.941846775307229,
+  "successful_trajectories": 500,
+  "total_transitions": 25969
+}

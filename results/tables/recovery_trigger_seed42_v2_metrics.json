@@ -1,0 +1,354 @@
+{
+  "additional_timesteps": 53248,
+  "backend": "metaworld",
+  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed42_v2.zip",
+  "config": "/home/diy/bonus_track/REIM/configs/ppo_trigger.yaml",
+  "device": "cuda",
+  "episodes": 50,
+  "expert_pretraining": {
+    "batch_size": 512,
+    "best_validation_loss": 0.006390898954123259,
+    "dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "enabled": true,
+    "epochs": 40,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.06699131061154676,
+        "validation_loss": 0.04178960248827934
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.037422040903783704,
+        "validation_loss": 0.03599019721150398
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.033572388319186415,
+        "validation_loss": 0.03324069827795029
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.029815591176051693,
+        "validation_loss": 0.028853360563516617
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.02606127271989742,
+        "validation_loss": 0.02414746955037117
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.0219233808477959,
+        "validation_loss": 0.020183535292744637
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.018495096230363273,
+        "validation_loss": 0.01715082675218582
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.016700134186231227,
+        "validation_loss": 0.01550122071057558
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.015638884179383875,
+        "validation_loss": 0.01430675107985735
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.014995388462241873,
+        "validation_loss": 0.014278693124651909
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.014389330947614578,
+        "validation_loss": 0.013211023062467575
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.013788681421204504,
+        "validation_loss": 0.01287898886948824
+      },
+      {
+        "epoch": 13,
+        "train_loss": 0.013318928396217075,
+        "validation_loss": 0.012364734895527363
+      },
+      {
+        "epoch": 14,
+        "train_loss": 0.012757271438477987,
+        "validation_loss": 0.01188372541218996
+      },
+      {
+        "epoch": 15,
+        "train_loss": 0.012367907058761781,
+        "validation_loss": 0.011984355747699738
+      },
+      {
+        "epoch": 16,
+        "train_loss": 0.011783212030598199,
+        "validation_loss": 0.011060706339776516
+      },
+      {
+        "epoch": 17,
+        "train_loss": 0.01144895028233169,
+        "validation_loss": 0.010541785508394241
+      },
+      {
+        "epoch": 18,
+        "train_loss": 0.011010073316115213,
+        "validation_loss": 0.010422124527394772
+      },
+      {
+        "epoch": 19,
+        "train_loss": 0.010655499489820865,
+        "validation_loss": 0.009695871733129025
+      },
+      {
+        "epoch": 20,
+        "train_loss": 0.010229970934430519,
+        "validation_loss": 0.00975844170898199
+      },
+      {
+        "epoch": 21,
+        "train_loss": 0.009970328983772233,
+        "validation_loss": 0.00907536968588829
+      },
+      {
+        "epoch": 22,
+        "train_loss": 0.009708656256188112,
+        "validation_loss": 0.008915122598409653
+      },
+      {
+        "epoch": 23,
+        "train_loss": 0.009632916930299926,
+        "validation_loss": 0.008677939884364605
+      },
+      {
+        "epoch": 24,
+        "train_loss": 0.009008589060416064,
+        "validation_loss": 0.00820021890103817
+      },
+      {
+        "epoch": 25,
+        "train_loss": 0.008990167354020369,
+        "validation_loss": 0.008532952517271042
+      },
+      {
+        "epoch": 26,
+        "train_loss": 0.00860255822561771,
+        "validation_loss": 0.008043061010539532
+      },
+      {
+        "epoch": 27,
+        "train_loss": 0.008385274261909437,
+        "validation_loss": 0.007428293582051992
+      },
+      {
+        "epoch": 28,
+        "train_loss": 0.008272852428840944,
+        "validation_loss": 0.007297934032976627
+      },
+      {
+        "epoch": 29,
+        "train_loss": 0.008253185976162014,
+        "validation_loss": 0.007664334494620562
+      },
+      {
+        "epoch": 30,
+        "train_loss": 0.008028889265674424,
+        "validation_loss": 0.0070377252995967865
+      },
+      {
+        "epoch": 31,
+        "train_loss": 0.007777223363518715,
+        "validation_loss": 0.007218068465590477
+      },
+      {
+        "epoch": 32,
+        "train_loss": 0.007793296156563313,
+        "validation_loss": 0.007030917331576347
+      },
+      {
+        "epoch": 33,
+        "train_loss": 0.0076373382527605595,
+        "validation_loss": 0.007163564674556255
+      },
+      {
+        "epoch": 34,
+        "train_loss": 0.0074781198559486,
+        "validation_loss": 0.006626725662499666
+      },
+      {
+        "epoch": 35,
+        "train_loss": 0.0075473910399589195,
+        "validation_loss": 0.006452599540352821
+      },
+      {
+        "epoch": 36,
+        "train_loss": 0.00721333332988153,
+        "validation_loss": 0.006480216048657894
+      },
+      {
+        "epoch": 37,
+        "train_loss": 0.007300847602716412,
+        "validation_loss": 0.0065734367817640305
+      },
+      {
+        "epoch": 38,
+        "train_loss": 0.007204704553292817,
+        "validation_loss": 0.006579533219337463
+      },
+      {
+        "epoch": 39,
+        "train_loss": 0.007184521727129279,
+        "validation_loss": 0.006390898954123259
+      },
+      {
+        "epoch": 40,
+        "train_loss": 0.007088995993092477,
+        "validation_loss": 0.00657949922606349
+      }
+    ],
+    "learning_rate": 0.001,
+    "observation_noise_std": 0.005,
+    "train_samples": 42386,
+    "validation_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "validation_samples": 8212
+  },
+  "failure_rate": 0.04,
+  "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed42_v2_final.zip",
+  "mean_episode_reward": 92.09346221716999,
+  "mean_episode_steps": 44.54,
+  "minimum_selection_timesteps": 10000,
+  "recovery_rate": 1.0,
+  "resume_checkpoint": null,
+  "reward": {
+    "base_reward_scale": 1.0,
+    "distance_progress_scale": 2.0,
+    "failure_penalty": -10.0,
+    "initialization_disturbance": 0.03,
+    "initialize_with_failure_states": false,
+    "lift_progress_scale": 2.0,
+    "max_recovery_steps": 150,
+    "reach_progress_scale": 2.0,
+    "recovered_distance": 0.08,
+    "recovery_reward": 0.0,
+    "recovery_start_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "relift_height": 0.03,
+    "successful_starts_only": true,
+    "task_success_reward": 25.0,
+    "terminate_on_recovery": false,
+    "time_penalty": -0.01,
+    "warmup_max_steps": 45,
+    "warmup_min_steps": 45
+  },
+  "seed": 42,
+  "selected_model_timesteps": 40000,
+  "selected_model_type": "validation_best",
+  "selection_metric": "task_success",
+  "starting_timesteps": 0,
+  "state_mode": "semantic",
+  "std_episode_reward": 29.02775372708611,
+  "success_rate": 0.96,
+  "target_timesteps": 50000,
+  "task_success_selection_history": [
+    {
+      "episodes": 50,
+      "failure_rate": 0.06,
+      "mean_episode_reward": 98.43921597707859,
+      "mean_episode_steps": 49.56,
+      "recovery_rate": 0.98,
+      "selected": false,
+      "selection_eligible": false,
+      "std_episode_reward": 34.007667935776766,
+      "success_rate": 0.94,
+      "timesteps": 0
+    },
+    {
+      "episodes": 50,
+      "failure_rate": 0.06,
+      "mean_episode_reward": 95.50419572595266,
+      "mean_episode_steps": 48.62,
+      "recovery_rate": 0.98,
+      "selected": true,
+      "selection_eligible": true,
+      "std_episode_reward": 34.785276255473036,
+      "success_rate": 0.94,
+      "timesteps": 10000
+    },
+    {
+      "episodes": 50,
+      "failure_rate": 0.06,
+      "mean_episode_reward": 93.26054611568743,
+      "mean_episode_steps": 47.62,
+      "recovery_rate": 0.98,
+      "selected": false,
+      "selection_eligible": true,
+      "std_episode_reward": 32.591754069298545,
+      "success_rate": 0.94,
+      "timesteps": 20000
+    },
+    {
+      "episodes": 50,
+      "failure_rate": 0.06,
+      "mean_episode_reward": 89.26432893089672,
+      "mean_episode_steps": 47.98,
+      "recovery_rate": 0.98,
+      "selected": false,
+      "selection_eligible": true,
+      "std_episode_reward": 34.812177285286104,
+      "success_rate": 0.94,
+      "timesteps": 30000
+    },
+    {
+      "episodes": 50,
+      "failure_rate": 0.04,
+      "mean_episode_reward": 92.09346221716999,
+      "mean_episode_steps": 44.54,
+      "recovery_rate": 1.0,
+      "selected": true,
+      "selection_eligible": true,
+      "std_episode_reward": 29.02775372708611,
+      "success_rate": 0.96,
+      "timesteps": 40000
+    },
+    {
+      "episodes": 50,
+      "failure_rate": 0.06,
+      "mean_episode_reward": 80.00397878518152,
+      "mean_episode_steps": 46.12,
+      "recovery_rate": 0.98,
+      "selected": false,
+      "selection_eligible": true,
+      "std_episode_reward": 34.905310071054664,
+      "success_rate": 0.94,
+      "timesteps": 50000
+    }
+  ],
+  "trained_timesteps": 53248,
+  "validation_best_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo_trigger_seed42_v2/best/best_model.zip",
+  "validation_reward": {
+    "base_reward_scale": 1.0,
+    "distance_progress_scale": 2.0,
+    "failure_penalty": -10.0,
+    "initialization_disturbance": 0.03,
+    "initialize_with_failure_states": false,
+    "lift_progress_scale": 2.0,
+    "max_recovery_steps": 150,
+    "reach_progress_scale": 2.0,
+    "recovered_distance": 0.08,
+    "recovery_reward": 0.0,
+    "recovery_start_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "relift_height": 0.03,
+    "successful_starts_only": true,
+    "task_success_reward": 25.0,
+    "terminate_on_recovery": false,
+    "time_penalty": -0.01,
+    "warmup_max_steps": 45,
+    "warmup_min_steps": 45
+  }
+}

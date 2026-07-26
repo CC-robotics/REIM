@@ -1,0 +1,24 @@
+\begin{table}[t]
+  \centering
+  \caption{Completed component diagnostics. These values use different
+  validation units and are not end-to-end comparisons. The recovery row uses
+  trajectory-disjoint exact-trigger validation pairs and is therefore
+  model-selection evidence rather than an unbiased test result.}
+  \label{tab:component-diagnostics}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lll}
+    \toprule
+    Component & Diagnostic & Value \\
+    \midrule
+    ACT & validation action L1 & \ACTBestValidationLone \\
+    LSTM & precision at $\tau=\DetectorDiagnosticThreshold$ &
+      \DetectorPrecisionDiagnostic \\
+    LSTM & recall at $\tau=\DetectorDiagnosticThreshold$ &
+      \DetectorRecallDiagnostic \\
+    Recovery imitation & validation Smooth L1 &
+      \RecoveryWarmStartValidationLoss \\
+    Standalone actor & audited output error & exactly zero \\
+    \bottomrule
+  \end{tabular}
+\end{table}

@@ -1,0 +1,46 @@
+{
+  "backend": "metaworld",
+  "condition_key_fields": [
+    "Method"
+  ],
+  "conditions": [
+    [
+      "ACT + Heuristic Recovery"
+    ],
+    [
+      "ACT + Random Reset"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)"
+    ],
+    [
+      "ACT"
+    ]
+  ],
+  "crn_episode_specifications_verified": true,
+  "episode_bank_sha256s": [
+    "8c503c07dc6dcdd904e948f14d270410c2fbd4d9796f8d9e08451dc34c7d4399"
+  ],
+  "episode_rows": 4000,
+  "episodes_per_condition": 1000,
+  "evaluation_seed_end": 8001041,
+  "evaluation_seed_start": 8000042,
+  "inputs": {
+    "results/tables/formal_crn/baseline_act.csv": "c32e6f37369db0759cba3ddf13b5b942e7cff20e047d314970871fbac732e9b1",
+    "results/tables/formal_crn/baseline_act_episodes.csv": "3b3ec315022194fa905fc9ba845cb1541c3e28bbd0866b89552f731efccf11d7",
+    "results/tables/formal_crn/baseline_heuristic_recovery.csv": "036d39e4fb702628851dc25cefccc847ece37bd334b6219aaa9ffacd5360f6bd",
+    "results/tables/formal_crn/baseline_heuristic_recovery_episodes.csv": "82833aa68882fc41e87760d76352e256772beb0f2e7631eb40358b50c9907cfd",
+    "results/tables/formal_crn/baseline_random_reset.csv": "037c231896a2cbb312e4567e0d705c37ac772364efd96111a3a4f5691d556c8a",
+    "results/tables/formal_crn/baseline_random_reset_episodes.csv": "f05d28a35d68fab7a05d9b9b5dfa4b1960a147ce1cd9f3b8979de5ffb0312e2b",
+    "results/tables/formal_crn/baseline_reim.csv": "cc6836e222894361ca39864238e9f10569097a8dc637af760277c3f5c7f1f450",
+    "results/tables/formal_crn/baseline_reim_episodes.csv": "6d552ec233a265538dea5c9314c6b88dbdc670742f4ab3c4e51c9a0342214ff0"
+  },
+  "outputs": {
+    "episodes": "results/tables/baseline_episodes.csv",
+    "summary": "results/tables/baseline.csv"
+  },
+  "profile": "full",
+  "strategy": "validated_parallel_shard_merge",
+  "summary_recomputed_from_raw_episodes": true,
+  "summary_rows": 4
+}

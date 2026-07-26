@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use REIM, please cite this software and the Meta-World benchmark."
+title: "REIM: Recovery-Enhanced Imitation Learning for Robust Embodied Robot Manipulation"
+type: software
+version: 0.1.0
+date-released: 2026-07-26
+license: MIT
+authors:
+  - family-names: "REIM Research Team"

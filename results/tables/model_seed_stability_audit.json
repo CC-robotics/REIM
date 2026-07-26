@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "analysis_id": "equal_budget_500k_n3",
+  "result_scope": "equal_budget_500k_model_seed_stability_not_primary_benchmark",
+  "benchmark_eligible": false,
+  "scope_statement": "ACT and the failure detector are fixed; only the PPO recovery-policy training seed changes. This is not a three-seed full-system result.",
+  "training_provenance": {
+    "minimum_actual_env_steps": 500000,
+    "frozen_config_sha256": "9b75b6318c287725b4e977b9f1c66c1da6edc0ccde00cfa338f493e71cf16f63",
+    "training_snapshot_bank_sha256": "b338c9b2c5e6f880f0166897b07e7ec3fee763f579b9446ea8fd334b58239e2d",
+    "validation_snapshot_bank_sha256": "88d3b54dba8844cfad435beb1c991d409b2a0d0dcb4d6246255bb92c4d4c02fa",
+    "fixed_act_checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "fixed_detector_checkpoint_sha256": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "runs": [
+      {
+        "recovery_training_seed": 42,
+        "actual_trained_timesteps": 500136,
+        "selected_model_timesteps": 118248,
+        "selected_checkpoint_sha256": "55d92acfdd98061e198c4e27fac882e735f5ef4a1336c578e520f1ee8df0ffe7",
+        "training_metrics_sha256": "0e9763badce6e8c605173d97ad79f07b53946343399ef62a440036c40fe16291",
+        "raw_episodes_sha256": "8056407daa459bd4b1bc38844fcd2d5e733af22dc51f1a91b626a125ad75851f",
+        "success_rate": 0.865,
+        "recovery_rate": 0.7378640776699029,
+        "paired_gain_vs_act_percentage_points": 11.0,
+        "paired_gain_bootstrap_95_ci_percentage_points": [
+          6.5,
+          15.5
+        ],
+        "rescued": 23,
+        "harmed": 1,
+        "exact_mcnemar_p_value": 2.9802322387695312e-06
+      },
+      {
+        "recovery_training_seed": 43,
+        "actual_trained_timesteps": 503808,
+        "selected_model_timesteps": 40000,
+        "selected_checkpoint_sha256": "23ccadbc6eef8be9cd557202c319274d9ad519b96f6e93049a7aebd9034b6656",
+        "training_metrics_sha256": "a0be3be5aa217c387dfded91632e01ccd2c024bd5f5962ff2307cdedd3c908e5",
+        "raw_episodes_sha256": "806dadac981eb45bfb681c864a94d1db9ae78446adc50d3745e5f82cc7c09153",
+        "success_rate": 0.81,
+        "recovery_rate": 0.6310679611650486,
+        "paired_gain_vs_act_percentage_points": 5.5,
+        "paired_gain_bootstrap_95_ci_percentage_points": [
+          2.0,
+          9.5
+        ],
+        "rescued": 13,
+        "harmed": 2,
+        "exact_mcnemar_p_value": 0.00738525390625
+      },
+      {
+        "recovery_training_seed": 44,
+        "actual_trained_timesteps": 503808,
+        "selected_model_timesteps": 10000,
+        "selected_checkpoint_sha256": "dbc5cb5c787d7b48568ef91e207633622f24ec4c9081cfd0b6d4b871ecf86746",
+        "training_metrics_sha256": "37b99e350ab8e7aad4e812c19b8f3c9c91dace8d9d02a475ff610602bd406535",
+        "raw_episodes_sha256": "2d96111c4142db518aa9485e342712276a93c8123ff67e6ae884059f3020e135",
+        "success_rate": 0.87,
+        "recovery_rate": 0.7475728155339806,
+        "paired_gain_vs_act_percentage_points": 11.5,
+        "paired_gain_bootstrap_95_ci_percentage_points": [
+          7.5,
+          16.0
+        ],
+        "rescued": 23,
+        "harmed": 0,
+        "exact_mcnemar_p_value": 2.384185791015625e-07
+      }
+    ]
+  },
+  "aggregate_mean_and_sample_std": {
+    "n_recovery_training_seeds": 3,
+    "success_rate": [
+      0.8483333333333333,
+      0.033291640592396934
+    ],
+    "recovery_rate": [
+      0.7055016181229773,
+      0.06464396231533388
+    ],
+    "paired_gain_vs_act_percentage_points": [
+      9.333333333333334,
+      3.329164059239693
+    ]
+  },
+  "validation": {
+    "episode_count_per_seed": 200,
+    "evaluation_seed_range": [
+      7000042,
+      7000241
+    ],
+    "paired_with_fixed_act": true,
+    "all_actual_training_timesteps_at_least_500000": true,
+    "all_metrics_targets_equal_500000": true,
+    "all_checkpoint_sha256_values_verified": true,
+    "all_selected_and_final_checkpoint_internal_timesteps_match_metrics": true,
+    "all_raw_episode_summaries_independently_recomputed": true,
+    "all_outputs_marked_benchmark_eligible_false": true,
+    "byte_identical_double_regeneration": true,
+    "focused_tests": "5 passed",
+    "full_test_suite": "39 passed, 14 third-party deprecation warnings",
+    "latex_static_brace_and_environment_audit": true,
+    "latex_engine_available": false,
+    "latex_compilation_performed": false,
+    "latex_compilation_note": "No pdflatex, xelatex, lualatex, latexmk, or tectonic executable is installed in this environment.",
+    "figure_visual_self_check": {
+      "overlapping_labels": false,
+      "white_background": true,
+      "functional_color_groups_at_most_three": true,
+      "non_primary_scope_visible_in_figure": true
+    }
+  },
+  "artifact_sha256": {
+    "generator": "ddc72c99c6fdc9ca4ad7737b6993a284158efa1d5bf1ebbbca027347d7d3481d",
+    "focused_tests": "48015f72ed3db0e503b372d252c792a45bd189189917dce3a57d2bb9f6f1ff48",
+    "summary_csv": "ff4b268e814e36db4b8295feb6d8c90290d43ad83481e7c722ab4b99e06a679b",
+    "summary_json": "a1b127e9727ea690ccd48d80d8ab0bf430f6956b899744d11e0634daaba55bd7",
+    "table4_tex": "1a08776b164f952eb7c5b2fbc5afc28566c4ce394c81d3bd0872c60402c33371",
+    "results_figure_png": "c47eaf98fa09225d9bf6e9b9da5133dac66e3829c6ec79461d92d29ae7f2763c",
+    "results_figure_pdf": "54a2aa7352b0435931e8e56ddbdf96c9bee68a712746658a78ad7804bbb8b271",
+    "paper_figure_png": "c47eaf98fa09225d9bf6e9b9da5133dac66e3829c6ec79461d92d29ae7f2763c",
+    "paper_figure_pdf": "54a2aa7352b0435931e8e56ddbdf96c9bee68a712746658a78ad7804bbb8b271"
+  }
+}

@@ -1,0 +1,32 @@
+seed: 42
+device: auto
+data_dir: datasets/demonstrations
+checkpoint: checkpoints/bc_policy.pt
+latest_checkpoint: checkpoints/bc_policy_latest.pt
+curve_path: results/figures/act_training_curve.png
+
+model:
+  policy_type: ACT
+  chunk_size: 20
+  hidden_dim: 256
+  n_heads: 8
+  encoder_layers: 3
+  decoder_layers: 4
+  dim_feedforward: 1024
+  latent_dim: 32
+  dropout: 0.1
+  temporal_ensemble: true
+  ensemble_decay: 0.05
+
+training:
+  epochs: 200
+  batch_size: 256
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  validation_fraction: 0.1
+  num_workers: 0
+  patience: 40
+  checkpoint_every: 5
+  grad_clip_norm: 5.0
+  reconstruction_loss: l1
+  kl_weight: 10.0

@@ -1,0 +1,83 @@
+{
+  "backend": "metaworld",
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 6000042,
+  "episodes_reindexed": true,
+  "inputs": [
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk0_new_episodes.csv",
+      "rows": 250,
+      "seed_end": 6000291,
+      "seed_start": 6000042,
+      "sha256": "1e9f7147493a11a842f9ab1ae4b1b762f91f5049d9eae710341df6b04ede5dcd"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1a_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000391,
+      "seed_start": 6000292,
+      "sha256": "b6d5398dc2912e679113de6f509b2ec84033185f6588547e9ee5a689e8e225cf"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1b_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000491,
+      "seed_start": 6000392,
+      "sha256": "e0fc3347786238441eddcadc7399b275f732d9ecc81a5b8729a4ffba5a9aa87c"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1c_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000591,
+      "seed_start": 6000492,
+      "sha256": "f3e060b63242eaf9eedb42c2a0c0861084e25ff5d5bcdf5fa3eafd0798ed45ed"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1d_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000691,
+      "seed_start": 6000592,
+      "sha256": "8510cd4f45011c2cde3f4b521c077122de3b1f8811e2c3dfc700df95d23ea2ef"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1e_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000791,
+      "seed_start": 6000692,
+      "sha256": "d0df3989023fba2171198ab3bf72d93198a175975579edc74a354fd1deda2506"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1f_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000891,
+      "seed_start": 6000792,
+      "sha256": "27df220247772c9bef4a691769e235d7db543043f9570492784285d42c3fe71c"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1g_new_episodes.csv",
+      "rows": 100,
+      "seed_end": 6000991,
+      "seed_start": 6000892,
+      "sha256": "1293a4bc5cb03a4ba86515acd983dcb26400ab906f2a95926bac5b8c31456652"
+    },
+    {
+      "path": "results/tables/shards/baseline_act_random_reset_chunk1h_new_episodes.csv",
+      "rows": 50,
+      "seed_end": 6001041,
+      "seed_start": 6000992,
+      "sha256": "835ebedad08c6406d128bad24e6a6cbb46730ea20395c6132dba81de63ec52cd"
+    }
+  ],
+  "method": "ACT + Random Reset",
+  "outputs": {
+    "results/tables/shards/baseline_act_random_reset_new.csv": "7f8f85cb39c98c2cac996dfd92dd0270f81b781c8f4079c15585890b71d87d70",
+    "results/tables/shards/baseline_act_random_reset_new_episodes.csv": "bdfc65af2090d15900b4096bb3ed94cd707b6d23952b9245abfc2f91d20de529"
+  },
+  "profile": "full",
+  "requested_seed_end": 6001041,
+  "requested_seed_start": 6000042,
+  "rows": 1000,
+  "strategy": "sequential_contiguous_microshards_reaggregated_from_raw",
+  "summary_recomputed_from_raw_episodes": true,
+  "unique_seeds": 1000
+}

@@ -1,0 +1,5232 @@
+{
+  "backend": "metaworld",
+  "config": "/home/diy/bonus_track/REIM/configs/environment.yaml",
+  "dataset_type": "sequential_expert_demonstrations",
+  "env_name": "pick-place-v3",
+  "expert_algorithm": "Sawyer scripted",
+  "imitation_target": "ACT",
+  "schema_version": "reim-demonstrations-v1",
+  "seed": 42,
+  "state_metadata": {
+    "action_layout": {
+      "delta_position": {
+        "range": [
+          -1.0,
+          1.0
+        ],
+        "shape": [
+          3
+        ],
+        "slice": [
+          0,
+          3
+        ]
+      },
+      "gripper_control": {
+        "range": [
+          -1.0,
+          1.0
+        ],
+        "shape": [
+          1
+        ],
+        "slice": [
+          3,
+          4
+        ]
+      }
+    },
+    "backend": "metaworld",
+    "env_name": "pick-place-v3",
+    "layout": {
+      "end_effector_position": {
+        "description": "TCP/hand Cartesian XYZ.",
+        "shape": [
+          3
+        ],
+        "slice": [
+          7,
+          10
+        ]
+      },
+      "end_effector_quaternion": {
+        "description": "TCP/hand quaternion in MuJoCo WXYZ order.",
+        "shape": [
+          4
+        ],
+        "slice": [
+          10,
+          14
+        ]
+      },
+      "goal_position": {
+        "description": "Task goal Cartesian XYZ.",
+        "shape": [
+          3
+        ],
+        "slice": [
+          17,
+          20
+        ]
+      },
+      "gripper_state": {
+        "description": "Meta-World gripper opening scalar.",
+        "shape": [
+          1
+        ],
+        "slice": [
+          20,
+          21
+        ]
+      },
+      "joint_positions": {
+        "description": "Sawyer joint qpos in MuJoCo model order.",
+        "shape": [
+          7
+        ],
+        "slice": [
+          0,
+          7
+        ]
+      },
+      "object_position": {
+        "description": "Manipulated object Cartesian XYZ.",
+        "shape": [
+          3
+        ],
+        "slice": [
+          14,
+          17
+        ]
+      }
+    },
+    "raw_layout": {
+      "end_effector_position": {
+        "shape": [
+          3
+        ],
+        "slice": [
+          0,
+          3
+        ]
+      },
+      "goal_position": {
+        "shape": [
+          3
+        ],
+        "slice": [
+          36,
+          39
+        ]
+      },
+      "gripper_state": {
+        "shape": [
+          1
+        ],
+        "slice": [
+          3,
+          4
+        ]
+      },
+      "object_1_position": {
+        "shape": [
+          3
+        ],
+        "slice": [
+          4,
+          7
+        ]
+      },
+      "object_1_quaternion": {
+        "shape": [
+          4
+        ],
+        "slice": [
+          7,
+          11
+        ]
+      },
+      "object_2_position": {
+        "shape": [
+          3
+        ],
+        "slice": [
+          11,
+          14
+        ]
+      },
+      "object_2_quaternion": {
+        "shape": [
+          4
+        ],
+        "slice": [
+          14,
+          18
+        ]
+      },
+      "previous_observation": {
+        "shape": [
+          18
+        ],
+        "slice": [
+          18,
+          36
+        ]
+      }
+    },
+    "raw_observation_dim": 39,
+    "state_dim": 21,
+    "state_mode": "semantic"
+  },
+  "statistics": {
+    "action_dim": 4,
+    "backend": "metaworld",
+    "demo_success_rate": 1.0,
+    "env_name": "pick-place-v3",
+    "episodes_collected": 500,
+    "episodes_requested": 500,
+    "expert_algorithm": "Sawyer scripted",
+    "failed_trajectories": 0,
+    "imitation_target": "ACT",
+    "max_trajectory_length": 62,
+    "mean_return": 71.61165285163702,
+    "mean_trajectory_length": 51.938,
+    "min_trajectory_length": 44,
+    "schema_version": "reim-demonstrations-v1",
+    "seed": 42,
+    "state_dim": 21,
+    "state_mode": "semantic",
+    "std_return": 22.926910475491177,
+    "std_trajectory_length": 3.941846775307229,
+    "successful_trajectories": 500,
+    "total_transitions": 25969
+  },
+  "trajectories": [
+    {
+      "action_dim": 4,
+      "episode_seed": 42,
+      "file": "trajectory_00000.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "88155769ed73786049ce683cb43ae60f016cb7239088b073d82b776639f48a58",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 45,
+      "file": "trajectory_00001.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "f8bcb1f90a1ef467c96be2ea165d456a45a82ee194ef2421fb24ee74491bc90a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 48,
+      "file": "trajectory_00002.npz",
+      "length": 62,
+      "return": 116.77900286950171,
+      "sha256": "75602b62d13038a8ae284df0f1198e03783da87b9bc0e4b1df6e86bcf36c9990",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 51,
+      "file": "trajectory_00003.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "e1456ff85dea25b3a2a671846d19c171ebda2ecbceaeb119688e0dff7750d60c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 54,
+      "file": "trajectory_00004.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "af94712c44efee4e552972b8b2f05e6722db83f9e3087a903a6c8f8d7b8d5450",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 57,
+      "file": "trajectory_00005.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "1000dd61e62770eb618e2161c8a23f953258225486eace1d5a2a961d9a824721",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 60,
+      "file": "trajectory_00006.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "4f0e18eff6e8f8bc1b7941c0847f81a5ace58bc03c78346e2304b51a8c08978a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 63,
+      "file": "trajectory_00007.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "fe115c983ac0dfc5fcbe588740b248e3c1d739c2a3f1c46f178410f9ad96f981",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 66,
+      "file": "trajectory_00008.npz",
+      "length": 49,
+      "return": 55.83649460235756,
+      "sha256": "2fa969fcdecff4783412f9ea138201fb54c8e06efeb9175d4cf3e958ef16d3c2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 69,
+      "file": "trajectory_00009.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "496d292b66eacd324c455609fa9835014dcab5c9bc1916796a910007243705c3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 72,
+      "file": "trajectory_00010.npz",
+      "length": 51,
+      "return": 68.06942382082343,
+      "sha256": "d2da2f812db5ce2e1940c451efcfd531c993f1f6e1ccb87c7b0ea2b3b6a70b5a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 75,
+      "file": "trajectory_00011.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "c4663ea312a4945cb56ac21634d5f2bb59a3f0ddbf1df041d53cefafd844ffe8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 78,
+      "file": "trajectory_00012.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "cb959ad1670c3f78e15fb0d6ed5c2b2299df3fa481dffc3e1e4f0f1d274baedf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 81,
+      "file": "trajectory_00013.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "46d29fd17616f1db606c23a1b57891748c7a5fb2cb6bf94dc8797c3aca6e87f5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 84,
+      "file": "trajectory_00014.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "6f84cdcced4e637a0aec85b717aa63a02e133be3505ca83f16607b11f3506ee9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 87,
+      "file": "trajectory_00015.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "b1d1ab7011db0bd3067408c624d612c51bec72691c63654f97afb8c6571e4cfb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 90,
+      "file": "trajectory_00016.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "7471f96f4d20d61aa0b038f2594014a4c9f277bf2aa0b54994a8401bf56ae694",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 93,
+      "file": "trajectory_00017.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "c4018915d280a6de99345a80fc2220ace6fa24ef92dbfac3e4a90190b4f409b7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 96,
+      "file": "trajectory_00018.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "e80f2a415fe6e06ccea10b723ef6ebaa9f4e3327fa75b5e7c4cdd702fcae3e47",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 99,
+      "file": "trajectory_00019.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "0dd2d310ca6a048d525691674cae1cde97d68d60f027b2a3cfc3223c497ca274",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 102,
+      "file": "trajectory_00020.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "198c5fb7ec554cbe236b4d12b8d6076b254b635e8982135d79e3aed128ecc904",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 105,
+      "file": "trajectory_00021.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "08073766a486bd6b13ea4fc9ee5eefff249e8dd74fb8888600a47b265c9cefc0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 108,
+      "file": "trajectory_00022.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "b9e3e6ad1806a85f61d0758222afd4c29d8e76d21f5f982e2326d5997b6d0115",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 111,
+      "file": "trajectory_00023.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "1a0a44f02f8aeda4f2dd309248c9165374e806c0833c75b14230c30f10d900fb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 114,
+      "file": "trajectory_00024.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "a7b8ef1399407321ba2787f33637a60cc583090101306fd74ed4dc336b42865c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 117,
+      "file": "trajectory_00025.npz",
+      "length": 62,
+      "return": 116.77900286950171,
+      "sha256": "09e520fa310739c057ecdc82e4ac90c4a1d1ad1d24c15b797b1e03cf10995dce",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 120,
+      "file": "trajectory_00026.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "26319281836bd19aa24b2d6da64f507afc970a4a416e18537ef70d76877947dc",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 123,
+      "file": "trajectory_00027.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "b60b53a9d4c607ed4121454b0d6505bb9c5a129e9c310e4231033522d3f3436a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 126,
+      "file": "trajectory_00028.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "0e021935d813e6b9b4e3b5c57bbf2e542d160a85102db8f4c2d394f5602c81c7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 129,
+      "file": "trajectory_00029.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "d50e113410f2062b9b7f131debd71a588e63a69ed18857ed99224017d9d78f70",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 132,
+      "file": "trajectory_00030.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "6a141e7e096b5527520f46fdbf0676108412208baa2750061bffc95cf051c5e9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 135,
+      "file": "trajectory_00031.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "c359228d5b0d44422df79de2a3af37277d37f74e8ee823364d10ff96bc398987",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 138,
+      "file": "trajectory_00032.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "1fa690a7ea0ab18807518e74db756ea673fb940d2228ffc67f8c447abef7f14f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 141,
+      "file": "trajectory_00033.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "54ef0ecb72e0be0b471000b4a881dc7014fe171635281764208214c425b09894",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 144,
+      "file": "trajectory_00034.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "e6525d17c7b79d54df639594ef4deb10aaf799fbfe789f21c7208117db02f82f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 147,
+      "file": "trajectory_00035.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "1d1540043155fcba82f7f5e8eaa254d8b3ce6d29bdcaaaae9677d35010f9b6ad",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 150,
+      "file": "trajectory_00036.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "459e77330a9f71961ebb33edf7df2a93cd5d2ea2cd85ed988868e129b5799217",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 153,
+      "file": "trajectory_00037.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "f6fc1ae53f28e4f6c06e86229b15ae535cf1c24e097fb2b14158cc5cac943225",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 156,
+      "file": "trajectory_00038.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "c1c0a655e5255e0cc9f8a0e1437576c2539f22c888f818be5bf701089b390a8a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 159,
+      "file": "trajectory_00039.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "ec02287394da17ace7b474af6b6ae47a082bb4155948f533653caf237c34f525",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 162,
+      "file": "trajectory_00040.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "24224651e979a11524786c6aff6938915c3c982b733a144712f8966d1494610b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 165,
+      "file": "trajectory_00041.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "52c99ef7dd5fd82c1054b62f5765b3b7b7b35bda57d29c6aa70b346f04c86a52",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 168,
+      "file": "trajectory_00042.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "f0616aaa7f04454b5f851ec14077d7e586048ecdab4413b803208fad6cc03332",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 171,
+      "file": "trajectory_00043.npz",
+      "length": 59,
+      "return": 102.94589640758932,
+      "sha256": "f4a73223f93974acfc1db7501978840364db84f22763e9e6be24f0fd02c39953",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 174,
+      "file": "trajectory_00044.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "aa57cae3c4b5e7c472e86cd3a8f61ac18cd0f5cef347930e00970f824231666d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 177,
+      "file": "trajectory_00045.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "7b5b24b80274fe1c9d3a3f843488d3528319a7848ab3342c671ff68410467ec7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 180,
+      "file": "trajectory_00046.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "cd099b870a7efe838475db4cd15e33a8bfbcd5748fbc96ad487b285b52a93698",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 183,
+      "file": "trajectory_00047.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "fdfa19d53b468f1e227b4db32655e9f9db9792c65a59f701f7a3a8a92008a7e5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 186,
+      "file": "trajectory_00048.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "c2ebcd1c83961bd32bdbf6efc7380b955f3e3e21ec85595d7a6ad0768b429c78",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 189,
+      "file": "trajectory_00049.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "fdc920206d5179508292fa1ec2b20462e6f6eaa08a918b87e3e84b14c18f25e2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 192,
+      "file": "trajectory_00050.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "7bdcdc98416ba17a2c219530f7d46be4ff0939d0a85b6439e234152cb19e87c5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 195,
+      "file": "trajectory_00051.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "66d7b4cd79dbc3d1dd66d4bc0067393848bdc4cf75e539375e50f0ef7d16663d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 198,
+      "file": "trajectory_00052.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "52a6453c9047320dc1c0f56111ca7db3058cde38d68abd98cc74010e020cdb73",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 201,
+      "file": "trajectory_00053.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "cc666ecfee1c98a9e09a0f958f955c1e4192400d7c058a916c929e13917d30bf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 204,
+      "file": "trajectory_00054.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "e05a802917b14d85ae448ecfbc4fcdd311950e8eb7e1ed20681cac2ed0d26bd2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 207,
+      "file": "trajectory_00055.npz",
+      "length": 48,
+      "return": 70.77317818813026,
+      "sha256": "86a7a4241535a023d50395c5c09d574c157b906e819fc2dedd234d58f269d017",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 210,
+      "file": "trajectory_00056.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "4bbe0fdf018482eb0263b527bf60dcaaba466bb8b22939a198edad1a40b7ef7a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 213,
+      "file": "trajectory_00057.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "8aa79749e6f308cd3baf3233680537cc3c0117fb23eab1480372757450f01b81",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 216,
+      "file": "trajectory_00058.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "a03d29124d424f85768aaae014f27f2779ed193189e1f1002801e827baa5a955",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 219,
+      "file": "trajectory_00059.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "f0f90b87da8462e3aef3cbb84d67fa68bc754bf7c6602c4835a83f5d5e19d5cd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 222,
+      "file": "trajectory_00060.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "a26542900e34581ae53687c0aa2bfc5a6662b85cf6c51bc4f33ed72eb83d7d19",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 225,
+      "file": "trajectory_00061.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "319683f2a93ae262ce42b1d9eb320d3aa5e72fa6187ab7c7dfb66afc967cfac4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 228,
+      "file": "trajectory_00062.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "ed73dd140b9c24914e77b27f056458eb464487d0640a68b09099948eed48b90a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 231,
+      "file": "trajectory_00063.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "8ee016e22bb99c54ce96d7c51ab1d2634afda2bd4f9f7805aa36f704977dce5b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 234,
+      "file": "trajectory_00064.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "56deed90a9074d527ad4b415ec78ae235724f3ea67f5a9d0123389575ad025cd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 237,
+      "file": "trajectory_00065.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "e975bcbd39e221849f2128c24ad5dadcbcf2fbce7d2e593093b009168eb592a4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 240,
+      "file": "trajectory_00066.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "c68c134c9127223a10597c91484446d0f7cf52edd37797b00c932e54d6a9da85",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 243,
+      "file": "trajectory_00067.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "42303f2c0c8b464d7afe5e02b7c1c58c5fa989fa500b3ba47ca27e3d68a95003",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 246,
+      "file": "trajectory_00068.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "9f7c0a1670954fb2998b4f55093a875815950345c69d5cd75aae50405f6edfe5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 249,
+      "file": "trajectory_00069.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "debe94da5c56695034afe9d83b3d3ba03a843ffc5a19b259febe5388ab779b1d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 252,
+      "file": "trajectory_00070.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "f9c919568e4f4eb73c90da293b438da19c8ac75a8897ed20c889e752524289f0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 255,
+      "file": "trajectory_00071.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "1cd1dabd9b9f7dd66c51a27494872973099dc3ff4e6f47fdc4b99b40fd0eff11",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 258,
+      "file": "trajectory_00072.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "df74fa32e5ec43454765b7afdae505e88085718f6dc81372f48410cad98ab6b9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 261,
+      "file": "trajectory_00073.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "046c65343faf6057bf9b27b8513e0b0a50e9a52f8882b40c69b448cd647ca93d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 264,
+      "file": "trajectory_00074.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "11fd555763108f2d8e6de4969516889b7f46e68b472a85671ad75bfc46e690d2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 267,
+      "file": "trajectory_00075.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "a08d2d6df476ffbacb14143c441576071efe30cb19da80493eb255727fee038f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 270,
+      "file": "trajectory_00076.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "0eaec0cf38e892c51414ac16b3a5dfdbaed1acca2cd20e7f7d0256b5a4a687b2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 273,
+      "file": "trajectory_00077.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "d8d5f12a609123be73b1bab911398d33c09ac8a56bc389f2e7e0c15c92b302e8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 276,
+      "file": "trajectory_00078.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "a9fe6f9aa9e4ff4915020cab1854bfb7d7e8391557eaaae4eb234eb46cd8eabb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 279,
+      "file": "trajectory_00079.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "764069d9e0bd3411fade8daa3f2d5182d667721d81e1c534ee3bcda0ddb808e5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 282,
+      "file": "trajectory_00080.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "5a296d1228dc057384727f604ec81f654466aedc58890e804ce3b7e304b212e7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 285,
+      "file": "trajectory_00081.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "890380e0d28cc5981c5eb6c6b9ac1a01785a36258dc94d99a05df69e31e676fd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 288,
+      "file": "trajectory_00082.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "753f41c2835cb99b987d298f4614531bcec8dcd12f96bdb4cbc559d6567574b9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 291,
+      "file": "trajectory_00083.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "3762b473c33a7c7f35817bf156315a96fce435f08b7713e318cdcdb7c78b970a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 294,
+      "file": "trajectory_00084.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "12740c699ac8d12f5b2b1b998ee04433fe739940caeae091925aeb461cb00387",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 297,
+      "file": "trajectory_00085.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "421cf8a50f0ffba09fe816768b6ddcdcf90e1e99f0f3164935301d39fc7d4176",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 300,
+      "file": "trajectory_00086.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "43d7f3c7936ba29290fecd09dabca08242a6f1b9a2a36fd913b162cee738c688",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 303,
+      "file": "trajectory_00087.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "7ef2c3102ad523abc23b3be6acdc76a8a7974a86b6993a33293487aae89a909f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 306,
+      "file": "trajectory_00088.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "898cf3ec4dc1e16f8ad28317af62c7739ebcc0165a43b6325b27002c709cf217",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 309,
+      "file": "trajectory_00089.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "7c67d7d8d98aa77b6404705e037961aa6258fb43c4b8d050480bd985582874a2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 312,
+      "file": "trajectory_00090.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "37d00be062bb6166879dbd8eb733a2e08847b63a20c3b1ef014344a8b16034f2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 315,
+      "file": "trajectory_00091.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "67de85a1c9ad5f67e7b05d2026adc02dd82b33a9dcbc1ad30310913bbb229d8a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 318,
+      "file": "trajectory_00092.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "613f7da12c4a4b2dc9762aa5774bfa94727724d84eb243d7d7a6cf9ba97a7bb7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 321,
+      "file": "trajectory_00093.npz",
+      "length": 48,
+      "return": 51.341266547759005,
+      "sha256": "ab84f880f4eebd1deb2bcd952e2fab50decb69d59c8e55693fd4550e3ca3d21e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 324,
+      "file": "trajectory_00094.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "11f866eef84e10b0b8ddd8ec0fc81370712fd61697e0f0f9a802dc80698fe1ff",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 327,
+      "file": "trajectory_00095.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "cbe3fa8426d8cd97e1619b1b9b5f95df99eb79122b39d4227d14eca8c9d621cc",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 330,
+      "file": "trajectory_00096.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "6d456c1b675df11f9a60628e052ab557e247874715bede7b1616d2d1cedaa452",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 333,
+      "file": "trajectory_00097.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "6e7c804ce9587c90410b4a1eb3eba957f80e91f76e78e76f2e4220fce1fe5605",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 336,
+      "file": "trajectory_00098.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "a05e0d2a60e0132dcd507e65e9d3198ec9efa610f33a351dddec194352d9a2e2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 339,
+      "file": "trajectory_00099.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "854f67381017c2a035aade2353dbed9eb474e02c87f25773c1a2b7ffc79e85bb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 342,
+      "file": "trajectory_00100.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "001b7c364d4f39a59e922395d4eff02b1f2216a4f8f85842c2857e654e3f4653",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 345,
+      "file": "trajectory_00101.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "2b40ac2a16e4f739f1f827a030cfa085a335717f6c1cd0c1653fd16bb738215a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 348,
+      "file": "trajectory_00102.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "54bfb2fc1bdceb4d2c70626e81b1b733ddbacac4e3f3bb629d0bcb714ff53e80",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 351,
+      "file": "trajectory_00103.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "bd64120859b1c32ecb64a50caeec17799b21c4a0e36404d087cde50a3de9d691",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 354,
+      "file": "trajectory_00104.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "3614ee61ed01a6635e8c239ab0f968b7b50993ce8b36de0f0f5578e396c9e272",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 357,
+      "file": "trajectory_00105.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "5182ec07e62f9dfafb261d8567585f39fa4182d02ad05ee9f99ca0efc918bb86",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 360,
+      "file": "trajectory_00106.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "e035ae79b320ea6e730e930868000ec93ecadb72852a2fb1cb1d6c1fd5c1937c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 363,
+      "file": "trajectory_00107.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "41533835348ef3db3a80d06f1d78a2b198f19f52c0d61586e8cca973696cbae6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 366,
+      "file": "trajectory_00108.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "151c5213aa0d368ac0f3fcad0f42bb01a5514f4fca933bd0d7be843ae3c654ef",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 369,
+      "file": "trajectory_00109.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "20864836b81bbaeba9283185b973a7b211a2d1282585b5e90941353f187c24b0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 372,
+      "file": "trajectory_00110.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "5be99d3096f2272c664c6beb12eb789462f57a1e9e01a5dc2c62908f13b029d0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 375,
+      "file": "trajectory_00111.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "0ca4e92fdd0c8b9833c26678db70827096b6e805a33d08d106b8ba3bab109191",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 378,
+      "file": "trajectory_00112.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "e1daaeacb41ef5c7c1b2537a2f748c2b127df9165ab9bb86cc8baf106a9473b0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 381,
+      "file": "trajectory_00113.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "50058e3305eef267e27515cd17270f8a3a8cc8a8c18a737c90d2d5549b89a6ee",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 384,
+      "file": "trajectory_00114.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "2a962c5dbbc1cf179c8eade46776f62acf87db8e27719a895c44d2211951363b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 387,
+      "file": "trajectory_00115.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "c64c62dc43c1e6784bc6bc15ce364425094807f94717db5902ffdc330c8eb88c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 390,
+      "file": "trajectory_00116.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "c75d75ff2e796e4c6f26efff275e898e5fd33032d6d6825b0eb4e89b16289d8e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 393,
+      "file": "trajectory_00117.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "8ffa6c3c193e5505a6ef52968e795c210201e5559aff2693b21caef813b1aa61",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 396,
+      "file": "trajectory_00118.npz",
+      "length": 48,
+      "return": 59.86628776229918,
+      "sha256": "1b6dfa7e20ba2a174fea63ff6ab6220b9eff1ce71af565e2f7c526dd5f91f550",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 399,
+      "file": "trajectory_00119.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "76c93a659fb038a6a34da9d08645d927739553275f8934cc5513ce50e229eb53",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 402,
+      "file": "trajectory_00120.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "0995b52854974be79d55c3bb585b5bfc12420424a5678278281c891e7e627dbf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 405,
+      "file": "trajectory_00121.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "ff4435f828a93d130e1105f8e6d876ba8cfae1a33b89e5b140ffe040daa50aab",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 408,
+      "file": "trajectory_00122.npz",
+      "length": 62,
+      "return": 116.77900286950171,
+      "sha256": "4430fc47462e13f8965172a10422afc62aa825840e6c1599aac5e4e5c6bfb27e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 411,
+      "file": "trajectory_00123.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "a316e0c5f57dc3c6ceb3adb86303a5cbcf706f30901f0e585d0acb21d2901398",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 414,
+      "file": "trajectory_00124.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "0b5846ee6fdbd0e556e0a2e12c5ff7665f632dba730755026b97815bb22c175a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 417,
+      "file": "trajectory_00125.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "4c242ef8b3d999bd7a0b720e86b3bf03566a844509799b51dda750f8c545c32a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 420,
+      "file": "trajectory_00126.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "4e15ec6cbe53e97a24c68b3a4b1641319a7e9203db492572d303fcf80566a902",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 423,
+      "file": "trajectory_00127.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "b3322d2113f08271cd3b5b19562209fcdc23d750b75dadbbe33182d4c13b29b4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 426,
+      "file": "trajectory_00128.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "51a5d2f68d272d3b3fe380189adedafcef7b6ec688c30685e38f3e41dff8ea7d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 429,
+      "file": "trajectory_00129.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "a8a9548e6c356e00803d003f96a57c7a1c5103276a0c287c3008ce639a465e54",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 432,
+      "file": "trajectory_00130.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "525e83f0e4d77b0e01e47ea6cc680f2e7b909aff40501690ad45da3cb9c83265",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 435,
+      "file": "trajectory_00131.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "964dfde7a3d1fd6380e81f9dcf86eb14e18a30d381b84d9e0354a2b328e44a4f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 438,
+      "file": "trajectory_00132.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "826b721c9a24de6084f76dbca4241233461e75cb8c41bb22bf8675acb6303765",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 441,
+      "file": "trajectory_00133.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "3a986a277468d049eec864d65c54983af8c523806db5e103ce977724b290de02",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 444,
+      "file": "trajectory_00134.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "ae32ad0b5d66636c15b9dcdeac8ed7fa356bdf3113db6cccba1c58b5f80f3956",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 447,
+      "file": "trajectory_00135.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "b849ee31967306b0fe5ece2c66d4569c4c7b26a53d11f5cba0a8217307acd024",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 450,
+      "file": "trajectory_00136.npz",
+      "length": 56,
+      "return": 88.14794662082568,
+      "sha256": "f503a3d09242841e3701d86d8699d223331f4465ad019e3b592db1220089c349",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 453,
+      "file": "trajectory_00137.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "de8c7868b2a303f4748c0312a68f60bb608db79faa0d9cd04e51966760f2a2f7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 456,
+      "file": "trajectory_00138.npz",
+      "length": 59,
+      "return": 102.94589640758932,
+      "sha256": "f8e4fb7ead7edb5dbf8ca6b62050d32cf9ed3476d27ecdcfa5fab7e0b63f39e6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 459,
+      "file": "trajectory_00139.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "87620db7ecb8a49c772274a502a3d5502b2ee95682c2bd5aca51243f1b5cdfc9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 462,
+      "file": "trajectory_00140.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "05302efaa1729a27a3e51e14ed8653b51e654b16a2fc1b09553e205a06c97445",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 465,
+      "file": "trajectory_00141.npz",
+      "length": 49,
+      "return": 55.83649460235756,
+      "sha256": "e8dddc576bfd0053628d071ecf1e05a6050e5dfb93d223905ffb6d2c41440d3c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 468,
+      "file": "trajectory_00142.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "e1cb781c7fb557b905882d76b9387683837d178c93cd48f250a816e4aa823b21",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 471,
+      "file": "trajectory_00143.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "250294e1796059198799bfa2a2c5cae5776e6390d3a144aaf2c170e1490c6626",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 474,
+      "file": "trajectory_00144.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "931ca0a9d0bd1d01aafb758ad609008c1d3d8373f5eb7b14e8443461045bdc0c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 477,
+      "file": "trajectory_00145.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "b80d923b6aded84d1b99b29092a787993277c00b1c89e784de970f4e762aab6b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 480,
+      "file": "trajectory_00146.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "b3d98f5c8b48608d45cf1353e1f4a2d4ef345391be2250aa8b718ffcdc201a49",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 483,
+      "file": "trajectory_00147.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "68d3699177d3829e7fdbcdc0ea1c8b90ff5b8ef39d7eb2f87ac8a2487709e76a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 486,
+      "file": "trajectory_00148.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "382b56e8881fbf17dd8383349efed9c2fb725c504c434722867e88a0b2185278",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 489,
+      "file": "trajectory_00149.npz",
+      "length": 48,
+      "return": 70.77317818813026,
+      "sha256": "e9f57f4fbbf98f892dd23b0ad97dbf4ccb7b8d1b89fdd3e54087d060a9c3ea0d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 492,
+      "file": "trajectory_00150.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "caee114f5837a433c095573bae8b2c7b61cbd4d5a6091fcb418e3d52468863c1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 495,
+      "file": "trajectory_00151.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "31a85cee1eca711a090fcf6b543370dfdf5d7eb0fe0f6a84f10eb24e328549d5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 498,
+      "file": "trajectory_00152.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "563fe6e25d7ff332edbd1065f27d849efb33d2edd5c954c609d313d5a00020e8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 501,
+      "file": "trajectory_00153.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "983a1239a20bb3e390cb85d0577d5a5ac15425bb1427752337e56a0f43d91b25",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 504,
+      "file": "trajectory_00154.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "ad990bd9d92b54363b0d1999ff2fbcd4494553ea81bcf9c99b175e539ba4bbdc",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 507,
+      "file": "trajectory_00155.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "f5a7e6bbafc397c2e756907b64b8261fa7aa6b10bff24454016470fca00b966d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 510,
+      "file": "trajectory_00156.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "9a55f8545619bb0da6361d7bebc76f9c769ddc9ca95f2ce40012351f172e456b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 513,
+      "file": "trajectory_00157.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "c4a5569518f396d13de70e17d62d0f58f3d2299ff128bd74899f7df764a4915f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 516,
+      "file": "trajectory_00158.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "e7da9f4d122dea905c834f96e081d82320a0a92d85752d6f1091cee075409ad1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 519,
+      "file": "trajectory_00159.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "b99478442e49dc1f73aa0da474f448f2f4e2ab8f5526c453780e77271da670e6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 522,
+      "file": "trajectory_00160.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "c1696d026357f74ae5504ecd28b466ca4b2655b5a36f6f29874768c8a5e4bd12",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 525,
+      "file": "trajectory_00161.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "002fb3b5771bfbf66f486778ef5fd825e50fe99717f7ade6b265b6c15268e8a2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 528,
+      "file": "trajectory_00162.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "9c515acc686828f0b8880e2caf4d12382c5ee2d4dd9cd2c242809252fe5dcffd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 531,
+      "file": "trajectory_00163.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "1a7be21363529a520a79e1d1026bd1290b4a8b047f0245c717d99c03ff95642c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 534,
+      "file": "trajectory_00164.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "1ae019479511c7e7969804c6fc526e4171ff523c57a5a52108f54b5203b911d5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 537,
+      "file": "trajectory_00165.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "04535e53d33b041e54f15327f3c86c84f5a3c693b5d66ae7b22a05bb288a7bc7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 540,
+      "file": "trajectory_00166.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "091b34f26c45a2fdaeb8255c959654823a9202cb03283c64a6a454fbce4529f2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 543,
+      "file": "trajectory_00167.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "19d3db405a8a87e8bb265fd96582063343389cc457c834a1e644f444059aad69",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 546,
+      "file": "trajectory_00168.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "784eef4fe3711cdd0450412c1ca0c957dc94cb672b8e960acf63c0533ce57a6a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 549,
+      "file": "trajectory_00169.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "736aea1c3ae7b996ba32b8c14fe8e0672e381d15f1741f5d7482d23437e62500",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 552,
+      "file": "trajectory_00170.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "f2078a69920ca004a01ba48bca47a5d3512960311a45c94d1a72f71c57f62fc8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 555,
+      "file": "trajectory_00171.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "b76a0641481ac26ed7d00a4fe2541de8ff3666b1acd49e65028a2409b07a08e5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 558,
+      "file": "trajectory_00172.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "7ee0894ec715016e515ac2d2a5d066899cadc540feb9a7aea0dccb8ee1006d5a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 561,
+      "file": "trajectory_00173.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "1fc9f62c9a72761f63d1e3ec691577dcbd47356295f29bef1a32843afc364bfd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 564,
+      "file": "trajectory_00174.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "675ae43273e7c1ce801836dea29d211f777f4facc6948bae7709a26f2c33238b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 567,
+      "file": "trajectory_00175.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "b903d6d5ccbfd6175be62d5b83c13a1caedc4c9df130bc9dc8d5f55a58712031",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 570,
+      "file": "trajectory_00176.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "f22a650cd3bf51076c2847297f266b76cd6c6a58fce9fa70ba8dabcf7ee16b5e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 573,
+      "file": "trajectory_00177.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "fd84d629c5bb1f64e65c3946a745bdb0aa2f3a7f6c13e1d3aef31d35aed15de3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 576,
+      "file": "trajectory_00178.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "ba10bcae718581c7452961eb8d337213a98e19295de07a21bd0dda8e2f7da18b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 579,
+      "file": "trajectory_00179.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "75a98316546dd78831e7fd3b2a847a05ec4fcd7eb0f7bb24e2c445f34cd150c5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 582,
+      "file": "trajectory_00180.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "2c05febe1c51e6b53e1b56063d0a4b648eb1ad656a5d59e1985778f6bdfb81db",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 585,
+      "file": "trajectory_00181.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "f03eb9ec69d61981bf5fe7dc88df4c4f91941e9303bfab8e69e81f6948ff1a8e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 588,
+      "file": "trajectory_00182.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "3c768b5d26c5c60034c2968aaa1aadc697a4f80bd8be8156bb66a5f382c3df33",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 591,
+      "file": "trajectory_00183.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "bafd61e34030a09e4c7787f9f75495f0bd96c1dd2a3c8df39199fd43caee4d2c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 594,
+      "file": "trajectory_00184.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "8a9a711167a138430eb4a572b47e8517dc0ed636fd8eee104fbd8f485ff2bcf3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 597,
+      "file": "trajectory_00185.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "9e0bf034730ac7c50c8ad64c6584d5f220d9c73f17050bbe743227fe7af6f69f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 600,
+      "file": "trajectory_00186.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "50e8bce298a61eac30d92677d1dc5ddef52b52bf1e119ccc5d495463e49288e5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 603,
+      "file": "trajectory_00187.npz",
+      "length": 48,
+      "return": 51.341266547759005,
+      "sha256": "6c0c4d7137f9398022057898cf44b814cdad22a769c8c605ad2977fac887f135",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 606,
+      "file": "trajectory_00188.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "3a6593ba5f764f9087849441305b718f171836754ef3645b8b5d83a5bc21e3b5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 609,
+      "file": "trajectory_00189.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "3c999ffdd59ee0ba9531e2b4e068e02338dad749519b775ae8bec91f72ff9351",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 612,
+      "file": "trajectory_00190.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "c70afa06f0f56c41f1645774033c3c1b35ce2fab9b7caf201afb02957469efcd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 615,
+      "file": "trajectory_00191.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "0031ca5ac38be5b3989871ca74bbabbfa7e6d012f55087667ba960e3878ac3d5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 618,
+      "file": "trajectory_00192.npz",
+      "length": 56,
+      "return": 88.14794662082568,
+      "sha256": "12ee99fc678a9d19b823203619bb55550cc172383380f22375f931e98a396e1d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 621,
+      "file": "trajectory_00193.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "9c99a2ea708310707b572814ff7910c8e3b2c75e8f5a9b428b446e8a130bc800",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 624,
+      "file": "trajectory_00194.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "18ba9a2c8bd4ef8627b12b293fe4ec51cfefcdcad20f1eae681b30f9b984d4f9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 627,
+      "file": "trajectory_00195.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "4bf88527bfccbf972ccc4a50d553e6e97f26c69e2d7f53fc6d1f3b27d4f90805",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 630,
+      "file": "trajectory_00196.npz",
+      "length": 59,
+      "return": 102.94589640758932,
+      "sha256": "da57010ad98a7c88a77ba245eddc19148a784b4ef1004cfd1dc96f767d4e39de",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 633,
+      "file": "trajectory_00197.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "64884f8ae9c0907012016b814220e918b8e18054c67d2542dc24fe40e212f99e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 636,
+      "file": "trajectory_00198.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "01341b6ca486b7ee3d146eb2caab07eb7aef3d051faebefb2de64b6c67d4dd4d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 639,
+      "file": "trajectory_00199.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "84aca8d47754b98270c5ef087229fa8332641a2cfa017dcd5cbaf47465c7de9e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 642,
+      "file": "trajectory_00200.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "b459710d7530bdf688d97e4c919187c64356e6fe80c7fdcb0c77602cf4d8e767",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 645,
+      "file": "trajectory_00201.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "20e49932330d313e1135ab2122037c9793ba6f96e266c779e79713378c920350",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 648,
+      "file": "trajectory_00202.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "9cc28b7d7b83651c937fc8682a4ea02d24cfab001bad11ac9fa633c2054f11ef",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 651,
+      "file": "trajectory_00203.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "0511b02af2095a717130dedd5c9122f75920e7fdf4df1c6f97a5fcfcad17b049",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 654,
+      "file": "trajectory_00204.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "acbb5b23d6621106755eb85fa4baabf28ff1c150bb8d217d18b6de09f1e9fe15",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 657,
+      "file": "trajectory_00205.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "9f096ab4be5184038c9a2f928554a46e384ae32771a9d8f5b88171d385ee1d2c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 660,
+      "file": "trajectory_00206.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "3d5cb960cf64f012c9cb3796d100cbd8358ffeca207755d4f3786e94d6668fe2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 663,
+      "file": "trajectory_00207.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "eebe1868be66476ca8b2902efb0ca3994da2a5c2808be864c815e9e76d162f36",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 666,
+      "file": "trajectory_00208.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "61768bdade1a54ae555b5bf1213eb1e28fc884563cf4cb3e2b55c5b23f752d79",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 669,
+      "file": "trajectory_00209.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "fea0bd3212f5bc894451b7ac80d7fe6c4e9a9f5c06c4d854809c55d47aab6ff1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 672,
+      "file": "trajectory_00210.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "8b6335dfa5ba3336d41723888a323bf455a3459ab0eb686ab79fcd79917ca6a7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 675,
+      "file": "trajectory_00211.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "9a6b42caee304bee36f3ee3eb9df4c51c045db4feda315fa9aac3286266ec95b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 678,
+      "file": "trajectory_00212.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "ea0c68625e993bac75556723191466892ece3dcae8da753f8053f1aecfc1dab2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 681,
+      "file": "trajectory_00213.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "c04607d723bbd34d7f5446511b09dbc278010a5e01184da9217b98345aeeca22",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 684,
+      "file": "trajectory_00214.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "b0c38dadcb68bcec813727865f41b8c9bd411b21073f4175013b20ece83b040f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 687,
+      "file": "trajectory_00215.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "3681318cc2a7739929bbad994aa0651720b6c2e4f1460433d3e9e1b0461f6625",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 690,
+      "file": "trajectory_00216.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "5257bcf61b4df70a6725bc91ff30c37554e818ae49268bbd3520542adcac8ec3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 693,
+      "file": "trajectory_00217.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "4ac72aa7eb117aad0e24bf910627287ff912667938a364213192fbbdf0a5fc9e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 696,
+      "file": "trajectory_00218.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "9be536b35be6945f4991b1d75e096153a6a122b5bb48105389f1bb724a055a56",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 699,
+      "file": "trajectory_00219.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "c58ef27abb1c6b3750edf0dd36951f9e07a5efe5f6626eccf084178d68fe6d4d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 702,
+      "file": "trajectory_00220.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "07c67b2828372bf7f9ff62121d1e40e784e1af0addb01b42a5d47f278d58cf83",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 705,
+      "file": "trajectory_00221.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "fe044d62433d13ceae14d4a2586d403e567a192a2df2a29ea6e2e7ce44a86a18",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 708,
+      "file": "trajectory_00222.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "5517bc2bd8c5fda5119a42ac9ce3061c38fb47bf636e34b340da91026f3b0724",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 711,
+      "file": "trajectory_00223.npz",
+      "length": 49,
+      "return": 55.83649460235756,
+      "sha256": "66f076665e20e10268ffc31428088c9a00f9c8b5ce1715de8d5b0db2fbb7ed7f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 714,
+      "file": "trajectory_00224.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "cc0b52a52def6b81d729547f339d01ee997e57290c6e5d7282b9099c3d0559ee",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 717,
+      "file": "trajectory_00225.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "89671ffe65a6a9c67433a1d002a37967d2a34e2eef2d530bd73c94e68452d759",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 720,
+      "file": "trajectory_00226.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "5c468770285b567eb07f2dbc040c432937c16ac12e7370c742333bd6c8bc2ab4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 723,
+      "file": "trajectory_00227.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "f7a81cb39f75a167b70fcee5df079230c2849027c3539476b3d3caf7215d3f8d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 726,
+      "file": "trajectory_00228.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "9f173ba9c5664ce9583fba07a2e6b7abc0a240725a18874c62a514747de05c3f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 729,
+      "file": "trajectory_00229.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "210fe370653079a578b2a2f038aee5c33344ff217cfa869b52d47d23de6faa35",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 732,
+      "file": "trajectory_00230.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "c37ca7a9399137f5d7a9dddda835c43f83a5b673a29fc0930184a07f79eb14a7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 735,
+      "file": "trajectory_00231.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "24c9da4d9c64133080865e53187f09631b50bf39dd6b299796893b5d46f6d91d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 738,
+      "file": "trajectory_00232.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "19807de9d024bcaebc0a51d972a1ca0affc90af7420da82efb34ea29f8c5bd7e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 741,
+      "file": "trajectory_00233.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "2a16797c23a3407c3ffac61ed56dc79056ad853f308729551a9357ac620a188e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 744,
+      "file": "trajectory_00234.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "42c7f5c5ec219daef05211f3a33eafac25eb389e121bd25fba982e42c0b5e519",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 747,
+      "file": "trajectory_00235.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "73691ead1744eb05fb1b8c34838a56e66bc2ef7210d68b797d2b473a82da8b37",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 750,
+      "file": "trajectory_00236.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "c475d9423e72d02840340392a905991d206b1a485689e1d636affec909c98f81",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 753,
+      "file": "trajectory_00237.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "71943ac72bf82c14e1557d29641396a1eb46e29f4e27a2995b5901b297e7d1f5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 756,
+      "file": "trajectory_00238.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "a6151505a54e05d5ba9aae3f68f85108ce13bad1f7f20b19bff01f8fd7ba377b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 759,
+      "file": "trajectory_00239.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "8d2a02b936c906fab82b160601a830fef28cb8fd3ad97138fde4d7d19d7a7fea",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 762,
+      "file": "trajectory_00240.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "ef51dc591bbd21af0c1dcd4ca01b501c3b069c27e033627fbbac604cb007129d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 765,
+      "file": "trajectory_00241.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "5925dde8d67a8d109a029ab19d55a46d01578e70ea4cdc1ea552131927c3c495",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 768,
+      "file": "trajectory_00242.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "4cc339c26d2474619cd220ca84f2a557fde99e3baba44f08f1dce398d327324a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 771,
+      "file": "trajectory_00243.npz",
+      "length": 62,
+      "return": 116.77900286950171,
+      "sha256": "c38b128c4e6184f6139973c4d609c78277bb3bb5fcc71f757ddad8192def5176",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 774,
+      "file": "trajectory_00244.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "e8e779fb71d5fc27d2d167f47c2ac71e087c31e6c340cee0c6dac14d41421bc4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 777,
+      "file": "trajectory_00245.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "15ed727b019d61185c6dc01f30cedfecd1d5e281f494b93bc77701e4e21598dc",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 780,
+      "file": "trajectory_00246.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "3ae1c603e28b8ef0474789b854c0111f8085b978e6b73daf39a68ccc9abe3ea5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 783,
+      "file": "trajectory_00247.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "561f157ee39f3b42850bd70e4bc9c4f6206e9252c15c662a84c08a7bfaec049b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 786,
+      "file": "trajectory_00248.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "6ea1b37dc61e835f9bf90ae5d32d0a2940537a9949bd43add2b0954675888cfe",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 789,
+      "file": "trajectory_00249.npz",
+      "length": 48,
+      "return": 70.77317818813026,
+      "sha256": "03ab719f4c48a69448668610f362f7b94161e72f1b48f990e09718914f06e4ca",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 792,
+      "file": "trajectory_00250.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "d4f1c1738b18266c1aee3fa88096b39044dfec1a6362a60572a10d13d562026e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 795,
+      "file": "trajectory_00251.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "0b0976283361e3f376b59a8265263a17a3bf171b03e5d0402606a4bb26b6a3a6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 798,
+      "file": "trajectory_00252.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "76819d014c33cdd419b36701bdfb13b5845d8911217adbe103b27aa868dbf2c8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 801,
+      "file": "trajectory_00253.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "f8a43f7b5e9761c0833f5779fea32432db8d432f8aa7682471b19bae72050153",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 804,
+      "file": "trajectory_00254.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "86edb7f5b2f40882c2aa9282dfd9386b0a984ce1d629635f68596d9f92996e3b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 807,
+      "file": "trajectory_00255.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "9f5def61fd3c3aa27948cf9a2f89921250d0b8f6781284c38ab41944dabfa979",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 810,
+      "file": "trajectory_00256.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "f2b30aff4f9e63a20dd436b83a37805308366d8d36809fefe15e3bbb3bfe81ab",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 813,
+      "file": "trajectory_00257.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "37ec82559ad3df1d354764c12d890a60576b36e6724687aaa56cd984df980165",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 816,
+      "file": "trajectory_00258.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "73a060c9db7a0348550d1c8079316bb1b6b7d54ee498e7309b4ca4ed5b04b5d3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 819,
+      "file": "trajectory_00259.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "44f0de5027ffa92338691e5f2fec5f4e7085820c7a37d5191684eb1bc2f0580e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 822,
+      "file": "trajectory_00260.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "20ce7078cb06033f5838e1540b34f39f983362a0b9062c5171130d52cd5379fe",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 825,
+      "file": "trajectory_00261.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "a8ae4c7d8b2aab6088f0dce700ee6e232cbe885b058b531979ceba823415edae",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 828,
+      "file": "trajectory_00262.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "58f1bd78a1069552470b54fc5888d0a6c5dc384a2c983c83d4e1fa1457216eeb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 831,
+      "file": "trajectory_00263.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "496e5a68e3856d906b14c2c5c379eb164febc007348483d8251838d9d4b857f8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 834,
+      "file": "trajectory_00264.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "4f164945872a3d54c35a0f63976bfb28e048d4529ce2f83c3c919f9c599a4773",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 837,
+      "file": "trajectory_00265.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "bd58e36f1b497f1848ff1ab33f737497e2dd47b8a6bbdbb65cb74f82a6dcae18",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 840,
+      "file": "trajectory_00266.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "16a4189a2733d265e95470041c07011cca3510ceb33a2426a8a61eb11bdec398",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 843,
+      "file": "trajectory_00267.npz",
+      "length": 59,
+      "return": 102.94589640758932,
+      "sha256": "393f4d304eec83f04b32c614513d7ee1a9343be8a985f741f66bb4651472d3ae",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 846,
+      "file": "trajectory_00268.npz",
+      "length": 56,
+      "return": 88.14794662082568,
+      "sha256": "7d48ecf715cc0f16e281ec2323b741f4860b06872cc34c78233968ddec17f298",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 849,
+      "file": "trajectory_00269.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "17e6092caa4228651d3093e6dab71ec9585ae41a37712ee1249193e92d9b1c76",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 852,
+      "file": "trajectory_00270.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "4b964e0e9258d7ab2d0999113a157196e5e8190d0d02951a9cb465b847856597",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 855,
+      "file": "trajectory_00271.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "6194adaca7c79e2bd6d8cad8d36db79fe0538fee0ab9f10195e2edf269526cc4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 858,
+      "file": "trajectory_00272.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "6caf2407b2e403c2fd84ac9c7e1ed5e04c55a6d5ef21adb5c360fa86ab1355ef",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 861,
+      "file": "trajectory_00273.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "a6ad3d72706af66728483ede4dcd06557bbdbd172f96420aa669dbaf36c9e269",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 864,
+      "file": "trajectory_00274.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "91ff1ad6f6d3100747e878b1b3e79defd2f4f92b551e4e6148c75d32393e202b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 867,
+      "file": "trajectory_00275.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "febfa691f68dd123dd48334a782526c656bfca8243fe09a513c1c4c367eb5241",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 870,
+      "file": "trajectory_00276.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "e3c1b52fd99aa69e7a11ba2617d824a73c7bbd7f91163fa6f541b716500a052b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 873,
+      "file": "trajectory_00277.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "b35f03b8895b45bb926180a474b011a34bdc24011d9878fbfdd07482d72d17c5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 876,
+      "file": "trajectory_00278.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "b864ee88ad63f752c0f761c18fb0ddd529c28d3d73888b01c4fc8c0838a969a0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 879,
+      "file": "trajectory_00279.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "819d1a62681c5d7a40719b1fe68d45ef2911a922901f316053bb042088e548ad",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 882,
+      "file": "trajectory_00280.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "9bebc25b4f2b4602a3c0153c8e41954a54e92f85cbba3a20785ff5891296f332",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 885,
+      "file": "trajectory_00281.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "03170f2cd5835a70bbb05b0614dfa0fd45dc1d6a124f6948b23c0d7bf15e6be1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 888,
+      "file": "trajectory_00282.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "a7f2a2a609bc2b224ef9faabcc5063458aa723a600eceee49a63f926b4201e46",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 891,
+      "file": "trajectory_00283.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "973146a402cd2b655126c3f06cb22bb3f336dc7538bb56c8ae81bc2f1e645063",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 894,
+      "file": "trajectory_00284.npz",
+      "length": 50,
+      "return": 85.5253848079592,
+      "sha256": "6d28af9ae160ab02ea636068f766ec61723c2edadc0e8e01cb9d5a52777ea186",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 897,
+      "file": "trajectory_00285.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "892c5df840b2c1c2adff3d44ff42346b1d50d21253ddc1b347857c6702aa19eb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 900,
+      "file": "trajectory_00286.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "85215dafbbe6c6e37c0595fa27e1cfbfa4cc46995207d4ef20809d44bf961f8d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 903,
+      "file": "trajectory_00287.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "43c0a9ddc05a2f28af58877b605dfdeb210db6dfd6cf64e4fe281d097bfe7f44",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 906,
+      "file": "trajectory_00288.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "951f1ed4b61433f5e3287f78bee89d73f5c00a5c04e83722d12e982f0427fcf3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 909,
+      "file": "trajectory_00289.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "144dbf4f21234d4f766f907ee87f65db0e372e7e4c368696e87d5466332d0f8f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 912,
+      "file": "trajectory_00290.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "5b9f0a83bc9b06103c43ba939ffecff1dd46e3108f7cc3b2173e4c0ef5c94d0d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 915,
+      "file": "trajectory_00291.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "aaa1a5de31105de6bfbd480cf06ec18ccea64edab87521bec991c39fc54754e2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 918,
+      "file": "trajectory_00292.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "2d5311979862f3ac71f285ec9a473aab67453fcbc81cb4f41fecdffd873f1210",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 921,
+      "file": "trajectory_00293.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "f1e87b19854701e3e5fbde93ad5bcfa9a192f62dd34292035f1c7994b6447df5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 924,
+      "file": "trajectory_00294.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "419c47b9921211b30b4e8f1fadbb955e04fb18c5342c87c4e70270578eb11fb2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 927,
+      "file": "trajectory_00295.npz",
+      "length": 51,
+      "return": 68.06942382082343,
+      "sha256": "80cdc45a93be5a0e8f5e0e2c264da53a098306120ff81392180211c79cbec6e5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 930,
+      "file": "trajectory_00296.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "f622fdf0065a3cc2ad6e195a938862b270f3bb9f2310326258ab620cb3dd8e79",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 933,
+      "file": "trajectory_00297.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "bb920ca61b9a5731c768023405caae1056853d9d18bd123f579047cde8227804",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 936,
+      "file": "trajectory_00298.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "f48c6ecc27a7be9389802d9b7ed2617637c1b206f53d348aedae2da76da54754",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 939,
+      "file": "trajectory_00299.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "1af8256308c664234ff116f36f13090496c1988f860bde035d9c126110a877f9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 942,
+      "file": "trajectory_00300.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "eaabe6566eb64464e6cb143712d5c3195e412de1f999979c10923ceacbbed00c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 945,
+      "file": "trajectory_00301.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "3f13447003cc5245f2a188015d06d1ffd18e38db9de6f0a558af4da6b849b901",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 948,
+      "file": "trajectory_00302.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "28cd5200a304a6fd6138a078c8e98f5dc2160e24f2939241879f8092b2166bf7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 951,
+      "file": "trajectory_00303.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "c1e9b1d4e489c92c055f073efb887a79d27319033155053696464a5b3f5daf5f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 954,
+      "file": "trajectory_00304.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "32d8c6f3379775f91028cb4c4838ed08625baabcf09c760b4569bdab8302158f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 957,
+      "file": "trajectory_00305.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "82f52c0d512c917ab33a9ed97a4122c450dadd68474b7f628922b54a14cb8837",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 960,
+      "file": "trajectory_00306.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "50bfd7cc1696c1edc2442803ffb9384f2d97729b51e07dfc2f7a54adb3a3f731",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 963,
+      "file": "trajectory_00307.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "5bfc5a0043af01b7c5793a642f68b03dcf1a6238e0bc6eed4e1ab58607ec1937",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 966,
+      "file": "trajectory_00308.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "3c45c3e6a227d4813a1db4fdcaab208c3a78c625c2bf46e6afc118d50a568f85",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 969,
+      "file": "trajectory_00309.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "3bd854b18a6e537d4d25825cc3e3ef4bf57d5c774b8b3d82018a1d20cef7343b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 972,
+      "file": "trajectory_00310.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "a42a5171bac8c7fa7001d61c65509737d7676c6e0c31058f3a0913ab44c58a72",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 975,
+      "file": "trajectory_00311.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "84b2650f2c95ba7e7fd27a9707736c921a6e52f551aca937b8ef2c6fe68c62c3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 978,
+      "file": "trajectory_00312.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "50053fd6acbe7e229bea01b9431cf470158c5b6f1a1cf1d9033c562bd3511cf0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 981,
+      "file": "trajectory_00313.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "ed104b359a0ce5000253adee5d33dff7782ecda1f674ab3b48a199327011d556",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 984,
+      "file": "trajectory_00314.npz",
+      "length": 48,
+      "return": 59.86628776229918,
+      "sha256": "7e5d3f903a46e154dde21b8faca3b1e055e7f45677cc8174e3dd7d6372abf80d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 987,
+      "file": "trajectory_00315.npz",
+      "length": 62,
+      "return": 116.77900286950171,
+      "sha256": "e11132896f4827c7441266c34f2ac8f691679f35ef878812bfa5223033345b44",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 990,
+      "file": "trajectory_00316.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "69c7f5abeeafb4f850e8b3f571551bedbf1cffcda30b49e0e466cf5f6cd89afc",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 993,
+      "file": "trajectory_00317.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "bf57d3b090c7c59622fbcb1827008d6d5aa5820cf954cacc0d93fda6d74487d5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 996,
+      "file": "trajectory_00318.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "e3380c542d94ef0337bd0d3bc16f1c1c95a82f3d561e0d223453fbef5bba5225",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 999,
+      "file": "trajectory_00319.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "40793d336359dca7ab504d7742de4058f4e643e31e085c7852d261d5c426e3a9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1002,
+      "file": "trajectory_00320.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "97aa7af7e6f4fe5f524c1f630acd52c0c79a11428248af2df5c0910eee7da25d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1005,
+      "file": "trajectory_00321.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "c16b0c2ad846156f98a1e0b54bd78ba10360c33a7fa37bc3cf01e53eb136413b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1008,
+      "file": "trajectory_00322.npz",
+      "length": 56,
+      "return": 88.14794662082568,
+      "sha256": "aef7272384a3532221495482872512a76f84b0fef3df8e8da0b3595770fdd3c1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1011,
+      "file": "trajectory_00323.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "2532862d6378bc665999e45b33f6296373bd14e4354bbfd69a85e539b8ea15c0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1014,
+      "file": "trajectory_00324.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "6a23aca8b61e17b2a0a6b863e086ea35d94afba39fe26b8ded4570c77cd6bc50",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1017,
+      "file": "trajectory_00325.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "6a940c9ccc68a0b4976a04140da7de8b1e0ee602859b3160addc154653239feb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1020,
+      "file": "trajectory_00326.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "d138dad2570c85767b22cb443c6206318e3eed37ffc61e2b7cd7a6d29875ee01",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1023,
+      "file": "trajectory_00327.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "e905fef76381816e0d326a5bd143e469e710cb0b191a58f5c41cb2f08a19e269",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1026,
+      "file": "trajectory_00328.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "1f8d58769f03c63cd2c0ca462c5de9754dee9b8874bfd165a0a4152b02562437",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1029,
+      "file": "trajectory_00329.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "1a808c8d2246eafd6441e61a1139f454e673f7eaa65671399abf8f00ed40f824",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1032,
+      "file": "trajectory_00330.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "724b94dc3779ed528f5135f3150679a762fc32a685d2d9011fdcf42fb2515891",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1035,
+      "file": "trajectory_00331.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "70d80653b99a300ac6c503466bec3f4fecd5a96a8b736bcebe8fab844752d6a3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1038,
+      "file": "trajectory_00332.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "1062e677d295e77ddfcbdde7b1112a7d6b953e3676f971e446611cf9675de2bb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1041,
+      "file": "trajectory_00333.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "0dface13ddefe16a75c5b73ce3f8fe746fe009e5b7c48f2a3baf1f6aeba5b20f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1044,
+      "file": "trajectory_00334.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "6fcaac8253274303d10de6efbcdae94b52497381bd2bd2b93d4ebef725d8abb7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1047,
+      "file": "trajectory_00335.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "3bc7d859aa17ad230f7ebe17431171beb7c4633b6e3d2f003ac08779a44767f5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1050,
+      "file": "trajectory_00336.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "384fecbb30ea07bb303a72474775a747d987560679a29ed23d3e7a28c63ad8b8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1053,
+      "file": "trajectory_00337.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "5229ff0e25850efe52fd626b8a521a15f143dc4a783b26009c8162a1e6b8fed9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1056,
+      "file": "trajectory_00338.npz",
+      "length": 49,
+      "return": 55.83649460235756,
+      "sha256": "12d6457b05510aa71f1b1a26841a774c6e8c9be6c744e8c46d77f6ea8cb44e0e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1059,
+      "file": "trajectory_00339.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "c7f101542e13afb50e99423d11ec0dd44b415e2919fa5dedde851006f51f84a4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1062,
+      "file": "trajectory_00340.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "f5c69381c6b6afa96d045cc80ced93d99dea589a577b470d3e428e723576a073",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1065,
+      "file": "trajectory_00341.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "eb7ea3f2a220d6404e12724cc20f32406e4682950ef07e6cf7ee8343f1c7c304",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1068,
+      "file": "trajectory_00342.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "2e91ef7ddfd899673afe4ec131428f3bdbc2a56a90125d4e1d88092670f2ec2d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1071,
+      "file": "trajectory_00343.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "3af0eba6fb611ded366ea71e867daf8362ccbedb5555de5c67b5070679d823e8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1074,
+      "file": "trajectory_00344.npz",
+      "length": 44,
+      "return": 51.25055445730686,
+      "sha256": "e729855875a02f8d730ba61224e1380c4bde492265cebc474b2125b2a7552904",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1077,
+      "file": "trajectory_00345.npz",
+      "length": 48,
+      "return": 59.86628776229918,
+      "sha256": "61faf281f59f6f6b2bbab213bae468533538fbbce15bb1b7695427f1b062ec14",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1080,
+      "file": "trajectory_00346.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "39a5d18321bef4bf4f0268696aa1e2777a003f6a9d15c62d45e54d24666ed4c8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1083,
+      "file": "trajectory_00347.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "1fea6fb42bc9a675423c2480b89388d0fdadc4cb75cbefe813c47d2ac5b7f1d1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1086,
+      "file": "trajectory_00348.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "e51eb2ace093e0955721a8d2560c4fd6f44932fa3482b6a91dbcaa97c467fe0c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1089,
+      "file": "trajectory_00349.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "ea07d17962deeb1f80cea807cd81cb236988cecf3be39f739fe5aaf7996d2252",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1092,
+      "file": "trajectory_00350.npz",
+      "length": 51,
+      "return": 68.06942382082343,
+      "sha256": "f3a86953379cc44b7f10c73bfb0f796f97a828dde34b4c51737fa7d0bdc63203",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1095,
+      "file": "trajectory_00351.npz",
+      "length": 48,
+      "return": 70.77317818813026,
+      "sha256": "bc5ae93971fbbea481a46d0ef46e6b5fedb150142f433d92c8aaa47f7450517d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1098,
+      "file": "trajectory_00352.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "68811ba9685f4e28224451bf4cbb493820d7f271a06f520fd509691f40ecf341",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1101,
+      "file": "trajectory_00353.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "0a0aee15ab25f031963c4e33593d58ee5bf3df6b5feffbbab9f51c09cf24f109",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1104,
+      "file": "trajectory_00354.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "22547a9d4efae685427267297c665cc7a2b7930af3f4e0ed8871e9ca0441fc6a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1107,
+      "file": "trajectory_00355.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "78ffcc056d1da1796d9fc01a223f94dbd8aaaafbda78874d5d8f7be4c5114ace",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1110,
+      "file": "trajectory_00356.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "1de0091a4ffb43796f99c17530b1a1da334bee8b83a11b03565bd5c76969e79b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1113,
+      "file": "trajectory_00357.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "b27e4dc2e537d1ba841eea5935a4b3bea0d95e58478c8742959127226069678d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1116,
+      "file": "trajectory_00358.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "8223bc48093ca537c809c169fa16696dd2833f2ee8e1634b56261fe49e89fcd6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1119,
+      "file": "trajectory_00359.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "89ec80c0b1eace0817c564a022006e03815e061eeef08cabddc8e7527960eb8c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1122,
+      "file": "trajectory_00360.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "5efb72a6d1100cd799c62a5b5d049f866dbdd9c82ec804b6d51e77a3502ff7f4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1125,
+      "file": "trajectory_00361.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "18fb134ce64259c9e1037ed47fe56bb6edddae170c09ff3ed4ca3a2b713423fe",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1128,
+      "file": "trajectory_00362.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "79218bee34d1a0dd75af07feb28229807df7d89f5104d01199a7852500135030",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1131,
+      "file": "trajectory_00363.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "ba5d7d7209ebf2bb43526b2c1aa3ba95ddb99d664b256a2d7f3ef464afe43fd6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1134,
+      "file": "trajectory_00364.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "a4d299506b2601c618a38507134464bfe2f89354e1dcd7baf7c333ba684cd461",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1137,
+      "file": "trajectory_00365.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "c160121c4c4a447bc55bdfd6c4bd11cfddeb3f3fc82f6d2c36bff841af54192e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1140,
+      "file": "trajectory_00366.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "1dcc6bc326b2c637cf1741fbbc3514f478248ebebf220e98a40933bfebdfd326",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1143,
+      "file": "trajectory_00367.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "b820fda8ba5ea99cfdcb9330bc64c79f34a5f6f96972df58aab4eae6a75db890",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1146,
+      "file": "trajectory_00368.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "c08de5365cdb157527b8ff1f845dac8a8e676f8f465dd2ebb5f2891b416b08bf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1149,
+      "file": "trajectory_00369.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "abc69699750c4460c5df719d712a3735d866f84cc803aa636af702de00b472c5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1152,
+      "file": "trajectory_00370.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "7de8ffb25f835d24219aea861dd89d370adc2b7e6eb2c693fcdfc25c9cc9855c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1155,
+      "file": "trajectory_00371.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "4e03f1fb0684fc950e01dbf4d2311ce38d1b1c974f172e2947d5531f69168b08",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1158,
+      "file": "trajectory_00372.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "0335463a919868349e2cc945d17d4009db2f5f81f319a126236d7c0a469d6d1a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1161,
+      "file": "trajectory_00373.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "a33d7c9aedca244564e000f7cca7fd8090c9de14554f96eebb3ecfb5c8dc9a2d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1164,
+      "file": "trajectory_00374.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "9bb4652e15f8a7d0da8128c95b860f1f70e6a9cb0bb34ccd0f53e00a6dacfe3f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1167,
+      "file": "trajectory_00375.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "a04a0c25db30a3d70224c3e38d3d4f4e7a1e09a3ef9fe17529e717d025e2a9dd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1170,
+      "file": "trajectory_00376.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "047b0896cde8f1f1788f5a722ac568056af95542731d8b99761052a77c11a1d3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1173,
+      "file": "trajectory_00377.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "279b38994f2c36cbb53b4c5dc8553b8a60c67439ed7b344b8128feaf117178d0",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1176,
+      "file": "trajectory_00378.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "5854cea90b63d1409db636a6bee26cb32da9ed666566eb8a5a65e1dcf1e95acf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1179,
+      "file": "trajectory_00379.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "e1b1c39efd353035ffe82a8741943ea674651bd031b075d216a64a29933f3c62",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1182,
+      "file": "trajectory_00380.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "04f2db74afc9a28f6ca039d89954976dc7d9a4ecf01c35c494ac496cea3107a3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1185,
+      "file": "trajectory_00381.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "6a298eaf7e2cf7f76aa5ae68040b4f1fe93f46769551df3167ae07128a465064",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1188,
+      "file": "trajectory_00382.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "2432f26ee2a28aa080762d76c09a761f695acdcf6fc36c48758c054401f0c349",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1191,
+      "file": "trajectory_00383.npz",
+      "length": 48,
+      "return": 59.86628776229918,
+      "sha256": "d2da6bb76083517270de37926f44b1aaa1a435f08950f0f99bb09059d1fb56a8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1194,
+      "file": "trajectory_00384.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "9a6db34fbd2259168f7d532962dd6dd26a9ca4fd6d541297f67d23b867033a8c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1197,
+      "file": "trajectory_00385.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "ea570f4aa899c40c690a35eafde58e2ee1f9bb2dfae65dd46413d7eb13dbb2ad",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1200,
+      "file": "trajectory_00386.npz",
+      "length": 55,
+      "return": 116.68167622946203,
+      "sha256": "80250ad5b9d73499835d9c89acc7e6b10141b5548c49bb703bb33115fbcf8273",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1203,
+      "file": "trajectory_00387.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "04de6f6920c39f503e47afda1c073189371d3991306740e193c0bd90044108b5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1206,
+      "file": "trajectory_00388.npz",
+      "length": 58,
+      "return": 99.28970768488944,
+      "sha256": "86aba5e7cd1cdfa34a7ef893948da40c027a8c6cc1309de7366c091a08ab6701",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1209,
+      "file": "trajectory_00389.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "f2ffdcd18acc3c1b7438ba2e19d52271a1ff538d8abc8772b3ddb0c78b6796ca",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1212,
+      "file": "trajectory_00390.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "29dbaa524babc0e469d303f07a0f1f7b37ee270d8cdee52058db60447b5c1fa4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1215,
+      "file": "trajectory_00391.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "75985b4c2b73f8ad9e586238db582354bed439a3557bda086dad425d419385df",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1218,
+      "file": "trajectory_00392.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "958207dda627315a73145d39a9a029c759576965ee7b5c9d22e593f2ae77db43",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1221,
+      "file": "trajectory_00393.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "ab63614b9e7c76785eff3c31e0ae10f4e55d1a43bc0753752b51092fcef4663f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1224,
+      "file": "trajectory_00394.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "1c3a7f8910095adc81626b4494d5bcc54b905759b25ef8a0b1701feba7b468c9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1227,
+      "file": "trajectory_00395.npz",
+      "length": 46,
+      "return": 9.335415575653315,
+      "sha256": "afd800177e4f2c79605e6fc042930dcf22ef50880e4d2c487b954c8bc6775e1d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1230,
+      "file": "trajectory_00396.npz",
+      "length": 48,
+      "return": 70.77317818813026,
+      "sha256": "4365b79e40292b0c113cee0dfe0810bb9360d723886b3958bded2d2de0d75cd7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1233,
+      "file": "trajectory_00397.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "f7c3ee0acb5a5b3b407b3aba8f642397bcaa57312062cb1ce671e37a8b4681eb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1236,
+      "file": "trajectory_00398.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "ce04c2bb0b1fff7c1ea45da73f16d71ed749caa367225970829b201fd821ae1e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1239,
+      "file": "trajectory_00399.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "79f1a21651ece056030163cf127c5f15651bf52d45217d3b6691d40a5c4100a4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1242,
+      "file": "trajectory_00400.npz",
+      "length": 44,
+      "return": 63.5727917496115,
+      "sha256": "83bbdb53c060b94790092b6f74de30329a5c2676755fe77942673d6bc688fc0c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1245,
+      "file": "trajectory_00401.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "a6ed4bb8f0bade99ca9bfcdcba20a86b1ec16eeaf68ca5625f85c943ba2e0b2c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1248,
+      "file": "trajectory_00402.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "4c86455e4f2acbbcbbaa5b46b4fc58d4cb6bc5b246cb54da424b2ba02c456969",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1251,
+      "file": "trajectory_00403.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "dfa6737837e16757a36eef14706412a4fd6d372c63a500d228a49d28694f798c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1254,
+      "file": "trajectory_00404.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "79d02962a705c075b498500398f13c662d87fd9a4bfff4ba63c98df218e8e4a8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1257,
+      "file": "trajectory_00405.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "60ef73cbb3de47ea35b42d799fa7de251fb449a5290efda519d19b453591027d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1260,
+      "file": "trajectory_00406.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "ca62954ef641cd7e99ee33586a099da43c288f91bfab01818a6ea7aca051f04b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1263,
+      "file": "trajectory_00407.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "4e7276697a85d16a749f97e17b9af361d0fbe7dbad51f7a74022a5e4795207d7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1266,
+      "file": "trajectory_00408.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "df7558c9f7a01e9759c4cfd4e60657e70d1f78f5a71ac52b6ca300e47800f26c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1269,
+      "file": "trajectory_00409.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "1382e7dd9f787d78c03d525f71261838e048355e8ca4245d556700c15ac867d1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1272,
+      "file": "trajectory_00410.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "0996660a6ed5782db498573fa0e26a1117236f64e406394e9d2bc827fdbc5a15",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1275,
+      "file": "trajectory_00411.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "03b5f52eaea910a711eab7d5d82fb850f48cbb3dc5f9f4ad6955b64ec272fe7f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1278,
+      "file": "trajectory_00412.npz",
+      "length": 57,
+      "return": 102.25359257124364,
+      "sha256": "538306ee723cf363ccdc1182f7200337b220fa979a341da0f3050858bb6885ed",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1281,
+      "file": "trajectory_00413.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "64f75944ff2461b11b2a5b8ce7bb87cc616d86f06b060c5c0e7fea506cc60d51",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1284,
+      "file": "trajectory_00414.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "89a3be1276b1e3e2c74ab65ef04a620e392d6d5e7683237f7c190f3bddf0b4f7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1287,
+      "file": "trajectory_00415.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "d3a23519ebb307926d9517ac6b48f5eb96196ce32772c8e77a0ac8913d19ac85",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1290,
+      "file": "trajectory_00416.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "66755cad2656a826abad20d23647240810c3a2b2158a05617345c9372597c8cb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1293,
+      "file": "trajectory_00417.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "bcfa931d8449bb44aca1a3e55666f4e4db733dace21021034f321449b114083b",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1296,
+      "file": "trajectory_00418.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "a2ab9139a65c0ecb1d2ab27bffb91c6498c41cbbbe1923b5c7fcde700f5db925",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1299,
+      "file": "trajectory_00419.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "7d284b5f78db17c8acb3ddfd1cbbb1ab1ef51102aed2557637467a227e4a0ebd",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1302,
+      "file": "trajectory_00420.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "c8511163c3e93961d5c1abf07962898e1527c75e36f831d41441947d29d4fdfa",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1305,
+      "file": "trajectory_00421.npz",
+      "length": 48,
+      "return": 60.77929006330669,
+      "sha256": "414a31921de53ba7b644e150ae9e88c8adfa1a6443500ee8ad68c78be75e3058",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1308,
+      "file": "trajectory_00422.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "ff1f53dd88aca7106851a9188a19b51251a6c98d83f0d82ba86ca0aba7e5b4ff",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1311,
+      "file": "trajectory_00423.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "27050e0893288c68d1ccf42b2dc062fc47fc2bd323fbe633eb3be08af60e4a4d",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1314,
+      "file": "trajectory_00424.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "4259b38fd871606750c07f037c9404b9dc16dea336bff8b82daad36ec4397901",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1317,
+      "file": "trajectory_00425.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "58f9b6b79367faa4af0cb56e87641860afba2ba23b6069bc31fae739480ab37a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1320,
+      "file": "trajectory_00426.npz",
+      "length": 46,
+      "return": 9.335415575653315,
+      "sha256": "4929494d2bb7fc529c237244bab4c068031a9f9890d376f4a6e6456c560bdb54",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1323,
+      "file": "trajectory_00427.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "5c42e11804ad1456dbdf993661bbeb17261e29a3183ec09a668a98c456a070e1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1326,
+      "file": "trajectory_00428.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "0b7b9a7edda89b77c0cedd597acaa20c61bac1b15c0737c898474faad355bff3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1329,
+      "file": "trajectory_00429.npz",
+      "length": 55,
+      "return": 86.64834326133132,
+      "sha256": "d6750b3051a890a8ccf18d2ab3d54fde6b1c65cc203277d31f79984898df67e9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1332,
+      "file": "trajectory_00430.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "d325b063076d56991fbf8f4027921e126b12c3188678ed2eab52d2c945294e44",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1335,
+      "file": "trajectory_00431.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "bc9b7077c45f9a75b190f423b18c0f09338f753e6b7137606da0eae31c1adcfb",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1338,
+      "file": "trajectory_00432.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "3dc6200f2b51d555be49fb18a7dc3e8b34718ba77b17d0ccd113bb15f0d6809a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1341,
+      "file": "trajectory_00433.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "22d814d79c0a0146545e2b778a79eeb75de78498e401eaf3b01794c75463300a",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1344,
+      "file": "trajectory_00434.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "0ccc95376a0de90fca8ff419d29ff0f39fe9b48a51c90a9949a5bcf2bc08260f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1347,
+      "file": "trajectory_00435.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "dcbf47e99a63e58f1b83f4d1c0f56e875840a2cb5973b13cd8a6ed2368399295",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1350,
+      "file": "trajectory_00436.npz",
+      "length": 54,
+      "return": 85.58324601314962,
+      "sha256": "50368f118e100df33668b1eb31fb6e1be2aea4975b41fec21d715a22db0670e6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1353,
+      "file": "trajectory_00437.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "f860569ec41bb4542934220aa97572862e27c00eb5494f41aa786290dd50b7a6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1356,
+      "file": "trajectory_00438.npz",
+      "length": 54,
+      "return": 72.21844791295007,
+      "sha256": "ff621bfbf4d2f2737af8378ceacb4b21110c67cd24e684c6ac40e83b7f9cf0e5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1359,
+      "file": "trajectory_00439.npz",
+      "length": 48,
+      "return": 51.341266547759005,
+      "sha256": "66ef116f74cd1886520e6106c2f6edf4a80e78b9c29597500868b93e2927d34c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1362,
+      "file": "trajectory_00440.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "606af491583ed0b6557b7024e5159b2483ef6e1b3861c4a2801de8d231953718",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1365,
+      "file": "trajectory_00441.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "81ebf99028234bf758e4d518bc0443819694d9b5c6af8501d0570beebd7660c8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1368,
+      "file": "trajectory_00442.npz",
+      "length": 55,
+      "return": 83.78540099132806,
+      "sha256": "21dd400852a55595d26c09dddda6457f7789383f8b4f9b70b69c0b7e4c585d04",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1371,
+      "file": "trajectory_00443.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "3a325ca893a19335d9ba69cae089b7769567a40b1b9ec13441d3ae3b8f23fc49",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1374,
+      "file": "trajectory_00444.npz",
+      "length": 55,
+      "return": 91.69959249906242,
+      "sha256": "b034c606e9ec3631069d1307573a46a0d05fd00e5025e4cd060c0c935f180e57",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1377,
+      "file": "trajectory_00445.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "4bd964be1f9a384358978f3225e2ab835cf57881ec553e7c038a87633aedd213",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1380,
+      "file": "trajectory_00446.npz",
+      "length": 56,
+      "return": 86.25880875112489,
+      "sha256": "6fae366212eaec142203823a19bb17cb67a34374098aa90780d876b418aef2cf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1383,
+      "file": "trajectory_00447.npz",
+      "length": 52,
+      "return": 79.76371891610324,
+      "sha256": "973e5c500db507c7acbdbb61327aab2d062417cde493d9e5fdabf118b834b5f6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1386,
+      "file": "trajectory_00448.npz",
+      "length": 51,
+      "return": 68.06942382082343,
+      "sha256": "591ef50215a9a9bf060f9937bb216ee4d15c18019f7ec67627fb78c13cc2eab5",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1389,
+      "file": "trajectory_00449.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "fa9f6374d95962c23b0f181c665c513815db2885fa1d28f0ff5fcde714876ea4",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1392,
+      "file": "trajectory_00450.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "78409ad2c8add2ee98937378835c40d0696c7f981b7ff1a5d89f0dd61897e62c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1395,
+      "file": "trajectory_00451.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "26b964832ea8279f1138eae60bb58cabe5c8db7c64b8df38ddc52626e9b42f61",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1398,
+      "file": "trajectory_00452.npz",
+      "length": 48,
+      "return": 57.61828033067286,
+      "sha256": "c499ed16cbf26b676065046abff3aeadb6cae258928c4a03a8bc4f153773ece9",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1401,
+      "file": "trajectory_00453.npz",
+      "length": 49,
+      "return": 35.04227980878204,
+      "sha256": "1987c9f9abb0073eb2696440ceeedee7825b21271deed2b71454ec529fa4d931",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1404,
+      "file": "trajectory_00454.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "66a877522bcf54dce2bb9266dd6f52dbb7611165cabc43c67fbac81d4ba0f5fe",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1407,
+      "file": "trajectory_00455.npz",
+      "length": 51,
+      "return": 72.76873510703444,
+      "sha256": "affb901af29e7826fa9aa389d51c94a741a0e26548d69003007dcf6582e72ff2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1410,
+      "file": "trajectory_00456.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "dfccd2d6d26ed845ef1348675173f6fd9eec22a168555cd3412e50308db5516c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1413,
+      "file": "trajectory_00457.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "36038a801f4d265510a2f7e6dccda3273cef54d86c8f3adc6415e9c23f75a283",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1416,
+      "file": "trajectory_00458.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "d40f631ad7bc9a945039c16ba393970ae3f87d826e3ee1ac7a3e737a36bdf807",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1419,
+      "file": "trajectory_00459.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "f58320f1c1e67d885f269750d10a8967ae0df63787b974a14bb53b0e90c37127",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1422,
+      "file": "trajectory_00460.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "b089568913977a67c9123a531a92f2b9682c694e14a74d9077148b2955c26b74",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1425,
+      "file": "trajectory_00461.npz",
+      "length": 52,
+      "return": 78.82772277481854,
+      "sha256": "e518590718ed3a86771135c92558be5ab4e323326b63f7f1e298972ad8a39f49",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1428,
+      "file": "trajectory_00462.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "09b301d7cd98d16537ac48d4a725113282c8ed281d7b993f5824e14067d33be6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1431,
+      "file": "trajectory_00463.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "e692c12c3040bb2dbee25acb5d7689bebebea53c8ba985c612890650dee85fd2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1434,
+      "file": "trajectory_00464.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "faf4008ac77043f36207858dedf0cd10ae2ba95ce91f4c57935ce1d95e3b4d99",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1437,
+      "file": "trajectory_00465.npz",
+      "length": 50,
+      "return": 66.00312385521829,
+      "sha256": "e3f909042ab4b905137ccdf99f876edbc2444375232ac773987b6678788d8524",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1440,
+      "file": "trajectory_00466.npz",
+      "length": 54,
+      "return": 83.94168577203527,
+      "sha256": "b7a168deea6e56278ec9399bc61998790b39fb11d3a06d5a672b85b2ce290534",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1443,
+      "file": "trajectory_00467.npz",
+      "length": 56,
+      "return": 24.163446944206953,
+      "sha256": "d65dbcde1728e8ccda63bda342223846765bbf88c7369427d9482ab2d18d87d3",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1446,
+      "file": "trajectory_00468.npz",
+      "length": 48,
+      "return": 54.20919811655767,
+      "sha256": "69c3f9fc4fc47c24568ef05090bc8bafa531e4912f2d6021aa59021a70e1ed42",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1449,
+      "file": "trajectory_00469.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "f8ee859bbbcb95e823f2f2a92a7b4bafa3f38155eb0f88c554c7d9f858412bd7",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1452,
+      "file": "trajectory_00470.npz",
+      "length": 54,
+      "return": 77.34279150251132,
+      "sha256": "02366c14c62bf6ad45b046b4f067ea06b63c14ae393e3a571e8bdb896995246c",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1455,
+      "file": "trajectory_00471.npz",
+      "length": 49,
+      "return": 56.41882046498358,
+      "sha256": "f98a7b04a46d350d35e7940fcb947db648820714ff52d067b329c78d6b7f325f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1458,
+      "file": "trajectory_00472.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "a74fd0b68da3a9f8b149985c0d7b7be6b6c1238a646df14f17df7c27eb9c375f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1461,
+      "file": "trajectory_00473.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "aa34ff5fcc5905e9adaba5d89a78111aff877eb5f280810b8e341a20fd6bd28f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1464,
+      "file": "trajectory_00474.npz",
+      "length": 56,
+      "return": 90.33342500776052,
+      "sha256": "751a4fb4abeb72839f9d86ad802fe9523e04e6a5a7ff8da334b261300e2aedaf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1467,
+      "file": "trajectory_00475.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "ccd92ac1157f1548e5b53ffe8a2d5697934dc8f5b21fb9f085fcca0656987a68",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1470,
+      "file": "trajectory_00476.npz",
+      "length": 56,
+      "return": 88.94656228274107,
+      "sha256": "f451b1dc0cfdc2c4f71a250af56a2e8f0cd03ead647ba97479aabe163ccc5e8f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1473,
+      "file": "trajectory_00477.npz",
+      "length": 52,
+      "return": 81.19865719042718,
+      "sha256": "627a33214150b7b819d3e256491c6c6e4676c0c6477c2145a5dc74ffd1f91a98",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1476,
+      "file": "trajectory_00478.npz",
+      "length": 48,
+      "return": 85.46969112381339,
+      "sha256": "98b939a3750bd06e203d388197d1665bb9c5dbf63d2c072ae2f5cf608bce42aa",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1479,
+      "file": "trajectory_00479.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "2c2bcb84b201f833909fb9eaeb8d31deec083aa43b9694e3a61a2f122c943ab6",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1482,
+      "file": "trajectory_00480.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "788bc09a8a742e124caaa174c970afd4e6d3847cf450a74e8ea90caa1253bfbf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1485,
+      "file": "trajectory_00481.npz",
+      "length": 48,
+      "return": 44.258920611348,
+      "sha256": "2b13498e77b868f811c2492ab0c150a59b242d2a7672ad6a63f7874d060d1598",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1488,
+      "file": "trajectory_00482.npz",
+      "length": 48,
+      "return": 59.86628776229918,
+      "sha256": "ad29dae8f0389440b1d842044b2500816156fa9eb96e20f990f19212509740c8",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1491,
+      "file": "trajectory_00483.npz",
+      "length": 45,
+      "return": 9.661442510783672,
+      "sha256": "9a7b196412ae5306f9860870c2d4b012dc49378f1c27e957f85632da0aad6adf",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1494,
+      "file": "trajectory_00484.npz",
+      "length": 53,
+      "return": 66.95853651873767,
+      "sha256": "1a048badcfc6e5d20aad12e7862606e09dcf2505a441de95feff4e9bf0864109",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1497,
+      "file": "trajectory_00485.npz",
+      "length": 61,
+      "return": 108.56624346040189,
+      "sha256": "63cdc03c935a083006c53e0f0eb01f8f76faea5d897d1fb9cfff46e34f484339",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1500,
+      "file": "trajectory_00486.npz",
+      "length": 52,
+      "return": 72.9626700328663,
+      "sha256": "902dd8d8e24a78c7b12f841053e8077d7a2d762eda019610e32c545388e14027",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1503,
+      "file": "trajectory_00487.npz",
+      "length": 51,
+      "return": 68.06942382082343,
+      "sha256": "13a09d56db33ec22e2eb78b680b851d13a98198633cbd0392b025376596de367",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1506,
+      "file": "trajectory_00488.npz",
+      "length": 55,
+      "return": 80.58958056394613,
+      "sha256": "83c235f934228371070c81a99cb1dd562fb64bacb2e3ca3c080f415447900a45",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1509,
+      "file": "trajectory_00489.npz",
+      "length": 56,
+      "return": 88.14794662082568,
+      "sha256": "e5b0c95bc652ea6e6e11553639e4ba98c73134e31137a4347dbd0c329bea7250",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1512,
+      "file": "trajectory_00490.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "55e234f483d03605e9628fbe1f1aba325550077e34422b91c04e35f7e20377c1",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1515,
+      "file": "trajectory_00491.npz",
+      "length": 46,
+      "return": 9.335415575653315,
+      "sha256": "a4e721dbba7d86e4fb619f87b8761207d4e3f6260b3d830565e151c1bbe0890f",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1518,
+      "file": "trajectory_00492.npz",
+      "length": 54,
+      "return": 84.37410276941955,
+      "sha256": "4780ed59e6cf84eb913872978f89eddf500b4412bd4a5e914dfe7554e0c04600",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1521,
+      "file": "trajectory_00493.npz",
+      "length": 56,
+      "return": 88.14794662082568,
+      "sha256": "2c52acef92f19d1083bb4866d97e9183e73174aa6c7709b1d9808b6a12c38374",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1524,
+      "file": "trajectory_00494.npz",
+      "length": 55,
+      "return": 86.49163279309869,
+      "sha256": "22581328ba8d194feb5a404a23b6c7592fc828b75d6867c385fdaa5a86c3bdc2",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1527,
+      "file": "trajectory_00495.npz",
+      "length": 45,
+      "return": 76.75875608250499,
+      "sha256": "3c328e99c90932473c72e3fa91aeb152fd7305bb217552bc6d53a801f111fbef",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1530,
+      "file": "trajectory_00496.npz",
+      "length": 49,
+      "return": 53.239307932555676,
+      "sha256": "0ed68534edb919ec5bb0f780bae50de74b07559c170e592c3c9b30cea4d25b10",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1533,
+      "file": "trajectory_00497.npz",
+      "length": 52,
+      "return": 66.25022504851222,
+      "sha256": "f8d3ee638cfb8b489cd74364a4ee9a074ac449c49b9aa58b7cfc1afaeac6396e",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1536,
+      "file": "trajectory_00498.npz",
+      "length": 49,
+      "return": 22.35548829101026,
+      "sha256": "260e1c72941800f87b5cf5b8a1def537c80ecb28f4cb21a48262dc683ce8d365",
+      "state_dim": 21,
+      "success": true
+    },
+    {
+      "action_dim": 4,
+      "episode_seed": 1539,
+      "file": "trajectory_00499.npz",
+      "length": 51,
+      "return": 70.93951144721359,
+      "sha256": "0e193ea81dfa70b00be6d71b1e56156f6f141aa96f4425eedc264bfbe080be45",
+      "state_dim": 21,
+      "success": true
+    }
+  ],
+  "trajectory_schema": {
+    "actions": [
+      "T",
+      4
+    ],
+    "executed_actions": [
+      "T",
+      4
+    ],
+    "next_states": [
+      "T",
+      21
+    ],
+    "raw_observations": [
+      "T",
+      39
+    ],
+    "rewards": [
+      "T"
+    ],
+    "states": [
+      "T",
+      21
+    ],
+    "success": []
+  }
+}

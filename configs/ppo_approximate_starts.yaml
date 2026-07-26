@@ -1,0 +1,69 @@
+# Training-design ablation: replace exact online trigger-state resets with a
+# scripted 45-step warmup plus a simulated object-position displacement. The
+# actor warm start, PPO settings, reward, and exact validation bank match the
+# full method so the reset distribution is the intended changed factor.
+seed: 42
+device: cpu
+checkpoint: checkpoints/recovery_ablation_approximate.zip
+checkpoint_dir: checkpoints/ppo_ablation_approximate
+tensorboard_log: results/logs/ppo_ablation_approximate
+monitor_dir: results/logs/ppo_ablation_approximate_monitor
+curve_path: results/figures/recovery_ablation_approximate_training_curve.png
+metrics_path: results/tables/recovery_ablation_approximate_metrics.json
+
+training:
+  policy: MlpPolicy
+  total_timesteps: 500000
+  torch_num_threads: 4
+  n_envs: 4
+  n_steps: 1024
+  batch_size: 512
+  n_epochs: 5
+  learning_rate: 0.00003
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.1
+  ent_coef: 0.0001
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  target_kl: 0.01
+  eval_freq: 10000
+  eval_episodes: 50
+  checkpoint_freq: 25000
+  progress_bar: true
+  select_best_model: true
+  selection_metric: task_success
+  minimum_selection_timesteps: 10000
+  policy_kwargs:
+    net_arch: [256, 256]
+
+reward:
+  task_success: 25.0
+  successful_recovery: 0.0
+  terminal_failure: -10.0
+  time_penalty: -0.01
+  base_reward_scale: 1.0
+  distance_progress_scale: 2.0
+  reach_progress_scale: 2.0
+  lift_progress_scale: 2.0
+
+recovery:
+  initialize_with_failure_states: true
+  initialization_disturbance: 0.03
+  validation_start_state_dataset: datasets/recovery_starts/validation.npz
+  successful_starts_only: true
+  max_recovery_steps: 150
+  warmup_min_steps: 45
+  warmup_max_steps: 45
+  recovered_distance: 0.08
+  relift_height: 0.03
+  terminate_on_recovery: false
+
+expert_pretraining:
+  enabled: true
+  dataset: datasets/recovery_starts/train.npz
+  validation_dataset: datasets/recovery_starts/validation.npz
+  epochs: 40
+  batch_size: 512
+  learning_rate: 0.001
+  observation_noise_std: 0.005

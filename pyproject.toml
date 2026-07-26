@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reim"
+version = "0.1.0"
+description = "Recovery-Enhanced Imitation Learning for robust embodied manipulation"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = {text = "MIT"}
+authors = [{name = "REIM Research Team"}]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "env*",
+  "models*",
+  "trainers*",
+  "evaluation*",
+  "experiments*",
+  "visualization*",
+  "utils*",
+  "data*",
+  "scripts*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The development workstation may expose ROS 2 pytest entry points through
+# system-site-packages. REIM does not use ROS; disabling those two plugins keeps
+# collection isolated and avoids importing optional ROS frontend dependencies.
+addopts = "-ra -p no:launch_testing -p no:launch_ros"

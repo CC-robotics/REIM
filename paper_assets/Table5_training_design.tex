@@ -1,0 +1,22 @@
+\begin{table}[t]
+  \centering
+  \caption{Recovery training-design controls on the same 200 paired
+  Meta-World seeds at 20\% disturbance. The REIM actor receives zero RL
+  interactions. PPO controls receive at least 500k environment steps;
+  ``selected'' denotes a development-bank checkpoint and ``endpoint'' the
+  actual 500k endpoint.}
+  \label{tab:training-design}
+  \scriptsize
+  \setlength{\tabcolsep}{3.2pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    Condition & Start & Init. & Training & Success $\uparrow$ \\
+    \midrule
+    REIM imitation (ours) & Online & Expert & Supervised & 91.5\% \\
+    PPO selected control & Online & Expert & PPO selected & 91.0\% \\
+    PPO approximate starts & Approx. & Expert & PPO selected & 89.5\% \\
+    PPO without imitation & Online & Random & PPO selected & 54.5\% \\
+    PPO endpoint & Online & Expert & PPO endpoint & 75.5\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}

@@ -1,0 +1,113 @@
+{
+  "artifact": "detector_pre_event_audit",
+  "audit": {
+    "feature_windows_rebuilt_causally_from_raw_states": true,
+    "raw_events_consistent_with_zero_offsets": true,
+    "raw_offsets_consistent_with_labels": true,
+    "stored_deployment_confusion_matrix_reproduced": true
+  },
+  "current_event_window_recall": 0.9620025835722612,
+  "inputs": {
+    "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/failure_detector.pt",
+    "checkpoint_sha256": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "dataset_manifest": "/home/diy/bonus_track/REIM/datasets/failures/manifest.json",
+    "dataset_manifest_sha256": "05425fd2cc9d126052f876be95d143667f9d4362a6b7098e2359c928bb99481e",
+    "detector_metrics": "/home/diy/bonus_track/REIM/results/tables/detector_metrics.json",
+    "detector_metrics_sha256": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
+    "validation_files_combined_sha256": "54702b6c799e7ebaabbd7e860151d39c5ac0128f4c446f531846b5d877d3b3c5"
+  },
+  "interpretation": "The conventional prospective-label confusion matrix is dominated by samples observed at an event. Strict pre-event metrics exclude offset-zero windows and quantify future-event monitoring separately.",
+  "outputs": {
+    "offset_csv": "/home/diy/bonus_track/REIM/results/tables/detector_pre_event_by_offset.csv"
+  },
+  "prospective_window_metrics_including_current_event": {
+    "accuracy": 0.8956500097772563,
+    "confusion_matrix": [
+      [
+        16352,
+        3038
+      ],
+      [
+        2832,
+        34031
+      ]
+    ],
+    "f1": 0.9206027160093059,
+    "fn": 2832,
+    "fp": 3038,
+    "negative_samples": 19390,
+    "positive_fraction": 0.6553072725010222,
+    "positive_samples": 36863,
+    "precision": 0.9180447274002536,
+    "predicted_positive_fraction": 0.6589692994151423,
+    "predicted_positive_samples": 37069,
+    "recall": 0.9231749993218132,
+    "samples": 56253,
+    "tn": 16352,
+    "tp": 34031
+  },
+  "protocol": {
+    "forecast_horizon": 10,
+    "sequence_length": 10,
+    "split_seed": 42,
+    "strict_pre_event_universe": "offsets -1 and 1..horizon; offset 0 excluded",
+    "target_interval": "[t, t + forecast_horizon]",
+    "threshold": 0.2,
+    "trajectory_files_total": 2000,
+    "validation_fraction": 0.2,
+    "validation_split": "trajectory_grouped",
+    "validation_trajectory_files": 400
+  },
+  "schema_version": 1,
+  "strict_future_positive_window_recall": 0.6826697892271663,
+  "strict_pre_event_window_metrics": {
+    "accuracy": 0.8097413722770662,
+    "confusion_matrix": [
+      [
+        16352,
+        3038
+      ],
+      [
+        1626,
+        3498
+      ]
+    ],
+    "f1": 0.6000000000000001,
+    "fn": 1626,
+    "fp": 3038,
+    "negative_samples": 19390,
+    "positive_fraction": 0.20902341519131926,
+    "positive_samples": 5124,
+    "precision": 0.5351897184822522,
+    "predicted_positive_fraction": 0.26662315411601534,
+    "predicted_positive_samples": 6536,
+    "recall": 0.6826697892271663,
+    "samples": 24514,
+    "tn": 16352,
+    "tp": 3498
+  },
+  "trajectory_metrics": {
+    "event_trajectories": 258,
+    "event_trajectories_with_strict_pre_event_alert": 191,
+    "latest_pre_event_alert_lead_steps": {
+      "count": 191,
+      "maximum": 59,
+      "mean": 2.225130890052356,
+      "median": 1.0,
+      "minimum": 1
+    },
+    "non_event_trajectories": 142,
+    "non_event_trajectories_with_any_alert": 94,
+    "non_event_trajectory_alert_rate": 0.6619718309859155,
+    "strict_pre_event_detection_rate": 0.7403100775193798
+  },
+  "validation_samples": {
+    "current_event_fraction_of_positive": 0.8609988335187044,
+    "current_event_offset_zero": 31739,
+    "negative_no_event_within_horizon": 19390,
+    "prospective_positive": 36863,
+    "strict_future_fraction_of_positive": 0.1390011664812956,
+    "strict_future_offset_one_to_horizon": 5124,
+    "total": 56253
+  }
+}

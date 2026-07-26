@@ -1,0 +1,67 @@
+{
+  "backend": "metaworld",
+  "checkpoint_sha256": {
+    "act": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "failure_detector_after_noop": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "failure_detector_before_noop": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "recovery_trigger_seed42_v2": "dcde8b5cf5ef758be459484a9f822d0ce391e7943221030467630e00f83a1b97"
+  },
+  "checkpoint_unchanged": true,
+  "detector_triggers": 544,
+  "episodes": 1000,
+  "evaluation_seed_end": 6001041,
+  "evaluation_seed_start": 6000042,
+  "method": "ACT + Detector",
+  "output_sha256": {
+    "confusion_matrix": "cb58a537916ae2aa3fc3ad7a12fa0063eaf379f364452ad996fa7bc713371b5c",
+    "detector_metrics": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
+    "episodes": "f2b9bf79aa3b0204547d7191a893c9028b2ef37228fa6fabcdeed42acde7a0f6",
+    "merge_manifest": "f99852a354df7d32552a6bb312db3db84d878df87c97c2cf03b2de13cc22ec30",
+    "summary": "c1d16aa0427660884e06cdcd35a9a37725a4519c98bda8a956aa0e61eb960de9"
+  },
+  "profile": "full",
+  "protocol": {
+    "failure_threshold": 0.2,
+    "max_steps": 200,
+    "noise_level": 0.2,
+    "recovery_budget": 150,
+    "recovery_clear_steps": 200,
+    "recovery_exit_threshold": 0.0,
+    "recovery_min_steps": 150
+  },
+  "raw_validation": {
+    "continuous_exact_seed_range": true,
+    "no_duplicate_seeds": true,
+    "no_literal_nan": true,
+    "summary_recomputed_from_raw": true
+  },
+  "schema_version": 1,
+  "shards": {
+    "chunk0": {
+      "episodes_sha256": "dc579405a191f82f870b02695646ac8fc8ebcb3ef768c44e53918c636d906e4c",
+      "seed_end": 6000291,
+      "seed_start": 6000042,
+      "summary_sha256": "04b2df3bb734dc5c244477d9f00eebbe307a4ffabb01d4a25583003d1d649406"
+    },
+    "chunk1": {
+      "episodes_sha256": "3338a6027d5b86df8d4b670b8500edac5752551385c2ac100e23648c20c00a5e",
+      "seed_end": 6000541,
+      "seed_start": 6000292,
+      "summary_sha256": "7bb9e0961e8435c8642184128093c1ab74a56e00b6606b78e2f3997f968ede6c"
+    },
+    "chunk2": {
+      "episodes_sha256": "c74c0dfcdc92a54c8a4b65368ed66d8fdbacde011cf448377474bf837afaff70",
+      "seed_end": 6000791,
+      "seed_start": 6000542,
+      "summary_sha256": "eb5746005674749d38818ced4d1cb94049dfb0a3ea1eee595f67d6a5a786862a"
+    },
+    "chunk3": {
+      "episodes_sha256": "843c63b9ec0cadb48a1d54aa878254909a88f66d1e58fb7835d635aef026f9e1",
+      "seed_end": 6001041,
+      "seed_start": 6000792,
+      "summary_sha256": "86eb08b01eba7381da544b15be1ac841aed7c326ab644504ee08bf7fe0e79d44"
+    }
+  },
+  "successes": 594,
+  "unique_evaluation_seeds": 1000
+}

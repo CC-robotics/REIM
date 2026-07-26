@@ -1,0 +1,591 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath,amssymb}
+\usepackage{newtxtext,newtxmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{balance}
+
+\graphicspath{{./}{../results/figures/}}
+\input{reim_macros.tex}
+
+\newcommand{\policyact}{\pi_{\mathrm{ACT}}}
+\newcommand{\policyrec}{\pi_{\mathrm{rec}}}
+\newcommand{\PaperGraphic}[3]{%
+  \IfFileExists{#1.pdf}{%
+    \includegraphics[width=#2]{#1.pdf}%
+  }{%
+    \IfFileExists{#1.png}{%
+      \includegraphics[width=#2]{#1.png}%
+    }{%
+      \fbox{\parbox[c][1.15in][c]{0.92\linewidth}{%
+        \centering\textbf{Missing compiled artifact}\\[2pt]#3}}%
+    }%
+  }%
+}
+
+\title{REIM: Recovery-Enhanced Imitation Learning for\\
+Failure-Aware Manipulation in Meta-World}
+
+\author{\IEEEauthorblockN{Anonymous Authors}
+\IEEEauthorblockA{Submission under review}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Imitation-learned manipulation policies can be accurate on demonstrations yet
+brittle after a missed grasp, object drop, or control perturbation shifts the
+closed-loop state distribution. We introduce Recovery-Enhanced Imitation
+Learning (REIM), a failure-aware controller that combines a state-based
+Action-Chunking-with-Transformers (ACT) task policy, a causal LSTM risk monitor,
+and a trigger-aligned supervised recovery option. Its curriculum executes ACT
+online under disturbances, serializes the complete MuJoCo simulator state at an
+early collection trigger, and queries a scripted expert for successful
+continuations from those learner-induced states. A deterministic recovery MLP
+is trained with Smooth L1 loss on 42,386 state--action pairs and selected on
+8,212 disjoint validation pairs. About 99\% of the captured states precede any
+lift, so REIM is principally an early pre-grasp correction system rather than a
+post-drop repair policy.
+Across \PlannedMainEpisodes{} paired Meta-World PickPlace trials at 20\%
+mixed simulated disturbance, REIM reaches \FinalREIMSuccess{} task success
+versus \FinalACTSuccess{} for ACT and \FinalResetSuccess{} for one fresh-task
+retry. The same recovery actor with a semantic heuristic gate reaches
+\FinalRLRecoverySuccess{}, while REIM improves success by
+\FinalREIMDeltaVsRL{} and uses
+\FinalREIMInterventionReductionVsRL{} fewer interventions. At 40\%
+disturbance, REIM retains
+\FinalREIMSuccessAtFortyNoise{} success versus
+\FinalACTSuccessAtFortyNoise{} for ACT.
+All experiments in this paper use the simulated Sawyer model in
+Meta-World/MuJoCo; no physical-robot evaluation is claimed.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+Imitation learning offers a direct route from expert demonstrations to robot
+control, but supervised action error does not capture the distribution induced
+by the learned policy. Small errors alter future observations and compound over
+the horizon, a problem formalized by interactive imitation-learning work such
+as DAgger~\cite{ross2011dagger}. Action chunking reduces the effective horizon
+and has enabled precise manipulation~\cite{zhao2023act}, but a chunked policy
+can still enter states absent from the successful demonstrations. In PickPlace,
+typical departures include a failed enclosure, premature gripper opening,
+object displacement, and trajectories that cease to make goal progress.
+
+A useful recovery system must answer three coupled questions: when nominal
+execution has become risky, which controller should act next, and which states
+should train that controller. Training a recovery policy from hand-designed
+``failure-like'' resets leaves a train--deploy gap: the reset may match object
+position while omitting robot velocity, gripper dynamics, controller memory,
+or task bookkeeping. Conversely, corrective demonstrations collected only
+from nominal states do not teach a policy how to respond at the learner-induced
+states where intervention is actually required.
+
+REIM addresses these issues with a closed-loop composition of imitation,
+runtime risk monitoring, and targeted recovery imitation. Its main
+contributions are:
+
+\begin{itemize}
+  \item a causal risk-gated controller coupling temporally ensembled ACT, an
+  LSTM risk monitor, and a persistent deterministic recovery option;
+  \item an online trigger-state curriculum that serializes and restores full
+  numeric Meta-World/MuJoCo states observed when disturbed ACT first crosses a
+  broad risk-monitor collection threshold;
+  \item trigger-aligned supervised recovery trained on successful expert
+  continuations with a trajectory-disjoint validation split, exported as a
+  standalone actor with zero reinforcement-learning interactions; and
+  \item a reproducible paired simulation protocol that separates classifier
+  diagnostics, model-selection validation, intervention-conditioned task
+  completion, final task success, and controller intervention burden.
+\end{itemize}
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Imitation Learning Under Distribution Shift}
+
+Behavior cloning is vulnerable to covariate shift because its training states
+come from the expert while its test states are induced by the learner.
+Interactive aggregation methods query corrective actions on learner-induced
+states~\cite{ross2011dagger}. ACT instead predicts temporally coherent action
+chunks with a conditional variational Transformer and ensembles overlapping
+predictions~\cite{zhao2023act}. REIM retains ACT as a strong nominal policy and
+adds an explicit recovery route for states that successful demonstrations do
+not cover.
+
+\subsection{Runtime Failure Monitoring}
+
+Runtime monitors can use predictive uncertainty, action consistency, semantic
+progress, or supervised failure labels. Recent work separates erratic actions
+from stalled task progress~\cite{agia2025sentinel}. REIM uses a lightweight
+causal LSTM~\cite{hochreiter1997lstm} over semantic state history. It estimates
+the risk that a labeled event is present now or occurs within a short horizon;
+it never consumes future observations at deployment.
+
+\subsection{Recovery Policies}
+
+Recovery RL separates a task policy from a safety-oriented recovery
+policy~\cite{thananjeyan2021recovery}. Residual RL adds learned corrective
+control to a nominal controller~\cite{johannink2019residual}, while
+MetaReSkill~\cite{vats2023metareskill} allocates training to manipulation
+failure modes and RecoveryChaining~\cite{vats2024recoverychaining} learns local
+policies that reconnect to nominal skills. REIM differs in the source of its
+recovery initial-state distribution: each start is a complete simulator state
+produced by the ACT--detector pair at its first online collection trigger. The
+collection gate is deliberately broader than the frozen deployment gate. This
+permits targeted corrective imitation from learner-induced states without
+requiring on-policy recovery interactions. State restoration is used only to
+construct a controlled simulation dataset; we do not claim that the same reset
+mechanism is directly available on hardware.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Problem Formulation}
+
+We consider a finite-horizon manipulation MDP with semantic state
+$s_t\in\mathbb{R}^{\REIMStateDim}$ and Cartesian action
+$a_t\in[-1,1]^{\REIMActionDim}$. The state concatenates the simulated Sawyer
+joint positions, end-effector position and quaternion, object position, goal
+position, and gripper state. The action contains end-effector displacement
+$(\Delta x,\Delta y,\Delta z)$ and gripper command $g$. Task success is the
+environment's explicit object-at-goal event. REIM learns a nominal policy
+$\policyact$, risk predictor $f_\phi$, and recovery policy $\policyrec$.
+
+\subsection{Chunked Nominal Policy}
+
+The state-based ACT model is a conditional variational Transformer that
+predicts a chunk of $\ACTChunkLength$ future actions,
+\begin{equation}
+  \hat a_{t:t+\ACTChunkLength-1}
+  = \policyact(s_t,z), \qquad z=0 \text{ at inference}.
+\end{equation}
+Training minimizes masked L1 reconstruction plus a KL term for the latent
+posterior. Overlapping predictions for the current action are combined with
+exponentially decaying temporal weights. The ensemble is cleared whenever
+control changes between ACT and the recovery option so an unexecuted
+pre-intervention chunk cannot re-enter the controller after recovery.
+
+\subsection{Causal Risk Monitoring}
+
+The detector consumes only the most recent $\DetectorHistory$ post-transition
+states. For short prefixes, valid states are placed first and the remainder is
+zero padded; packed sequence lengths prevent padding from changing the LSTM
+state. The failure probability is
+\begin{equation}
+  p_t = \sigma\!\left(
+  g_\phi\!\left(\operatorname{LSTM}_\phi
+  (s_{t-h_t+1:t})\right)\right),
+  \quad h_t\leq \DetectorHistory .
+\end{equation}
+Targets indicate whether an online failure event occurs in the inclusive
+interval $[t,t+\DetectorForecastHorizon]$. Thus an event observed at the current
+step is also positive; causal inputs do not make this a pure future-event
+forecast. Binary cross entropy trains the model on disturbed ACT rollouts, and
+trajectories rather than individual windows are assigned to disjoint training
+and validation splits.
+
+\subsection{Online Trigger-State Recovery Curriculum}
+\label{sec:trigger-curriculum}
+
+Approximate failure resets can reproduce an object's displacement without
+reproducing the dynamic state that caused it. We instead roll out ACT with the
+trained detector under mixed action, observation, and object disturbances. At
+the first $p_t\geq\CurriculumTriggerThreshold$, before any recovery action is
+executed, the collector stores the complete numeric simulator snapshot:
+MuJoCo positions and velocities, mocap targets, actuator/control state, task
+goal and reset-time geometry, previous observation, step count, and REIM
+episode bookkeeping. Training and model-selection validation use
+non-overlapping episode-seed banks. This collection threshold is intentionally
+lower than the frozen end-to-end gate
+$\tau_{\mathrm{on}}=\FinalControllerTrigger$: the former provides broad
+risk-triggered recovery starts, whereas the latter defines the deployed
+intervention operating point. We therefore call the states online-triggered,
+not deployment-distribution-matched.
+
+A scripted PickPlace expert then continues from the captured state. Every
+snapshot is retained for provenance. Only expert-successful trajectories
+contribute recovery-imitation targets. This yields
+\RecoveryTrainEligibleStarts{} eligible training starts with
+\RecoveryTrainExpertSamples{} supervised action pairs and
+\RecoveryValidationEligibleStarts{} model-selection starts with
+\RecoveryValidationExpertSamples{} pairs. Only 1.12\% of training snapshots
+and 1.04\% of validation snapshots record any prior lift. Thus approximately
+99\% are pre-grasp or early approach corrections, not post-drop recovery
+states.
+
+\subsection{Trigger-Aligned Recovery Imitation}
+
+The recovery option is a deterministic MLP
+$\policyrec:\mathbb{R}^{21}\!\rightarrow[-1,1]^4$ with two 256-unit
+\texttt{tanh} hidden layers and a clipped linear action head. Let
+$\mathcal{D}_{\mathrm{rec}}=\{(s_i,a_i^E)\}$ contain states and scripted-expert
+actions from successful continuations after online triggers. We optimize
+\begin{equation}
+  \mathcal{L}_{\mathrm{rec}}(\psi)=
+  \frac{1}{|\mathcal{D}_{\mathrm{rec}}|}
+  \sum_{(s,a^E)\in\mathcal{D}_{\mathrm{rec}}}
+  \operatorname{SmoothL1}\!\left(\pi_{\mathrm{rec},\psi}(s),a^E\right).
+\end{equation}
+This is failure-aware, Smooth-L1 behavior cloning: failure awareness enters
+through the online LSTM-triggered sampling distribution rather than a
+hand-labeled mode bit appended to the actor input.
+Training uses 42,386 pairs, 40 epochs, batch size 512, learning rate
+$10^{-3}$, and Gaussian observation augmentation with standard deviation
+0.005. The epoch with minimum Smooth L1 on 8,212 trajectory-disjoint validation
+pairs is retained. Its validation loss is
+\RecoveryWarmStartValidationLoss{}.
+
+The deployed file contains only the 21--256--256--4 actor, observation and
+action bounds, and provenance metadata. It contains no critic, stochastic
+log-standard-deviation, optimizer, or rollout state and records zero
+reinforcement-learning environment interactions and zero policy-gradient
+updates. An export audit compares the standalone actor against its source on
+42,386 training states, 8,212 validation states, and 10,000 deterministic
+random-support states: all 60,598 clipped and unclipped action outputs are
+bitwise identical.
+
+\subsection{Closed-Loop Arbitration}
+
+At each step the controller updates the causal history and computes $p_t$. ACT
+acts while $p_t<\tau_{\mathrm{on}}$; crossing $\tau_{\mathrm{on}}$ activates
+the recovery option. The frozen values are
+$(\tau_{\mathrm{on}},\tau_{\mathrm{off}},m,B,c)=
+(\FinalControllerTrigger,\FinalControllerRelease,
+\FinalControllerMinSteps,\FinalControllerBudget,
+\FinalControllerClearSteps)$, where $m$ is the minimum commitment, $B$ the
+budget, and $c$ the number of clear observations required for release. Because
+$m=B$ and $c>B$, the final protocol disables mid-intervention risk-clear
+release: $\policyrec$ retains control until task success or budget exhaustion.
+If the task remains active after an exhausted intervention, ACT resumes with its
+temporal ensemble reset. All evaluation entry points use this same
+configuration.
+
+\begin{figure*}[t]
+  \centering
+  \PaperGraphic{Figure1_final_framework}{0.96\textwidth}{%
+  ACT task policy $\rightarrow$ causal LSTM risk gate $\rightarrow$ supervised
+  recovery $\rightarrow$ action execution $\rightarrow$ Meta-World PickPlace
+  in MuJoCo (simulated Sawyer model).}
+  \caption{REIM training and deployment architecture. The environment block is
+  explicitly the Meta-World PickPlace task running in MuJoCo with a simulated
+  Sawyer model. Dashed training-only paths denote exact simulator snapshot
+  capture, scripted corrective demonstrations, and validation-loss checkpoint
+  selection; the scripted expert is never queried during evaluation.}
+  \label{fig:framework}
+\end{figure*}
+
+\section{Experiments}
+\label{sec:experiments}
+
+\subsection{Simulation Environment and Data}
+
+Experiments use the Meta-World 3.1.1 \REIMTask{} single-task,
+goal-observable environment~\cite{yu2020metaworld} with MuJoCo
+dynamics~\cite{todorov2012mujoco}. The requested benchmark is the historical
+PickPlace-v2 Sawyer task. Meta-World 3.1.1 exposes its maintained Gymnasium
+successor as \texttt{pick-place-v3}; the wrapper records both identifiers and
+maps a v2 request to that maintained registration while preserving the Sawyer
+pick--move--place task semantics. We report the exact executed identifier to
+avoid implying use of an unavailable legacy API. The 21-dimensional policy
+input includes privileged simulator quantities rather than images or a
+physical sensing stack.
+
+The ACT dataset contains \REIMDemoTrajectories{} successful scripted
+trajectories and \REIMDemoTransitions{} transitions. Failure-predictor data
+come from \DetectorTrainingEpisodes{} disturbed ACT episodes, using Gaussian
+action and observation noise plus one-shot simulated object-position
+displacements. Recovery
+starts are collected at \CurriculumNoiseLevel{} nominal disturbance scaling.
+The training and validation banks contain \RecoveryTrainStarts{} and
+\RecoveryValidationStarts{} exact trigger snapshots, respectively, with
+disjoint seed ranges and checkpoint hashes recorded in their manifests.
+
+\subsection{Training Protocol}
+
+ACT uses hidden width \ACTHiddenDim{}, \ACTAttentionHeads{} attention heads,
+\ACTEncoderLayers{} encoder layers, \ACTDecoderLayers{} decoder layers, and a
+\ACTLatentDim-dimensional latent. It is trained for \ACTTrainingEpochs{}
+epochs. The detector has an LSTM width of \DetectorHiddenDim{} followed by an
+\DetectorMLPDim-dimensional MLP. The recovery actor uses two 256-unit
+\texttt{tanh} layers and is optimized for 40 supervised epochs with batch size
+512, learning rate $10^{-3}$, and input-noise standard deviation 0.005.
+Training and validation contain 42,386 and 8,212 trigger-aligned pairs,
+respectively. Recovery-policy training uses no environment interaction; the
+primary uncertainty estimates therefore come from paired held-out episodes,
+not multiple policy-gradient seeds.
+
+\subsection{Baselines and Ablations}
+
+The paired baseline comparison contains:
+\emph{ACT}, the nominal policy without intervention;
+\emph{ACT + Random Reset}, one fresh-task retry after a heuristic failure event
+(the retry uses a new simulator seed);
+\emph{ACT + Heuristic Recovery}, the same trigger-aligned imitation actor
+activated by a semantic heuristic rather than the LSTM; and \emph{REIM}, which
+uses the LSTM gate with that actor. The heuristic fires after
+at least 20 steps and observed object interaction when a 12-step goal-distance
+window improves by less than $10^{-3}$ or worsens by more than
+$5\times10^{-3}$; explicit drop/failure flags also fire it. It therefore uses
+simulator-level semantic information. The paper-facing component study uses
+ACT, heuristic-gated recovery, and full REIM. The first removes recovery
+entirely; the second replaces the learned
+gate with simulator-level semantics while retaining the identical recovery
+actor.
+
+\subsection{Evaluation and Metrics}
+
+The main evaluation uses \PlannedMainEpisodes{} paired CRN episode
+specifications per method under \CurriculumNoiseLevel{} mixed disturbance,
+spanning seeds 8{,}000{,}042--8{,}001{,}041. Robustness uses
+\PlannedRobustnessEpisodes{} paired episodes at each of
+\RobustnessLevels{}. Each episode records explicit task success, intervention
+count, task completion while the recovery controller is active, and length.
+For learned recovery methods, ``recovery rate'' is the number of task
+completions reached
+during active recovery divided by the number of recovery interventions.
+Random Reset instead reports post-reset completion per reset and is labeled
+separately; the two intervention outcomes are not compared as identical
+quantities. Neither is a detector-risk-clearance proxy. Success intervals are
+Wilson intervals; ratio and step-count intervals are obtained by episode
+bootstrap. Every nominal attempt in a condition consumes the same serialized
+common-random-number (CRN) episode specification: task identity, initial
+MuJoCo state, disturbance schedule, and episode seed are hash-checked before
+aggregation. The Random Reset baseline alone receives one explicitly labeled
+fresh-task retry whose second-attempt specification uses a reserved,
+deterministically offset seed. The $\tau_{\mathrm{on}}=0.20$ LSTM gate is
+frozen before the primary evaluation. A separate post-freeze sweep on 200
+previously unused CRN episodes is reported only as a sensitivity diagnostic;
+it does not select or alter the primary gate.
+
+\section{Results}
+\label{sec:results}
+
+\input{Table1_final_baseline.tex}
+
+REIM achieves \FinalREIMSuccess{} task success, compared with
+\FinalACTSuccess{} for ACT, \FinalResetSuccess{} for random reset, and
+\FinalRLRecoverySuccess{} for semantic-heuristic recovery. Across REIM
+interventions, \FinalREIMRecovery{} reach task completion while recovery
+retains control. Pairing gives a REIM--ACT gain of \FinalREIMGain{}
+(\ConfidenceLevel{} CI \FinalREIMGainCI) and a REIM--Random Reset gain of
+\FinalREIMGainVsReset{} (CI \FinalREIMGainVsResetCI). Against the stronger
+semantic-heuristic gate, REIM improves success by \FinalREIMDeltaVsRL{} (CI
+\FinalREIMDeltaVsRLCI) while intervening in \FinalREIMIntervention{} rather
+than \FinalRLRecoveryIntervention{} of episodes (655 versus 731 of 1,000).
+This corresponds to \FinalREIMFewerIntervenedEpisodes{} fewer intervened
+episodes and a
+\FinalREIMInterventionReductionVsRL{} relative burden reduction. Thus the
+frozen LSTM gate Pareto-dominates this simulator-privileged heuristic in the
+primary CRN benchmark; the paired gate audit below tests whether this persists
+at matched burden.
+
+From no disturbance to the strongest condition, REIM changes from
+\FinalREIMSuccessAtZeroNoise{} to \FinalREIMSuccessAtFortyNoise{}, while ACT
+changes from \FinalACTSuccessAtZeroNoise{} to
+\FinalACTSuccessAtFortyNoise{}. At 10\%, 20\%, 30\%, and 40\% disturbance,
+the paired success improvements are \FinalREIMGainAtTenNoise{},
+\FinalREIMGainAtTwentyNoise{}, \FinalREIMGainAtThirtyNoise{}, and
+\FinalREIMGainAtFortyNoise{}, respectively.
+
+Figure~\ref{fig:gate-sensitivity} compares gate operating points on the
+separate diagnostic bank. At the frozen $\tau_{\mathrm{on}}=0.20$ point,
+REIM reaches \GateTauTwentySuccess{} success with
+\GateTauTwentyIntervention{} intervention, \GateTauTwentyGainVsHeuristic{}
+above the matched heuristic (CI \GateTauTwentyGainVsHeuristicCI,
+$p=\GateTauTwentyP$, exact two-sided McNemar/binomial test). At
+$\tau_{\mathrm{on}}=0.175$, its intervention rate
+\GateTauSeventeenFiveIntervention{} nearly matches the heuristic's
+\GateHeuristicIntervention{}: the paired difference is
+\GateTauSeventeenFiveInterventionDelta{} (CI
+\GateTauSeventeenFiveInterventionDeltaCI). REIM nevertheless reaches
+\GateTauSeventeenFiveSuccess{} versus \GateHeuristicSuccess{}, a paired gain of
+\GateTauSeventeenFiveGainVsHeuristic{} (CI
+\GateTauSeventeenFiveGainVsHeuristicCI, $p=\GateTauSeventeenFiveP$). This
+post-freeze burden-matched comparison supports the learned gate's utility but
+is not substituted for the primary benchmark or used for threshold selection.
+
+\begin{figure*}[t]
+  \centering
+  \PaperGraphic{Figure2_final_results}{0.96\textwidth}{%
+  Paired task-success comparison, intervention burden, and
+  \RobustnessLevels{} disturbance robustness curve.}
+  \caption{Final simulated Meta-World results. Left: paired task success for
+  the four methods. Center: the fraction of episodes receiving an
+  intervention, exposing controller burden when success rates are similar.
+  Right: success under increasing mixed action and observation noise plus
+  simulated one-shot object-position displacements. Every panel is regenerated
+  from final per-episode
+  records; no development-run curve is substituted.}
+  \label{fig:final-results}
+\end{figure*}
+
+\begin{figure}[t]
+  \centering
+  \PaperGraphic{Figure4_gate_sensitivity}{0.98\columnwidth}{%
+  Success--intervention sensitivity across five LSTM thresholds.}
+  \caption{Post-freeze gate sensitivity on a separate set of 200 paired
+  Meta-World seeds at 20\% disturbance. Each point is labeled by
+  $\tau_{\mathrm{on}}$; the green cross is the semantic heuristic evaluated on
+  the same serialized CRN bank. The circled 0.20 operating point remains the
+  frozen primary gate, while the dashed comparison at 0.175 exposes matched
+  intervention burden. This diagnostic was not used for model or threshold
+  selection.}
+  \label{fig:gate-sensitivity}
+\end{figure}
+
+\subsection{Completed Component Diagnostics}
+
+\input{Table3_component_diagnostics.tex}
+
+ACT reaches validation action L1 \ACTBestValidationLone{} on a
+trajectory-grouped split. At the separately reported
+\DetectorDiagnosticThreshold{} detector operating point, precision is
+\DetectorPrecisionDiagnostic{} and recall is \DetectorRecallDiagnostic{} over
+\DetectorValidationSamples{} validation windows. Figure~\ref{fig:detector}
+shows the corresponding confusion matrix. The diagnostic is evaluated at the
+same frozen probability threshold as end-to-end arbitration,
+$\tau_{\mathrm{on}}=\FinalControllerTrigger$, but window-level classification
+metrics do not by themselves establish closed-loop utility.
+
+The inclusive target requires a second, stricter audit. Of the positive
+validation windows, \DetectorCurrentEventPositiveShare{} have event offset zero.
+After excluding those current-event windows and scoring only future offsets
+$1$--$\DetectorForecastHorizon$ against windows with no event in the horizon,
+precision/recall/F1 are \DetectorStrictPreEventPrecision{}/
+\DetectorStrictPreEventRecall{}/\DetectorStrictPreEventFone{}. At trajectory
+level, the monitor alerts strictly before the first event in
+\DetectorPreEventDetectedTrajectories{}/\DetectorEventTrajectories{}
+(\DetectorPreEventTrajectoryDetection{}) event trajectories, with median latest
+alert lead \DetectorMedianPreEventLead{} step. We therefore describe the LSTM as
+a causal risk monitor, not a calibrated long-horizon forecaster.
+
+\begin{figure}[t]
+  \centering
+  \PaperGraphic{Figure3_detector}{0.86\columnwidth}{%
+  Grouped-validation confusion matrix.}
+  \caption{Causal risk-monitor confusion matrix on the trajectory-grouped
+  validation split at $\tau=\DetectorDiagnosticThreshold$. Counts are
+  $(\mathrm{TN},\mathrm{FP},\mathrm{FN},\mathrm{TP})=
+  (\DetectorTNDiagnostic,\DetectorFPDiagnostic,
+  \DetectorFNDiagnostic,\DetectorTPDiagnostic)$.}
+  \label{fig:detector}
+\end{figure}
+
+The recovery actor reaches validation Smooth L1
+\RecoveryWarmStartValidationLoss{}. The standalone checkpoint records zero
+environment-training steps and contains only 72,452 actor parameters. Its
+export audit finds exactly zero action error on 60,598 states, including every
+training and validation state plus 10,000 random-support states. This
+establishes deployment-artifact equivalence; held-out paired episodes, rather
+than the export check, support the task-level claims.
+
+\begin{figure*}[t]
+  \centering
+  \PaperGraphic{Figure5_operation_sequence}{0.96\textwidth}{%
+  Qualitative sequence from one separate Meta-World/MuJoCo episode:
+  ACT execution, LSTM trigger, recovery-imitation intervention, and task
+  completion.}
+  \caption{Paired qualitative operation sequence from separate simulation seed
+  \OperationTraceSeed{} at \OperationTraceNoise{} disturbance. With the
+  frozen evaluation gate
+  $\tau_{\mathrm{on}}=\OperationTraceThreshold$, ACT does not complete the
+  task within \OperationTraceACTSteps{} steps, whereas REIM triggers once and
+  completes in \OperationTraceREIMSteps{} steps, including
+  \OperationTraceRecoverySteps{} supervised-recovery actions. These are rendered
+  Meta-World/MuJoCo frames of the simulated Sawyer model, not hardware
+  photographs. This selected trace explains controller operation and does not
+  estimate aggregate success.}
+  \label{fig:operation}
+\end{figure*}
+
+\section{Recovery and Gate Ablations}
+\label{sec:ablations}
+
+\input{Table2_final_ablation.tex}
+
+Removing recovery entirely reduces the controller to ACT and
+\AblationASuccess{} success. Keeping the same trigger-aligned recovery actor
+but replacing the LSTM with simulator-semantic heuristics reaches
+\AblationCSuccess{} and intervenes in \FinalRLRecoveryIntervention{} of
+episodes. Full REIM reaches \AblationDSuccess{} while intervening in only
+\FinalREIMIntervention{}, improving both success and intervention burden. The
+separate burden-matched audit in Fig.~\ref{fig:gate-sensitivity} makes the gate
+comparison under nearly equal intervention rates.
+
+\begin{figure}[t]
+  \centering
+  \PaperGraphic{Figure3_final_ablation}{0.98\columnwidth}{%
+  Recovery and gate ablation on paired simulated episodes.}
+  \caption{Paper-facing component removal study. ACT removes recovery;
+  Heuristic gate + recovery replaces only the learned LSTM arbitration rule
+  while retaining the same recovery actor; REIM uses LSTM-triggered recovery
+  imitation. Error bars are Wilson 95\% intervals.}
+  \label{fig:ablation}
+\end{figure}
+
+Table~\ref{tab:final-ablation} therefore supports two scoped conclusions:
+recovery is responsible for the large improvement over nominal ACT, and learned
+temporal arbitration improves on a strong simulator-privileged gate. It does
+not isolate online snapshot collection from recovery-imitation training, so we
+make no separate marginal claim about those coupled design choices.
+
+\section{Limitations}
+\label{sec:limitations}
+
+The current study has several boundaries. First, it evaluates one
+state-observed Meta-World task; visual perception, multi-task transfer, and
+contact sensing are outside scope. Second, exact simulator restoration depends
+on privileged MuJoCo state and task bookkeeping. It is a controlled way to
+align recovery training in simulation, not a deployable physical-robot reset
+mechanism. Hardware would require state estimation and safe physical
+repositioning or real failure collection. Third, filtering recovery-imitation
+trajectories by scripted-expert success biases training toward recoverable states and may
+exclude precisely the hardest failures. Fourth, detector metrics are measured
+on disturbed rollouts from one nominal policy and may shift as ACT or the
+disturbance distribution changes. Moreover, the inclusive label makes the
+standard confusion matrix predominantly a current-event diagnostic, and
+\DetectorNonEventTrajectoryAlert{} of validation trajectories without a labeled
+event still contain an alert at the deployed threshold. Fifth, the main table
+is conditional on one trained ACT, detector, and supervised recovery actor, so
+it does not propagate all model-training uncertainty. Sixth, the validation
+pairs select the recovery epoch and therefore provide model-selection rather
+than independent test evidence. Finally, the reported ``intervention outcome''
+is task completion while the recovery option remains in control: the
+persistent option does not demonstrate recovery
+to a certified safe set followed by an ACT hand-back. It can also waste steps
+after false positives, so all arbitration parameters remain frozen throughout
+the paired benchmark.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+REIM combines state-based chunked imitation, causal runtime risk monitoring,
+and a persistent trigger-aligned imitation recovery option in one closed-loop
+manipulation controller. Corrective demonstrations are collected from complete
+simulator states captured at online risk-monitor triggers, and a deterministic
+recovery actor is selected by trajectory-disjoint validation loss without
+reinforcement-learning interaction. In paired
+Meta-World/MuJoCo evaluation, REIM improves ACT by \FinalREIMGain{} and remains
+substantially more robust at strong disturbances. Its LSTM gate reduces
+interventions by \FinalREIMInterventionReductionVsRL{} relative to
+heuristic-triggered recovery while improving success by
+\FinalREIMDeltaVsRL{} in the primary paired benchmark; a separate
+burden-matched audit yields \GateTauSeventeenFiveGainVsHeuristic{} at
+$p=\GateTauSeventeenFiveP$.
+The captured distribution is approximately 99\% pre-grasp/early correction,
+so the evidence supports selective simulated failure prevention and recovery,
+not general post-drop repair, visual perception, sim-to-real transfer, or a
+physical Sawyer claim.
+
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{reim_refs}
+
+\end{document}

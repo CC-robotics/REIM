@@ -1,0 +1,38 @@
+{
+  "artifact": "post_freeze_gate_sensitivity",
+  "selection_rule": "none; frozen primary tau=0.20 is not changed",
+  "paired_seed_start": 8200042,
+  "paired_seed_end": 8200241,
+  "episodes_per_threshold": 200,
+  "thresholds": [
+    0.1,
+    0.125,
+    0.15,
+    0.175,
+    0.2
+  ],
+  "crn_episode_specifications_identical": true,
+  "episode_bank_sha256": "bce931c8f7f4b2ca6d96ac63f5e3bd3c7b1a2d9a694728801ff6b1a12baf8802",
+  "episode_bank_file_sha256": "63679756c58e9f92045f137509620db649c1f612a4711bf15cd73cb3adbf2fa8",
+  "inputs": {
+    "results/tables/gate_calibration_tau010.csv": "34d897d63a7e30a57d78dcf59dd695b5a280be8ef05bf29a9657f52b51e103f6",
+    "results/tables/gate_calibration_tau010_episodes.csv": "eee346cbcf7c5e6f2e11582fce7bb65b2c4809d6bef7678cbef70471ecb2691b",
+    "results/tables/gate_calibration_tau0125.csv": "3e3d008ce482b73edbfe66d35b2a6b81bc4e14f425a76536a2c6aa7519a7a66a",
+    "results/tables/gate_calibration_tau0125_episodes.csv": "d5970e8a5e102db8f2aa2b46f6c1dd874360719dfdd061ec6f67aba4b6b7f042",
+    "results/tables/gate_calibration_tau015.csv": "d02da9b8b6caeccc82a1508659d4b525f92448680d75cc3d27bd97bd76af730d",
+    "results/tables/gate_calibration_tau015_episodes.csv": "099219d2f6aea9b684d63de1e356e27f126222c758f1a11f7d835093db163b7a",
+    "results/tables/gate_calibration_tau0175.csv": "a4d0eb71539dd6e3f80cd686e4d9ea2a2c5676b716b75e7ec2826f4eaeac3ffb",
+    "results/tables/gate_calibration_tau0175_episodes.csv": "1253dc77cf135f0a7bfaac4f4d549eefad557f49b9458d4af43f55f558ad6f57",
+    "results/tables/gate_calibration_tau020.csv": "7394813c002e4717a98819f291f96028d60c4adc01725f32678a95aa8bc51621",
+    "results/tables/gate_calibration_tau020_episodes.csv": "f55240326f58743a4341204ce8cb8cbaa67f3d089dd50bc86a389080c816687f"
+  },
+  "matched_gate_audit": {
+    "path": "results/tables/gate_matched_comparison.json",
+    "sha256": "b9fe916cf96cb54a09d4f11e1318c06aab175a05cc00de3c54d350477e88c275"
+  },
+  "outputs": {
+    "results/tables/gate_sensitivity.csv": "2ba0ce1e68e519d82c552ba9e3bd9523f7d3f4e013a667c181b68994ef13f5aa",
+    "results/figures/gate_sensitivity.png": "5adbd0fddb6ee813a8a6c1adfb36cdaed8c416611e2e76e00e0c55daae03a56b",
+    "results/figures/gate_sensitivity.pdf": "44807c374addeb44ed9b45580f935d796c358858a6b03ec8f7a0c02724d4f26a"
+  }
+}

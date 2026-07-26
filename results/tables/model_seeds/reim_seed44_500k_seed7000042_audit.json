@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "method": "REIM (ACT + Detector + Recovery)",
+  "recovery_training_seed": 44,
+  "checkpoint_lineage": "low_lr_exact_snapshot_500k_validation_best",
+  "training": {
+    "target_timesteps": 500000,
+    "starting_timesteps": 53248,
+    "additional_timesteps": 450560,
+    "actual_trained_timesteps": 503808,
+    "device": "cpu",
+    "torch_num_threads": 4,
+    "learning_rate": 0.00003,
+    "n_epochs": 5,
+    "n_steps": 1024,
+    "batch_size": 512,
+    "clip_range": 0.1,
+    "entropy_coefficient": 0.0001,
+    "selection_rule": "heldout_task_success_then_recovery_then_mean_return",
+    "selected_model_timesteps": 10000,
+    "selected_validation_task_success": 1.0,
+    "selected_validation_recovery_rate": 1.0,
+    "selected_validation_mean_reward": 99.23085686535738,
+    "last_scheduled_validation": {
+      "timesteps": 503248,
+      "task_success": 0.48,
+      "recovery_rate": 0.5,
+      "selected": false
+    },
+    "selection_history_points": 52,
+    "v2_source_files_checked": 14,
+    "v2_source_files_unchanged": true
+  },
+  "backend": "metaworld",
+  "episodes": 200,
+  "evaluation_seed_start": 7000042,
+  "evaluation_seed_end": 7000241,
+  "protocol": {
+    "noise_level": 0.2,
+    "max_steps": 200,
+    "failure_threshold": 0.2,
+    "recovery_exit_threshold": 0.0,
+    "recovery_budget": 150,
+    "recovery_min_steps": 150,
+    "recovery_clear_steps": 200
+  },
+  "checkpoint_sha256": {
+    "act": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "failure_detector": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "recovery_seed44_500k_selected": "dbc5cb5c787d7b48568ef91e207633622f24ec4c9081cfd0b6d4b871ecf86746",
+    "recovery_seed44_500k_final": "bb55cc606df9b6ef32677bb2ce3e63da9786332ff15cb8366f0ba02953148004"
+  },
+  "results": {
+    "successes": 174,
+    "success_rate": 0.87,
+    "recovery_attempts": 103,
+    "recovery_successes": 77,
+    "recovery_rate": 0.7475728155339806,
+    "paired_vs_act": {
+      "rescued": 23,
+      "harmed": 0,
+      "both_success": 151,
+      "both_failure": 26,
+      "net_success_gain_percentage_points": 11.5,
+      "paired_bootstrap_samples": 20000,
+      "paired_bootstrap_95_ci_percentage_points": [
+        7.5,
+        16.0
+      ],
+      "exact_mcnemar_p_value": 2.384185791015625e-07
+    }
+  },
+  "raw_validation": {
+    "rows": 200,
+    "continuous_exact_ordered_seed_range": true,
+    "unique_evaluation_seeds": 200,
+    "no_duplicate_seeds": true,
+    "paired_seed_order_matches_act": true,
+    "no_literal_nan": true,
+    "core_numeric_fields_finite": true,
+    "summary_recomputed_from_raw": true,
+    "deterministic_outcome_fields_match_seed44_v2": true
+  },
+  "output_sha256": {
+    "summary": "fc1c3a9737f6760c271c07ee898aba9e00fabae830f1b0fcc7c8de6ecdb9f757",
+    "episodes": "2d96111c4142db518aa9485e342712276a93c8123ff67e6ae884059f3020e135",
+    "controller_traces": "f17495f0185c7ea149b0bfdb05b4083656710c8c416e105606b374555c381a25",
+    "training_metrics": "37b99e350ab8e7aad4e812c19b8f3c9c91dace8d9d02a475ff610602bd406535",
+    "training_curve_png": "154064c8507de01119eba3d5fa34290f3017a127e7ec5b262268aee6babd5fb6"
+  },
+  "scope_note": "This 200-episode paired audit is a model-seed stability result, not the primary benchmark."
+}

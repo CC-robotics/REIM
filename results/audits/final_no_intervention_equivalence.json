@@ -1,0 +1,537 @@
+{
+  "aggregate": {
+    "all_episode_specification_hashes_unique": true,
+    "commanded_actions_bitwise_equal_episodes": 8,
+    "control_sources_equal_episodes": 8,
+    "episodes_audited": 8,
+    "episodes_expected": 8,
+    "forbidden_recovery_calls": 0,
+    "only_act_control_episodes": 8,
+    "passed_episodes": 8,
+    "states_bitwise_equal_episodes": 8,
+    "steps_equal_episodes": 8,
+    "success_equal_episodes": 8,
+    "zero_detector_calls": 718
+  },
+  "audit_type": "strict_no_intervention_equivalence",
+  "configuration": {
+    "act_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+    "act_checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "act_loaded_model_sha256": "19469a03339ed424e903e0e3abb4087997f9c8c13e1de13db75a398fb9823241",
+    "action_dim": 4,
+    "arrays_embedded_in_json": false,
+    "backend": "metaworld",
+    "comparison": "complete finite C-contiguous float32 trajectories compared byte-for-byte; success and executed steps compared exactly",
+    "constructor_seed_act": 20260726,
+    "constructor_seed_reim": 9000091,
+    "constructor_seeds_deliberately_different": true,
+    "device": "cpu",
+    "env_name": "pick-place-v3",
+    "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_crn_task20260726_ep8000042_n1000_noise020.json",
+    "episode_bank_file_sha256": "af5745b9186a646d034e11188254b9a02d00f2f6614386a43dbbf2654455056f",
+    "episode_bank_sha256": "8c503c07dc6dcdd904e948f14d270410c2fbd4d9796f8d9e08451dc34c7d4399",
+    "episode_count": 8,
+    "episode_offset": 0,
+    "independent_model_loads_equal": true,
+    "max_steps": 200,
+    "numpy": "2.0.2",
+    "python": "3.10.20",
+    "reim_loaded_model_sha256": "19469a03339ed424e903e0e3abb4087997f9c8c13e1de13db75a398fb9823241",
+    "state_dim": 21,
+    "torch_threads": 1
+  },
+  "generated_at_utc": "2026-07-26T12:18:21.525907+00:00",
+  "passed": true,
+  "per_episode": [
+    {
+      "act": {
+        "commanded_action_sha256": "d0ac3d7d3cf2b790b1a8d29bcba89e819c885924b80aa22ecc520a59a5fc2084",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "8d97f9d83e6065ab57f7d8a0cc53a30eb20c5c570c2a75404fda6d9cf65421ad",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 0,
+      "episode_seed": 8000042,
+      "episode_specification_sha256": "14e48f83a083b78eb4af5dc37d02e21b04a314c3c31b36f5a62b13e4add4f2a5",
+      "metaworld_task_sha256": "f82ceac6f8787ac22c378edc1f141cedcc86bf9309b43f1aff6633ae0a963abb",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "d0ac3d7d3cf2b790b1a8d29bcba89e819c885924b80aa22ecc520a59a5fc2084",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "8d97f9d83e6065ab57f7d8a0cc53a30eb20c5c570c2a75404fda6d9cf65421ad",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "2b982d0bfe04697535593dd55910ceda8c142d155c7f5a02163c1e78dee8282b",
+        "commanded_action_shape": [
+          59,
+          4
+        ],
+        "control_sources_sha256": "0eac92551191d8516f38a9c8bdb7da3ad7da4ab09cb50b11da4507ce38178486",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "19fd7b383cfd9a3f8c4e550d4bd989e6804533046bc2ba737ac6fd78f5b9a14e",
+        "state_shape": [
+          60,
+          21
+        ],
+        "steps": 59,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 1,
+      "episode_seed": 8000043,
+      "episode_specification_sha256": "5db0a8f9e6d6bd6ef5c15f040f9f154f255e36a365af820faa97ca3d60f4450f",
+      "metaworld_task_sha256": "06d355d7aff3b944ab4199c02a94c63d062e5c414c0b195f7b232b607e0ab1ed",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "2b982d0bfe04697535593dd55910ceda8c142d155c7f5a02163c1e78dee8282b",
+        "commanded_action_shape": [
+          59,
+          4
+        ],
+        "control_sources_sha256": "0eac92551191d8516f38a9c8bdb7da3ad7da4ab09cb50b11da4507ce38178486",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "19fd7b383cfd9a3f8c4e550d4bd989e6804533046bc2ba737ac6fd78f5b9a14e",
+        "state_shape": [
+          60,
+          21
+        ],
+        "steps": 59,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "dd2af55570b489832b4d2a46d54c67d85268137d06527efe20bb4cf6cecf0664",
+        "commanded_action_shape": [
+          60,
+          4
+        ],
+        "control_sources_sha256": "6899adddb118aa15259abddbe02204fbb86fa98861ccade6261cafda56b4915e",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "09f2962c97238c6a32f63430f241817d82dde411aa795c3fed43f6403e0ab7c3",
+        "state_shape": [
+          61,
+          21
+        ],
+        "steps": 60,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 2,
+      "episode_seed": 8000044,
+      "episode_specification_sha256": "a465539695523fa7de2784bf02081a919b5a3de9a14c98e511df211c298c1ee2",
+      "metaworld_task_sha256": "f6a9ed9055e00c868d6771022c2c557a6a48990bdacbed585d07cde857d4755a",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "dd2af55570b489832b4d2a46d54c67d85268137d06527efe20bb4cf6cecf0664",
+        "commanded_action_shape": [
+          60,
+          4
+        ],
+        "control_sources_sha256": "6899adddb118aa15259abddbe02204fbb86fa98861ccade6261cafda56b4915e",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "09f2962c97238c6a32f63430f241817d82dde411aa795c3fed43f6403e0ab7c3",
+        "state_shape": [
+          61,
+          21
+        ],
+        "steps": 60,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "e16480f69992fc239aae167c833b69b7de59b7830f87adbcd36bf9e5441e47a1",
+        "commanded_action_shape": [
+          51,
+          4
+        ],
+        "control_sources_sha256": "ec59ad2ba35874b259885fb8f32cbe508e0e9e0fe4d4645b0e23d697bfe9cb4a",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "84022c24f3b23ad30e1039930fbdeda3abb3667e578269322f42fe33843e5949",
+        "state_shape": [
+          52,
+          21
+        ],
+        "steps": 51,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 3,
+      "episode_seed": 8000045,
+      "episode_specification_sha256": "126bd203ec38252825c8befe6f6198c98a7a024ba44c52618f3f3fe35078f4c6",
+      "metaworld_task_sha256": "5d73f28d4d24cdbcb36a5e5cd61ec1a82f7287ce56d88da8cea912ed757b164c",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "e16480f69992fc239aae167c833b69b7de59b7830f87adbcd36bf9e5441e47a1",
+        "commanded_action_shape": [
+          51,
+          4
+        ],
+        "control_sources_sha256": "ec59ad2ba35874b259885fb8f32cbe508e0e9e0fe4d4645b0e23d697bfe9cb4a",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "84022c24f3b23ad30e1039930fbdeda3abb3667e578269322f42fe33843e5949",
+        "state_shape": [
+          52,
+          21
+        ],
+        "steps": 51,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "7f106316255ef1c7a3914a8b273e3c3e12b8d30056a485249ec1846cb7724d9d",
+        "commanded_action_shape": [
+          48,
+          4
+        ],
+        "control_sources_sha256": "169b1aeac3a11ede8c08d591db599501bfb5fdf6efcaa828705422606adb6a88",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "53086c85823d089f7183402534ba79958d8ee0076aa1b97471980f2822737a8b",
+        "state_shape": [
+          49,
+          21
+        ],
+        "steps": 48,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 4,
+      "episode_seed": 8000046,
+      "episode_specification_sha256": "4170194bcfe3841a7cfb0c3b09b2aa25f522a2c3b5ff3eb10715d8fce8c039a3",
+      "metaworld_task_sha256": "27e1ed8c670f23dae46752497e383610e58c248d638e3b9b707808a32ce33d4e",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "7f106316255ef1c7a3914a8b273e3c3e12b8d30056a485249ec1846cb7724d9d",
+        "commanded_action_shape": [
+          48,
+          4
+        ],
+        "control_sources_sha256": "169b1aeac3a11ede8c08d591db599501bfb5fdf6efcaa828705422606adb6a88",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "53086c85823d089f7183402534ba79958d8ee0076aa1b97471980f2822737a8b",
+        "state_shape": [
+          49,
+          21
+        ],
+        "steps": 48,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "a9b391818e99ada058cf007120f3082f92a55d982962fe1310c7b431625fdaca",
+        "commanded_action_shape": [
+          53,
+          4
+        ],
+        "control_sources_sha256": "421487edbaea481ee9ddbc27d639c7c1e92cc83de4fbe67e96b014d3b2b3840f",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "085866da0e9ae6ff163d3523bb72fae1b76e25a54b9183d3a3329d921543a956",
+        "state_shape": [
+          54,
+          21
+        ],
+        "steps": 53,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 5,
+      "episode_seed": 8000047,
+      "episode_specification_sha256": "9fa661de69328d26c027384cf31722da103cd753d557e7a172d987d52fbc4d0a",
+      "metaworld_task_sha256": "38329c6b97bbe7d133bf007c22742dca5f0cd7258f8d7199135c6c2371ae591d",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "a9b391818e99ada058cf007120f3082f92a55d982962fe1310c7b431625fdaca",
+        "commanded_action_shape": [
+          53,
+          4
+        ],
+        "control_sources_sha256": "421487edbaea481ee9ddbc27d639c7c1e92cc83de4fbe67e96b014d3b2b3840f",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "085866da0e9ae6ff163d3523bb72fae1b76e25a54b9183d3a3329d921543a956",
+        "state_shape": [
+          54,
+          21
+        ],
+        "steps": 53,
+        "success": true
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "c4f58fdd9d43c2b1414a99a8080be67bddeb41227157450c61da842568dbed5d",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "9f1ffd6ff87090c2c3607a824dcb8978565e2ed9204233dc480035b2eefca105",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 6,
+      "episode_seed": 8000048,
+      "episode_specification_sha256": "9c84beaab136edd4c1632709ff45c174ec3c717d220eaf94b7d668ee34962c9a",
+      "metaworld_task_sha256": "aba21ef1c98d0573e36116c9757115227fd3793cba96aea7eda95c2547314ca3",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "c4f58fdd9d43c2b1414a99a8080be67bddeb41227157450c61da842568dbed5d",
+        "commanded_action_shape": [
+          200,
+          4
+        ],
+        "control_sources_sha256": "3345f215c1775d318d00ac4bda6f92595725cc6b7179ee6a7495e2b5c08a3766",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "9f1ffd6ff87090c2c3607a824dcb8978565e2ed9204233dc480035b2eefca105",
+        "state_shape": [
+          201,
+          21
+        ],
+        "steps": 200,
+        "success": false
+      }
+    },
+    {
+      "act": {
+        "commanded_action_sha256": "7a3845c82160eb4aed2882d1be72b1d3df6738949d0553ea2ba5efe4acbdb627",
+        "commanded_action_shape": [
+          55,
+          4
+        ],
+        "control_sources_sha256": "1445ba4d37159a05086cdcdd53acc57d9fbee71e012e20be76d56bd882c9dc82",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "d91bd4885c98a8d0885aabaa5e00d3670a8be74fd0c778ba2011bcd3dfd4cee5",
+        "state_shape": [
+          56,
+          21
+        ],
+        "steps": 55,
+        "success": true
+      },
+      "checks": {
+        "commanded_actions_bitwise_equal": true,
+        "control_sources_equal": true,
+        "only_act_control": true,
+        "states_bitwise_equal": true,
+        "steps_equal": true,
+        "success_equal": true
+      },
+      "episode_index": 7,
+      "episode_seed": 8000049,
+      "episode_specification_sha256": "97ec25208265f89d11873f30142175e1e9164935e3849bfb439c16f9d0e10bba",
+      "metaworld_task_sha256": "4e97203f8ce1a96cef19545d4c4c300d0de39e4f94bd1941cef7ebc3dd48be02",
+      "metrics_checks": {
+        "metrics_steps_equal": true,
+        "metrics_success_equal": true,
+        "reim_detector_triggers_zero": true,
+        "reim_recovery_attempts_zero": true,
+        "specification_hash_equal": true,
+        "task_hash_equal": true
+      },
+      "passed": true,
+      "reim_no_intervention": {
+        "commanded_action_sha256": "7a3845c82160eb4aed2882d1be72b1d3df6738949d0553ea2ba5efe4acbdb627",
+        "commanded_action_shape": [
+          55,
+          4
+        ],
+        "control_sources_sha256": "1445ba4d37159a05086cdcdd53acc57d9fbee71e012e20be76d56bd882c9dc82",
+        "control_sources_unique": [
+          "bc"
+        ],
+        "only_act_control": true,
+        "state_sha256": "d91bd4885c98a8d0885aabaa5e00d3670a8be74fd0c778ba2011bcd3dfd4cee5",
+        "state_shape": [
+          56,
+          21
+        ],
+        "steps": 55,
+        "success": true
+      }
+    }
+  ],
+  "schema_version": 1,
+  "status": "passed"
+}

@@ -1,0 +1,57 @@
+project:
+  name: REIM
+  seed: 42
+
+environment:
+  # "metaworld" is always used for reported benchmark results. "toy" is an
+  # explicit deterministic CI backend used only to validate the whole pipeline.
+  backend: metaworld
+  benchmark: MT1
+  requested_task: PickPlace-v2
+  env_name: pick-place-v3
+  max_episode_steps: 200
+  terminate_on_success: true
+  render_mode: null
+  # semantic = 7 joint positions + 7D end-effector pose + 3D object
+  # position + 3D goal position + 1D gripper state.
+  state_mode: semantic
+  state_dim: 21
+  raw_observation_dim: 39
+  action_dim: 4
+
+disturbance:
+  action_noise_std: 0.0
+  observation_noise_std: 0.0
+  object_noise_probability: 0.0
+  object_noise_magnitude: 0.03
+  clip_actions: true
+
+demonstrations:
+  episodes: 500
+  max_attempts_per_trajectory: 3
+  controller: scripted
+  save_dir: datasets/demonstrations
+
+failure_dataset:
+  episodes: 2000
+  sequence_length: 10
+  horizon: 10
+  action_noise_std: 0.15
+  observation_noise_std: 0.01
+  object_noise_probability: 0.02
+  object_noise_magnitude: 0.04
+  save_dir: datasets/failures
+
+evaluation:
+  episodes: 1000
+  main_noise_level: 0.2
+  # The recovery actor is trained on exact online states collected at 0.1.
+  # Deployment uses the held-out development-set gate selected at 0.2.
+  recovery_start_collection_threshold: 0.1
+  detector_threshold: 0.2
+  detector_release_threshold: 0.0
+  recovery_horizon: 150
+  recovery_min_steps: 150
+  recovery_clear_steps: 200
+  random_reset_horizon: 12
+  bootstrap_samples: 1000

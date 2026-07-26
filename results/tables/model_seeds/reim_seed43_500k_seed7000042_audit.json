@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-07-26T11:19:48Z",
+  "method": "REIM (ACT + Detector + Recovery)",
+  "recovery_training_seed": 43,
+  "recovery_training_budget_timesteps": 500000,
+  "recovery_trained_timesteps": 503808,
+  "recovery_selected_timesteps": 40000,
+  "backend": "metaworld",
+  "episodes": 200,
+  "evaluation_seed_start": 7000042,
+  "evaluation_seed_end": 7000241,
+  "protocol": {
+    "noise_level": 0.2,
+    "action_noise_std": 0.08000000000000002,
+    "observation_noise_std": 0.005000000000000001,
+    "object_impulse_std_m": 0.020000000000000004,
+    "max_steps": 200,
+    "failure_threshold": 0.2,
+    "recovery_exit_threshold": 0.0,
+    "recovery_budget": 150,
+    "recovery_min_steps": 150,
+    "recovery_clear_steps": 200,
+    "bootstrap_samples": 2000,
+    "paired_bootstrap_samples": 20000,
+    "paired_bootstrap_seed": 7000085
+  },
+  "checkpoint_sha256": {
+    "act": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "failure_detector": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "recovery_seed43_500k_selected": "23ccadbc6eef8be9cd557202c319274d9ad519b96f6e93049a7aebd9034b6656",
+    "recovery_seed43_500k_endpoint": "af468961fd59d896ffb096a193b5c4f142e325ef95d25de09e5713b56b1f49bf"
+  },
+  "results": {
+    "successes": 162,
+    "success_rate": 0.81,
+    "success_wilson_95_ci": [
+      0.7499876129240015,
+      0.8583282847220932
+    ],
+    "recovery_attempts": 103,
+    "recovery_successes": 65,
+    "recovery_rate": 0.6310679611650486,
+    "recovery_bootstrap_95_ci": [
+      0.5405405405405406,
+      0.7216775543533733
+    ],
+    "average_steps": 80.615,
+    "steps_bootstrap_95_ci": [
+      72.564875,
+      88.86
+    ],
+    "detector_triggers": 103,
+    "paired_vs_act": {
+      "act_raw_episodes": "results/tables/model_seeds/act_seed7000042_episodes.csv",
+      "act_raw_episodes_sha256": "f0c8c2c4c19fe5977c670d5682b49b1cb319f7ceefe61dd10e6d412b51de9569",
+      "rescued": 13,
+      "harmed": 2,
+      "both_success": 149,
+      "both_failure": 36,
+      "net_success_gain_percentage_points": 5.5,
+      "paired_bootstrap_95_ci_percentage_points": [
+        2.0,
+        9.5
+      ],
+      "exact_mcnemar_p_value": 0.00738525390625
+    }
+  },
+  "raw_validation": {
+    "rows": 200,
+    "continuous_exact_ordered_seed_range": true,
+    "unique_evaluation_seeds": 200,
+    "no_duplicate_seeds": true,
+    "paired_seed_order_matches_act": true,
+    "no_literal_nan": true,
+    "core_numeric_fields_finite": true,
+    "summary_recomputed_from_raw": true,
+    "summary_matches_recomputed_raw": true,
+    "controller_trace_count": 4,
+    "controller_trace_seed_range": [
+      7000042,
+      7000045
+    ],
+    "controller_traces_all_numeric_values_finite": true
+  },
+  "repetition_note": {
+    "independent_environment_rollout_completed": true,
+    "task_outcomes_match_seed43_v2": true,
+    "recovery_counts_match_seed43_v2": true,
+    "reason": "The frozen held-out selector retained the same byte-identical 40000-step optimum; the new 500k endpoint is independently preserved and audited."
+  },
+  "benchmark_eligibility": {
+    "profile": "custom",
+    "benchmark_eligible": false,
+    "reason": "This isolated model-seed audit intentionally uses 200 paired episodes rather than the 1000-episode full benchmark profile."
+  },
+  "output_sha256": {
+    "summary": "7f592ce14cd41c8342a96cf985ebff89f4b783e63f3c89f686056dc664ac3d54",
+    "episodes": "806dadac981eb45bfb681c864a94d1db9ae78446adc50d3745e5f82cc7c09153",
+    "controller_traces": "9501ccc6453ad6ecd03c48ecbc8be5f6bd52844bf30e930def081e92687a1e76",
+    "console_log": "b7f91c1ba88361164689a1ae4500bb0a55ce2ffe7693714f28788278096716cd"
+  }
+}

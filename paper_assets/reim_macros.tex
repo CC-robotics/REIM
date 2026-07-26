@@ -1,0 +1,231 @@
+% Central source of every reported scalar in the REIM manuscript.
+%
+% Values in "completed component diagnostics" are read from immutable JSON
+% artifacts in results/tables and datasets.  Final benchmark values are filled
+% only by scripts/update_paper_results.py after its raw-episode publication
+% gate succeeds.
+
+\newif\ifREIMFinalResults
+\REIMFinalResultstrue
+
+\newcommand{\PendingMetric}{\textnormal{\textsc{tbd}}}
+\newcommand{\PendingInterval}{[\textnormal{\textsc{tbd}}]}
+\newcommand{\NotApplicable}{--}
+
+% ---------------------------------------------------------------------------
+% Verified environment, data, and model configuration
+% ---------------------------------------------------------------------------
+\newcommand{\REIMTask}{\texttt{pick-place-v3}}
+\newcommand{\REIMStateDim}{21}
+\newcommand{\REIMActionDim}{4}
+\newcommand{\REIMDemoTrajectories}{500}
+\newcommand{\REIMDemoTransitions}{25{,}969}
+\newcommand{\REIMDemoSuccess}{100\%}
+\newcommand{\REIMDevelopmentSeed}{42}
+\newcommand{\DevelopmentTrainingSeeds}{3}
+\newcommand{\ConfidenceLevel}{95\%}
+
+\newcommand{\ACTChunkLength}{20}
+\newcommand{\ACTHiddenDim}{256}
+\newcommand{\ACTAttentionHeads}{8}
+\newcommand{\ACTEncoderLayers}{3}
+\newcommand{\ACTDecoderLayers}{4}
+\newcommand{\ACTFeedForwardDim}{1{,}024}
+\newcommand{\ACTLatentDim}{32}
+\newcommand{\ACTTrainingEpochs}{200}
+\newcommand{\ACTParameterCount}{6{,}627{,}908}
+
+\newcommand{\DetectorHistory}{10}
+\newcommand{\DetectorHiddenDim}{128}
+\newcommand{\DetectorMLPDim}{64}
+\newcommand{\DetectorTrainingEpisodes}{2{,}000}
+\newcommand{\DetectorTrainingSamples}{285{,}443}
+\newcommand{\DetectorValidationSamples}{56{,}253}
+\newcommand{\DetectorForecastHorizon}{10}
+\newcommand{\DetectorSelectionThreshold}{0.50}
+\newcommand{\DetectorDiagnosticThreshold}{0.20}
+
+\newcommand{\CurriculumTriggerThreshold}{0.10}
+\newcommand{\CurriculumNoiseLevel}{20\%}
+\newcommand{\CurriculumActionNoise}{0.08}
+\newcommand{\CurriculumObservationNoise}{0.005}
+\newcommand{\CurriculumObjectImpulse}{0.02}
+\newcommand{\RecoveryTrainEpisodes}{1{,}000}
+\newcommand{\RecoveryValidationEpisodes}{200}
+\newcommand{\RecoveryTrainStarts}{985}
+\newcommand{\RecoveryValidationStarts}{193}
+\newcommand{\RecoveryTrainEligibleStarts}{978}
+\newcommand{\RecoveryValidationEligibleStarts}{192}
+\newcommand{\RecoveryTrainExpertSamples}{42{,}386}
+\newcommand{\RecoveryValidationExpertSamples}{8{,}212}
+\newcommand{\RecoveryExpertEpochs}{40}
+
+\newcommand{\PPOTrainingTarget}{500{,}000}
+\newcommand{\PPODevelopmentSteps}{500{,}136}
+\newcommand{\PPOSelectedStep}{118{,}248}
+\newcommand{\PPOEvalEpisodes}{50}
+\newcommand{\PPORecoveryBudget}{150}
+\newcommand{\PPOHiddenDim}{256}
+\newcommand{\PPOParallelEnvs}{4}
+\newcommand{\PPORolloutSteps}{1{,}024}
+\newcommand{\PPOBatchSize}{512}
+\newcommand{\PPOEpochsPerUpdate}{5}
+\newcommand{\PPOLearningRate}{3\times10^{-5}}
+\newcommand{\PPOGamma}{0.99}
+\newcommand{\PPOGAE}{0.95}
+\newcommand{\PPOClip}{0.10}
+\newcommand{\PPOEntropyCoefficient}{0.0001}
+
+\newcommand{\TaskSuccessBonus}{25}
+\newcommand{\TerminalFailurePenalty}{-10}
+\newcommand{\TimePenalty}{-0.01}
+\newcommand{\BaseRewardScale}{1}
+\newcommand{\GoalProgressScale}{2}
+\newcommand{\ReachProgressScale}{2}
+\newcommand{\LiftProgressScale}{2}
+
+% Frozen end-to-end controller.  These values are deliberately distinct from
+% the lower threshold used above to collect a broad early-trigger curriculum.
+% min_steps == budget and clear_steps > budget disable any intermediate
+% detector-based release: the recovery option holds control until task success
+% or budget expiry.
+\newcommand{\FinalControllerTrigger}{0.20}
+\newcommand{\FinalControllerRelease}{0}
+\newcommand{\FinalControllerMinSteps}{150}
+\newcommand{\FinalControllerBudget}{150}
+\newcommand{\FinalControllerClearSteps}{200}
+
+\newcommand{\PlannedMainEpisodes}{1{,}000}
+\newcommand{\PlannedRobustnessEpisodes}{200}
+\newcommand{\RobustnessLevels}{0\%, 10\%, 20\%, 30\%, and 40\%}
+
+% ---------------------------------------------------------------------------
+% Completed component diagnostics (not final end-to-end benchmark evidence)
+% ---------------------------------------------------------------------------
+\newcommand{\ACTBestValidationLone}{0.004013}
+\newcommand{\ACTBestValidationLoss}{0.004047}
+
+\newcommand{\DetectorAccuracyHalf}{89.3\%}
+\newcommand{\DetectorPrecisionHalf}{96.5\%}
+\newcommand{\DetectorRecallHalf}{86.8\%}
+\newcommand{\DetectorFoneHalf}{91.4\%}
+\newcommand{\DetectorAccuracyDiagnostic}{89.6\%}
+\newcommand{\DetectorPrecisionDiagnostic}{91.8\%}
+\newcommand{\DetectorRecallDiagnostic}{92.3\%}
+\newcommand{\DetectorFoneDiagnostic}{92.1\%}
+\newcommand{\DetectorTNDiagnostic}{16{,}352}
+\newcommand{\DetectorFPDiagnostic}{3{,}038}
+\newcommand{\DetectorFNDiagnostic}{2{,}832}
+\newcommand{\DetectorTPDiagnostic}{34{,}031}
+\newcommand{\DetectorCurrentEventPositiveShare}{86.1\%}
+\newcommand{\DetectorStrictPreEventPrecision}{53.5\%}
+\newcommand{\DetectorStrictPreEventRecall}{68.3\%}
+\newcommand{\DetectorStrictPreEventFone}{60.0\%}
+\newcommand{\DetectorPreEventDetectedTrajectories}{191}
+\newcommand{\DetectorEventTrajectories}{258}
+\newcommand{\DetectorPreEventTrajectoryDetection}{74.0\%}
+\newcommand{\DetectorMedianPreEventLead}{1}
+\newcommand{\DetectorNonEventTrajectoryAlert}{66.2\%}
+
+\newcommand{\RecoveryWarmStartValidationLoss}{0.006391}
+\newcommand{\RecoverySelectionSuccess}{100.0\%}
+\newcommand{\RecoverySelectionRecovery}{100.0\%}
+\newcommand{\RecoverySelectionFailure}{0.0\%}
+
+% Provenance for the qualitative paired simulator trace.  This is not an
+% aggregate benchmark result and uses its own explicitly reported gate.
+\newcommand{\OperationTraceSeed}{8{,}300{,}042}
+\newcommand{\OperationTraceNoise}{20.0\%}
+\newcommand{\OperationTraceThreshold}{0.20}
+\newcommand{\OperationTraceACTSteps}{200}
+\newcommand{\OperationTraceREIMSteps}{62}
+\newcommand{\OperationTraceRecoverySteps}{53}
+
+% ---------------------------------------------------------------------------
+% Final paired end-to-end benchmark results. These commands are populated by
+% scripts/update_paper_results.py after validating every canonical raw record.
+% Success and recovery values are percentages. For learned recovery methods,
+% "Recovery" is task completion while recovery has control, divided by
+% intervention count.
+% Random Reset reports post-reset completion per reset and is labeled separately.
+% ---------------------------------------------------------------------------
+\newcommand{\FinalACTSuccess}{73.4\%}
+\newcommand{\FinalACTSuccessCI}{[70.6, 76.0]\%}
+\newcommand{\FinalACTRecovery}{\NotApplicable}
+\newcommand{\FinalACTRecoveryCI}{}
+\newcommand{\FinalACTIntervention}{\NotApplicable}
+\newcommand{\FinalACTSteps}{93.3}
+
+\newcommand{\FinalResetSuccess}{81.3\%}
+\newcommand{\FinalResetSuccessCI}{[78.8, 83.6]\%}
+\newcommand{\FinalResetRecovery}{74.5\%}
+\newcommand{\FinalResetRecoveryCI}{[71.3, 77.6]\%}
+\newcommand{\FinalResetIntervention}{73.2\%}
+\newcommand{\FinalResetSteps}{93.3}
+
+\newcommand{\FinalRLRecoverySuccess}{87.7\%}
+\newcommand{\FinalRLRecoverySuccessCI}{[85.5, 89.6]\%}
+\newcommand{\FinalRLRecoveryRate}{83.3\%}
+\newcommand{\FinalRLRecoveryRateCI}{[80.6, 85.9]\%}
+\newcommand{\FinalRLRecoveryIntervention}{73.1\%}
+\newcommand{\FinalRLRecoverySteps}{72.8}
+
+\newcommand{\FinalREIMSuccess}{90.4\%}
+\newcommand{\FinalREIMSuccessCI}{[88.4, 92.1]\%}
+\newcommand{\FinalREIMRecovery}{85.3\%}
+\newcommand{\FinalREIMRecoveryCI}{[82.5, 88.0]\%}
+\newcommand{\FinalREIMIntervention}{65.5\%}
+\newcommand{\FinalREIMSteps}{69.3}
+\newcommand{\FinalREIMGain}{+17.0\,pp}
+\newcommand{\FinalREIMGainCI}{[+14.7, +19.3]\,pp}
+\newcommand{\FinalREIMRescuedEpisodes}{170}
+\newcommand{\FinalREIMHarmedEpisodes}{0}
+\newcommand{\FinalREIMInterventionDeltaVsRL}{-7.6\,pp}
+\newcommand{\FinalREIMInterventionReductionVsRL}{10.4\%}
+\newcommand{\FinalREIMFewerIntervenedEpisodes}{76}
+\newcommand{\FinalREIMGainVsReset}{+9.1\,pp}
+\newcommand{\FinalREIMGainVsResetCI}{[+6.1, +12.1]\,pp}
+\newcommand{\FinalREIMDeltaVsRL}{+2.7\,pp}
+\newcommand{\FinalREIMDeltaVsRLCI}{[+0.7, +4.8]\,pp}
+
+% Final component ablation.
+\newcommand{\AblationASuccess}{73.4\%}
+\newcommand{\AblationARecovery}{\NotApplicable}
+\newcommand{\AblationASteps}{93.3}
+\newcommand{\AblationBSuccess}{49.1\%}
+\newcommand{\AblationBRecovery}{\NotApplicable}
+\newcommand{\AblationBSteps}{129.5}
+\newcommand{\AblationCSuccess}{87.7\%}
+\newcommand{\AblationCRecovery}{83.3\%}
+\newcommand{\AblationCSteps}{72.8}
+\newcommand{\AblationDSuccess}{90.4\%}
+\newcommand{\AblationDRecovery}{85.3\%}
+\newcommand{\AblationDSteps}{69.3}
+
+% Final robustness endpoints used in the textual summary.  The complete curve
+% remains an external figure input so that it is regenerated from episode CSV.
+\newcommand{\FinalACTSuccessAtZeroNoise}{100.0\%}
+\newcommand{\FinalACTSuccessAtFortyNoise}{31.5\%}
+\newcommand{\FinalREIMSuccessAtZeroNoise}{100.0\%}
+\newcommand{\FinalREIMSuccessAtFortyNoise}{63.5\%}
+\newcommand{\FinalREIMGainAtTenNoise}{+2.5\,pp}
+\newcommand{\FinalREIMGainAtTwentyNoise}{+15.5\,pp}
+\newcommand{\FinalREIMGainAtThirtyNoise}{+26.0\,pp}
+\newcommand{\FinalREIMGainAtFortyNoise}{+32.0\,pp}
+
+% Separate post-freeze gate audit. The matched heuristic point uses the same
+% serialized 200-episode CRN bank as the LSTM-threshold sweep.
+\newcommand{\GateHeuristicSuccess}{86.0\%}
+\newcommand{\GateHeuristicIntervention}{76.0\%}
+\newcommand{\GateTauSeventeenFiveSuccess}{92.5\%}
+\newcommand{\GateTauSeventeenFiveIntervention}{76.5\%}
+\newcommand{\GateTauTwentySuccess}{90.5\%}
+\newcommand{\GateTauTwentyIntervention}{63.5\%}
+\newcommand{\GateTauSeventeenFiveGainVsHeuristic}{+6.5\,pp}
+\newcommand{\GateTauSeventeenFiveGainVsHeuristicCI}{[+2.5, +11.0]\,pp}
+\newcommand{\GateTauSeventeenFiveP}{0.0044}
+\newcommand{\GateTauTwentyGainVsHeuristic}{+4.5\,pp}
+\newcommand{\GateTauTwentyGainVsHeuristicCI}{[+0.5, +8.5]\,pp}
+\newcommand{\GateTauTwentyP}{0.0490}
+\newcommand{\GateTauSeventeenFiveInterventionDelta}{+0.5\,pp}
+\newcommand{\GateTauSeventeenFiveInterventionDeltaCI}{[-8.0, +8.5]\,pp}

@@ -1,0 +1,65 @@
+{
+  "backend": "metaworld",
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 6000042,
+  "checkpoint": "checkpoints/recovery_trigger_seed42.zip",
+  "checkpoint_sha256": "55d92acfdd98061e198c4e27fac882e735f5ef4a1336c578e520f1ee8df0ffe7",
+  "chunks": [
+    {
+      "chunk": 0,
+      "rows": 250,
+      "seed_end": 6000291,
+      "seed_start": 6000042
+    },
+    {
+      "chunk": 1,
+      "rows": 250,
+      "seed_end": 6000541,
+      "seed_start": 6000292
+    },
+    {
+      "chunk": 2,
+      "rows": 250,
+      "seed_end": 6000791,
+      "seed_start": 6000542
+    },
+    {
+      "chunk": 3,
+      "rows": 250,
+      "seed_end": 6001041,
+      "seed_start": 6000792
+    }
+  ],
+  "controller_protocol": {
+    "max_steps": 200,
+    "noise_level": 0.2,
+    "recovery_budget": 150,
+    "recovery_clear_steps": 200,
+    "recovery_min_steps": 150,
+    "tau_off": 0.0,
+    "tau_on": 0.2
+  },
+  "episodes_reindexed": true,
+  "inputs": {
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk0.csv": "cd86caf4f00d24a6f349bada55cdcdc5cbfa7151cab2fb6d6fcde0923e1fd55a",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk0_episodes.csv": "973ee59028267a45551da625d1546a63ca15991a628345dfa16311c96f0498ca",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk1.csv": "4c014d741328a6bad83079aed63032366ef8c434b6d5d4f03a48041a1eb2e465",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk1_episodes.csv": "7cc082aff15e07d0df55089aebbb0fdbc509d5c72c555b5c3890d4a1569494d0",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk2.csv": "905d91f8088cf214d83e5f9747ca0196ed5a036edb97b8cdc70e15ecb2472939",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk2_episodes.csv": "b0542003ef3879be05e30b8fcb36e4a42eebcfc7d6963e3f4f57e24d67fb28de",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk3.csv": "5717c0047430dd486189fca70b91587d6470573781795f76d359d3de776c3fce",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_chunk3_episodes.csv": "30a000eea14416fa09711fa3f125b3f3144397d44c45fb7154042773289ed131"
+  },
+  "method": "ACT + RL Recovery",
+  "outputs": {
+    "results/tables/shards/baseline_act_rl_recovery_final500k.csv": "526106ab8bfa46a951a66c40652dbd8340e467b6d44d02207f4298e78188128b",
+    "results/tables/shards/baseline_act_rl_recovery_final500k_episodes.csv": "bb4ce0dd24493daab98df2ec0930de44b0d57a6765242314423564108533888b"
+  },
+  "profile": "full",
+  "rows": 1000,
+  "seed_end": 6001041,
+  "seed_start": 6000042,
+  "strategy": "four_contiguous_250_episode_shards_reaggregated_from_raw",
+  "summary_recomputed_from_raw_episodes": true,
+  "unique_seeds": 1000
+}

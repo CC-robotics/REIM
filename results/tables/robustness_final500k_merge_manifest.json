@@ -1,0 +1,83 @@
+{
+  "backend": "metaworld",
+  "condition_key_fields": [
+    "Method",
+    "Noise Level"
+  ],
+  "conditions": [
+    [
+      "ACT",
+      "0.2"
+    ],
+    [
+      "ACT",
+      "0.1"
+    ],
+    [
+      "ACT",
+      "0.0"
+    ],
+    [
+      "ACT",
+      "0.3"
+    ],
+    [
+      "ACT",
+      "0.4"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.2"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.4"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.1"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.3"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.0"
+    ]
+  ],
+  "episode_rows": 2000,
+  "episodes_per_condition": 200,
+  "evaluation_seed_end": 6000241,
+  "evaluation_seed_start": 6000042,
+  "inputs": {
+    "results/tables/shards/robustness_n00_act_final500k.csv": "cb0262728463466d96f792c5c89c8de2263264be91149c553d4a51fa3319c7ad",
+    "results/tables/shards/robustness_n00_act_final500k_episodes.csv": "7c18462a290f362d663ade9b510d81e0fc6f740bf9c8e1dfcc4804518ac4f4cf",
+    "results/tables/shards/robustness_n00_reim_final500k.csv": "763b428321bd7255468591176ae875ce388bbd8e87d12379d26b610c4c731642",
+    "results/tables/shards/robustness_n00_reim_final500k_episodes.csv": "8448e393eb015ec4890d01ffff0e2b740fa19ef3a02a5756b57107cc58096569",
+    "results/tables/shards/robustness_n10_act_final500k.csv": "e51b02d6685215ecfb2957645599a0cbc1068c6b7ef5f497c9f545a43d1a186c",
+    "results/tables/shards/robustness_n10_act_final500k_episodes.csv": "7f0e514203e8e0cc2fe5c46c63c0f0be6c45a54c8f3cbcf6e33f251b4f8993c8",
+    "results/tables/shards/robustness_n10_reim_final500k.csv": "09d530147be1a539c85b3c2c446f9a1b3a55c73fbf205f7e1a6be9ae06cd720c",
+    "results/tables/shards/robustness_n10_reim_final500k_episodes.csv": "8be6ad277e62ba9ec69ebff9bd91104d48a065847462fa43de2acdf5b60eebb7",
+    "results/tables/shards/robustness_n20_act_final500k.csv": "99c034cd9a62f37dbb0ab031f31e521e8c2e7543494e06f94680224f5c52524d",
+    "results/tables/shards/robustness_n20_act_final500k_episodes.csv": "66d727d7834ee89f11159f0dce49376281cc7816c4b47515c22eed2ac4ac7b0b",
+    "results/tables/shards/robustness_n20_reim_final500k.csv": "c418d47539b4cd73584b64482d7dfcf516cef7aa317223c3fd2f02574da76388",
+    "results/tables/shards/robustness_n20_reim_final500k_episodes.csv": "bcb6f2b8cdcf0f61fd1267b581d45a505d7a9927ece9aeecf86ffe31693811b0",
+    "results/tables/shards/robustness_n30_act_final500k.csv": "8212e041250db03b982213bad85757d688e8158924022d5a58eafbd637190a25",
+    "results/tables/shards/robustness_n30_act_final500k_episodes.csv": "1663cb4fe2385831957852760640beb71d8ebaadd44179968215c37c99539d16",
+    "results/tables/shards/robustness_n30_reim_final500k.csv": "c8baec802f6b5e3345d06637757d2e6b5db9d4b8fdd00ab7691f9586855564cb",
+    "results/tables/shards/robustness_n30_reim_final500k_episodes.csv": "9b3d0d649c599baa8f11f8596b176a985d03a2ee1fe08013f99dca31bc43221d",
+    "results/tables/shards/robustness_n40_act_final500k.csv": "34c9151f6adab062477e6732bdf66e9b1e4f15f1befa05849dfb0bf46d391286",
+    "results/tables/shards/robustness_n40_act_final500k_episodes.csv": "359a686e4116d494f7e16e420d60b969226474fa5a9a872dddfe332445ce3625",
+    "results/tables/shards/robustness_n40_reim_final500k.csv": "9620de4e077f275e8889dc550540383172ace089de8894a85dacc44a0593aa62",
+    "results/tables/shards/robustness_n40_reim_final500k_episodes.csv": "f1632012151becf3c0e2b1039fd8d4dc0ae36eb408f2f8cbec0ca5b1689b3789"
+  },
+  "outputs": {
+    "episodes": "results/tables/robustness_final500k_episodes.csv",
+    "summary": "results/tables/robustness_final500k.csv"
+  },
+  "profile": "full",
+  "strategy": "validated_parallel_shard_merge",
+  "summary_recomputed_from_raw_episodes": true,
+  "summary_rows": 10
+}

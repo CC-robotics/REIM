@@ -1,0 +1,111 @@
+{
+  "artifact": "formal_baseline_final500k_paired_statistics",
+  "backend": "metaworld",
+  "bootstrap_samples": 2000,
+  "checkpoint": "checkpoints/recovery_trigger_seed42.zip",
+  "checkpoint_sha256": "55d92acfdd98061e198c4e27fac882e735f5ef4a1336c578e520f1ee8df0ffe7",
+  "input_hashes": {
+    "results/tables/baseline_final500k.csv": "fe50c97eed20b6425bd98db4a467d82ddc2d1d6aaae3395874ed284aae4c31ef",
+    "results/tables/baseline_final500k_episodes.csv": "667d898dfa6bc23a154db3841f99274685d051936769024e241a6efb6188aa01",
+    "results/tables/baseline_final500k_merge_manifest.json": "b2f25294e0873d588484db839f12fc2c2bc5223f66bc968a3b1355e41680021e"
+  },
+  "intervention_efficiency": {
+    "absolute_interventions_avoided": 151,
+    "act_rl_recovery_interventions": 695,
+    "average_steps_difference_reim_minus_act_rl": 2.5919999999999987,
+    "reim_interventions": 544,
+    "relative_intervention_reduction": 0.21726618705035972,
+    "relative_intervention_reduction_percent": 21.72661870503597,
+    "success_rate_cost_pp": 2.200000000000002
+  },
+  "method_episode_counts": {
+    "ACT": 1000,
+    "ACT + RL Recovery": 1000,
+    "ACT + Random Reset": 1000,
+    "REIM (ACT + Detector + Recovery)": 1000
+  },
+  "noise_level": 0.2,
+  "paired_comparisons": {
+    "ACT+RL - ACT": {
+      "bootstrap_ci_lower_pp": 11.5,
+      "bootstrap_ci_upper_pp": 16.6,
+      "contender": "ACT + RL Recovery",
+      "losses": 27,
+      "mcnemar_exact_p": 7.69305377145682e-26,
+      "paired_episodes": 1000,
+      "reference": "ACT",
+      "success_gain": 0.14,
+      "success_gain_pp": 14.000000000000002,
+      "ties": 806,
+      "wins": 167
+    },
+    "REIM - ACT": {
+      "bootstrap_ci_lower_pp": 9.2,
+      "bootstrap_ci_upper_pp": 14.2,
+      "contender": "REIM (ACT + Detector + Recovery)",
+      "losses": 34,
+      "mcnemar_exact_p": 5.178012545775744e-19,
+      "paired_episodes": 1000,
+      "reference": "ACT",
+      "success_gain": 0.118,
+      "success_gain_pp": 11.799999999999999,
+      "ties": 814,
+      "wins": 152
+    },
+    "REIM - ACT+RL": {
+      "bootstrap_ci_lower_pp": -4.2,
+      "bootstrap_ci_upper_pp": -0.2,
+      "contender": "REIM (ACT + Detector + Recovery)",
+      "losses": 64,
+      "mcnemar_exact_p": 0.040871970607754805,
+      "paired_episodes": 1000,
+      "reference": "ACT + RL Recovery",
+      "success_gain": -0.022,
+      "success_gain_pp": -2.1999999999999997,
+      "ties": 894,
+      "wins": 42
+    },
+    "REIM - Random Reset": {
+      "bootstrap_ci_lower_pp": 1.3,
+      "bootstrap_ci_upper_pp": 7.3999999999999995,
+      "contender": "REIM (ACT + Detector + Recovery)",
+      "losses": 104,
+      "mcnemar_exact_p": 0.009375170329727112,
+      "paired_episodes": 1000,
+      "reference": "ACT + Random Reset",
+      "success_gain": 0.042,
+      "success_gain_pp": 4.2,
+      "ties": 750,
+      "wins": 146
+    },
+    "Random Reset - ACT": {
+      "bootstrap_ci_lower_pp": 4.3,
+      "bootstrap_ci_upper_pp": 11.0,
+      "contender": "ACT + Random Reset",
+      "losses": 113,
+      "mcnemar_exact_p": 1.442843234555632e-05,
+      "paired_episodes": 1000,
+      "reference": "ACT",
+      "success_gain": 0.076,
+      "success_gain_pp": 7.6,
+      "ties": 698,
+      "wins": 189
+    }
+  },
+  "profile": "full",
+  "seed_end": 6001041,
+  "seed_start": 6000042,
+  "validation_checks": {
+    "backend_metaworld": true,
+    "checkpoint_sha256_matches": true,
+    "episode_indices_exact": true,
+    "episode_rows_4000": true,
+    "episodes_1000_each": true,
+    "methods_exact": true,
+    "no_literal_nan_or_inf": true,
+    "paired_seed_range_exact": true,
+    "profile_full": true,
+    "raw_numeric_finite": true,
+    "summary_rows_4": true
+  }
+}

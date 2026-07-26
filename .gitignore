@@ -1,0 +1,41 @@
+.venv/
+.tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+results/logs/
+
+# Local editor and operating-system files
+.DS_Store
+.idea/
+.vscode/
+
+# Runtime and experiment scratch files
+*.tmp
+*.bak
+*.swp
+wandb/
+runs/
+
+# LaTeX build intermediates (the source and compiled PDF are versioned)
+paper_assets/*.aux
+paper_assets/*.bbl
+paper_assets/*.bcf
+paper_assets/*.blg
+paper_assets/*.fdb_latexmk
+paper_assets/*.fls
+paper_assets/*.log
+paper_assets/*.out
+paper_assets/*.run.xml
+paper_assets/*.synctex.gz
+paper_assets/_minted-*/
+
+# Publish only the frozen models used by the paper. Epoch-by-epoch ACT
+# checkpoints and legacy PPO controls are reproducible but not repository assets.
+checkpoints/*
+!checkpoints/bc_policy.pt
+!checkpoints/failure_detector.pt
+!checkpoints/imitation_recovery.pt
+!checkpoints/imitation_recovery.audit.json

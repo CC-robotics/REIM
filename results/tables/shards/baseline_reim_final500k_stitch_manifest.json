@@ -1,0 +1,70 @@
+{
+  "backend": "metaworld",
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 6000042,
+  "checkpoint": "checkpoints/recovery_trigger_seed42.zip",
+  "checkpoint_sha256": "55d92acfdd98061e198c4e27fac882e735f5ef4a1336c578e520f1ee8df0ffe7",
+  "chunks": [
+    {
+      "chunk": 0,
+      "rows": 250,
+      "seed_end": 6000291,
+      "seed_start": 6000042
+    },
+    {
+      "chunk": 1,
+      "rows": 250,
+      "seed_end": 6000541,
+      "seed_start": 6000292
+    },
+    {
+      "chunk": 2,
+      "rows": 250,
+      "seed_end": 6000791,
+      "seed_start": 6000542
+    },
+    {
+      "chunk": 3,
+      "rows": 250,
+      "seed_end": 6001041,
+      "seed_start": 6000792
+    }
+  ],
+  "controller_protocol": {
+    "max_steps": 200,
+    "noise_level": 0.2,
+    "recovery_budget": 150,
+    "recovery_clear_steps": 200,
+    "recovery_min_steps": 150,
+    "tau_off": 0.0,
+    "tau_on": 0.2
+  },
+  "episodes_reindexed": true,
+  "inputs": {
+    "results/tables/shards/baseline_reim_final500k_chunk0.csv": "4cba8d3dbaec2e056ceb6fe097a6b5891bbada491fc64981720f2938984fb6de",
+    "results/tables/shards/baseline_reim_final500k_chunk0_episodes.csv": "777895989f72d72420aca3cb6cbc410f28defef265708b75f303270a38fabe02",
+    "results/tables/shards/baseline_reim_final500k_chunk1.csv": "f0b460821bd72f7e3bc43138193b9f39d141fa6a19370eb7a3155062eb884114",
+    "results/tables/shards/baseline_reim_final500k_chunk1_episodes.csv": "60bc4b269b084e545651edaed8b8fc16022ecd1d391db1dd3ba54493c6943af0",
+    "results/tables/shards/baseline_reim_final500k_chunk2.csv": "62b4fc70334ec4727bc5022e5deeaee63f9054c654f64d5f2dbed5883432ec2b",
+    "results/tables/shards/baseline_reim_final500k_chunk2_episodes.csv": "369ac310edc76687cb7ed838eea6a8d883ddc1c40eb9597b2095cc6798ad9a46",
+    "results/tables/shards/baseline_reim_final500k_chunk3.csv": "9b40dd9dd481a0c9aecfcb0a915a599d7aa62a9122c30ac5e4734af4e3c1afb0",
+    "results/tables/shards/baseline_reim_final500k_chunk3_episodes.csv": "b4e9b1a90c90525b3d96935c1f4becd7fcaba73f0f260fba4b43e248851a6d9d",
+    "results/traces/formal_baseline_final500k/reim_chunk0.json": "22b867c028ae4b5ce76b46a96e32e514a2455c05a105e01c806d0c38c732ceb5",
+    "results/traces/formal_baseline_final500k/reim_chunk1.json": "5b0d4178dbbcff7cf103c206cb3dd58c7c37d63eed1fb8a0e54ca6e6f8146e67",
+    "results/traces/formal_baseline_final500k/reim_chunk2.json": "3bfbbe97cf79589908c3f5b7982e99ca6b8387f2d01cf2182a7d3fb0cfd063e0",
+    "results/traces/formal_baseline_final500k/reim_chunk3.json": "658217adb9de56e3adbcaa18846cb5303cec0526a124af0577cc1c973b7df377"
+  },
+  "method": "REIM (ACT + Detector + Recovery)",
+  "outputs": {
+    "results/tables/shards/baseline_reim_final500k.csv": "ae96a96f4781e46aacbfe1dcb2e5f5dd710a9c9aac8168b43df75944661f687f",
+    "results/tables/shards/baseline_reim_final500k_episodes.csv": "30a6c5f81db86d14c91279d0ac5d083bc1abdf3314e5dc52cd8d85d650df6a64",
+    "results/traces/formal_baseline_final500k/reim.json": "c5fb1e377fd0462bc00070c57e9ecc184dc63594f54424d67b5a2a2e622e3983"
+  },
+  "profile": "full",
+  "rows": 1000,
+  "seed_end": 6001041,
+  "seed_start": 6000042,
+  "strategy": "four_contiguous_250_episode_shards_reaggregated_from_raw",
+  "summary_recomputed_from_raw_episodes": true,
+  "unique_seeds": 1000
+}

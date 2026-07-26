@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "method": "REIM (ACT + Detector + Recovery)",
+  "recovery_training_seed": 43,
+  "backend": "metaworld",
+  "episodes": 200,
+  "evaluation_seed_start": 7000042,
+  "evaluation_seed_end": 7000241,
+  "protocol": {
+    "noise_level": 0.2,
+    "max_steps": 200,
+    "failure_threshold": 0.2,
+    "recovery_exit_threshold": 0.0,
+    "recovery_budget": 150,
+    "recovery_min_steps": 150,
+    "recovery_clear_steps": 200
+  },
+  "checkpoint_sha256": {
+    "act": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
+    "failure_detector": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
+    "recovery_seed43_v2": "23ccadbc6eef8be9cd557202c319274d9ad519b96f6e93049a7aebd9034b6656"
+  },
+  "results": {
+    "successes": 162,
+    "success_rate": 0.81,
+    "recovery_attempts": 103,
+    "recovery_successes": 65,
+    "recovery_rate": 0.6310679611650486,
+    "paired_vs_act": {
+      "rescued": 13,
+      "harmed": 2,
+      "both_success": 149,
+      "both_failure": 36,
+      "net_success_gain_percentage_points": 5.5,
+      "paired_bootstrap_95_ci_percentage_points": [
+        2.0,
+        9.5
+      ],
+      "exact_mcnemar_p_value": 0.00738525390625
+    }
+  },
+  "raw_validation": {
+    "rows": 200,
+    "continuous_exact_ordered_seed_range": true,
+    "unique_evaluation_seeds": 200,
+    "no_duplicate_seeds": true,
+    "paired_seed_order_matches_act": true,
+    "no_literal_nan": true,
+    "core_numeric_fields_finite": true,
+    "optional_not_applicable_fields_blank": [
+      "failure_reason_on_success"
+    ],
+    "summary_recomputed_from_raw": true
+  },
+  "output_sha256": {
+    "summary": "793bd2732e8f7a7fa077c125728c7da41fc6c8f8a76c22d1a65393a26f9bac59",
+    "episodes": "db99852e1f3cf0ba052a68ad4ae76bc679fba366fb4f471097c9588522b0de97",
+    "controller_traces": "9501ccc6453ad6ecd03c48ecbc8be5f6bd52844bf30e930def081e92687a1e76"
+  }
+}

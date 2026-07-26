@@ -1,0 +1,46 @@
+\begin{table*}[t]
+  \centering
+  \caption{Paired comparison on the simulated Meta-World
+  \REIMTask{} task. Every method uses the same \PlannedMainEpisodes{} seeds.
+  Success and intervention outcomes are percentages with \ConfidenceLevel{}
+  intervals. For Heuristic Recovery/REIM, recovery is task completion while
+  recovery has control, divided by intervention count; Random Reset reports post-reset
+  completion per reset and is not directly comparable.}
+  \label{tab:final-baseline}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    Method & Task success $\uparrow$ & Intervention outcome $\uparrow$ &
+    Intervention rate & Steps $\downarrow$ \\
+    \midrule
+    ACT &
+    \FinalACTSuccess{} \FinalACTSuccessCI &
+    \FinalACTRecovery{} &
+    \FinalACTIntervention{} &
+    \FinalACTSteps{} \\
+    ACT + Random Reset &
+    \FinalResetSuccess{} \FinalResetSuccessCI &
+    \FinalResetRecovery{} \FinalResetRecoveryCI &
+    \FinalResetIntervention{} &
+    \FinalResetSteps{} \\
+    ACT + Heuristic Recovery &
+    \FinalRLRecoverySuccess{} \FinalRLRecoverySuccessCI &
+    \FinalRLRecoveryRate{} \FinalRLRecoveryRateCI &
+    \FinalRLRecoveryIntervention{} &
+    \FinalRLRecoverySteps{} \\
+    REIM (ours) &
+    \FinalREIMSuccess{} \FinalREIMSuccessCI &
+    \FinalREIMRecovery{} \FinalREIMRecoveryCI &
+    \FinalREIMIntervention{} &
+    \FinalREIMSteps{} \\
+    \bottomrule
+  \end{tabular}
+  \vspace{1mm}\parbox{0.96\textwidth}{\footnotesize
+  Paired REIM gain over ACT: \FinalREIMGain{}
+  (\ConfidenceLevel{} CI \FinalREIMGainCI);
+  \FinalREIMRescuedEpisodes{} ACT failures are rescued and
+  \FinalREIMHarmedEpisodes{} ACT successes are harmed. REIM intervenes in
+  \FinalREIMFewerIntervenedEpisodes{} fewer episodes than heuristic-gated recovery
+  (\FinalREIMInterventionReductionVsRL{} relative reduction).}
+\end{table*}

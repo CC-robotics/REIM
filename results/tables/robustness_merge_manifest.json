@@ -1,0 +1,81 @@
+{
+  "backend": "metaworld",
+  "condition_key_fields": [
+    "Method",
+    "Noise Level"
+  ],
+  "conditions": [
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.2"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.0"
+    ],
+    [
+      "ACT",
+      "0.2"
+    ],
+    [
+      "ACT",
+      "0.0"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.1"
+    ],
+    [
+      "ACT",
+      "0.1"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.3"
+    ],
+    [
+      "ACT",
+      "0.3"
+    ],
+    [
+      "REIM (ACT + Detector + Recovery)",
+      "0.4"
+    ],
+    [
+      "ACT",
+      "0.4"
+    ]
+  ],
+  "crn_episode_specifications_verified": true,
+  "episode_bank_sha256s": [
+    "093171deee73c73233afa582007dc538d5372fbe19a180c78389ff37452cf336",
+    "57ac5e7259f9e36fe4d487d0f69b7b13ade0c0aa4abbfe896ce2ee654b85d6b9",
+    "5dab9ea09f41c6bcf76a778fec235e41b2ca78bc226d49a2cf5818fef53b3bc9",
+    "8c503c07dc6dcdd904e948f14d270410c2fbd4d9796f8d9e08451dc34c7d4399",
+    "b4d00b629663580725cee7c16b68664af3de3bc5986bddef37e01448932e3ffd"
+  ],
+  "episode_rows": 2000,
+  "episodes_per_condition": 200,
+  "evaluation_seed_end": 8000241,
+  "evaluation_seed_start": 8000042,
+  "inputs": {
+    "results/tables/formal_crn/robustness_n00.csv": "a4a08cc71cc9558a10546037da2777bfdc331c3829034e47e63555cacc77f5bc",
+    "results/tables/formal_crn/robustness_n00_episodes.csv": "b1e5ffbf4c9cff098910e442f65876eb6f559202a58c705312d01a996c9c2ad4",
+    "results/tables/formal_crn/robustness_n10.csv": "ff0b2f1b9dfdcfd5ce15879ce54645a9e03f40896f3483f92d17bb3fce2d1ad7",
+    "results/tables/formal_crn/robustness_n10_episodes.csv": "fcc5754bc0e6f36fc46aee14f4c249bdeb22e30a65f6755d8225559b348fab6d",
+    "results/tables/formal_crn/robustness_n20.csv": "6d7a1d4a87521ba2e9a6a21cbd3c0deecc059ca612a68817b2b5447815c7d0cc",
+    "results/tables/formal_crn/robustness_n20_episodes.csv": "086251dfdf4f3f6107727bd840f6271251c856db89eb42837acc898037333e9a",
+    "results/tables/formal_crn/robustness_n30.csv": "4b2cd534aeab2ad8615da0623aa8147dd4c2cae4b4b18623aefe8b75963c1ffa",
+    "results/tables/formal_crn/robustness_n30_episodes.csv": "bba95d5b0295a83439ba1bce9926bedcfbcc4c4f050ae8fe093cc8b64b22b0fd",
+    "results/tables/formal_crn/robustness_n40.csv": "7b54b7c2438183b6797d84dc207e443a01325984ae71242b611d271126e06cda",
+    "results/tables/formal_crn/robustness_n40_episodes.csv": "5a0227204b45a7d3b4a798c54c5271d8e33e1806d3df3f8b76c271354f98c4cd"
+  },
+  "outputs": {
+    "episodes": "results/tables/robustness_episodes.csv",
+    "summary": "results/tables/robustness.csv"
+  },
+  "profile": "full",
+  "strategy": "validated_parallel_shard_merge",
+  "summary_recomputed_from_raw_episodes": true,
+  "summary_rows": 10
+}

@@ -1,0 +1,17 @@
+{
+  "action_dim": 4,
+  "best_validation_l1": 0.004013205849033837,
+  "best_validation_loss": 0.00404681268861229,
+  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+  "chunk_size": 20,
+  "curve": "/home/diy/bonus_track/REIM/results/figures/act_training_curve.png",
+  "device": "cuda",
+  "epochs_completed": 200,
+  "latest_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy_latest.pt",
+  "parameters": 6627908,
+  "policy_type": "ACT",
+  "samples": 25969,
+  "seed": 42,
+  "state_dim": 21,
+  "trajectories": 500
+}
