@@ -118,6 +118,36 @@ def _render_rgb(env: Any) -> np.ndarray:
     return np.ascontiguousarray(image)
 
 
+def _configure_camera(
+    env: Any,
+    *,
+    lookat: Sequence[float],
+    distance: float,
+    azimuth: float,
+    elevation: float,
+) -> None:
+    """Configure a close oblique free camera for interpretable keyframes."""
+
+    base_getter = getattr(env, "_base_metaworld_env", None)
+    base = base_getter() if callable(base_getter) else None
+    renderer = getattr(base, "mujoco_renderer", None)
+    if renderer is None:
+        raise RuntimeError("Meta-World environment does not expose a MuJoCo renderer")
+    camera_config = {
+        "lookat": np.asarray(lookat, dtype=np.float64).reshape(3),
+        "distance": float(distance),
+        "azimuth": float(azimuth),
+        "elevation": float(elevation),
+    }
+    renderer.default_cam_config = camera_config
+    viewer = getattr(renderer, "viewer", None)
+    if viewer is not None:
+        viewer.cam.lookat[:] = camera_config["lookat"]
+        viewer.cam.distance = camera_config["distance"]
+        viewer.cam.azimuth = camera_config["azimuth"]
+        viewer.cam.elevation = camera_config["elevation"]
+
+
 def _compact_info(info: Mapping[str, Any]) -> dict[str, Any]:
     """Keep only state/event fields needed for keyframe selection."""
 
@@ -303,17 +333,25 @@ def _select_keyframes(act: Rollout, reim: Rollout) -> list[Keyframe]:
         [_position(info, "object_position") for info in reim.infos]
     )
     distances = np.asarray([_distance(info) for info in reim.infos])
+    # The object displacement can contain a positive z component.  Using that
+    # instantaneous disturbed height as the table baseline can make the lift
+    # condition unreachable and collapse all recovery keyframes onto the final
+    # three timesteps.  Estimate the settled table height from the first ten
+    # post-trigger states instead.
+    settle_end = min(trigger + 10, reim_final + 1)
+    settled_z = object_positions[trigger:settle_end, 2]
+    finite_settled_z = settled_z[np.isfinite(settled_z)]
     reference_z = float(
-        object_positions[
-            min(max(disturbance, 0), object_positions.shape[0] - 1), 2
-        ]
+        np.median(finite_settled_z)
+        if finite_settled_z.size
+        else object_positions[min(max(trigger, 0), reim_final), 2]
     )
     recovery_candidates = np.arange(
         min(trigger + 1, reim_final), reim_final + 1
     )
     lifted = recovery_candidates[
         np.flatnonzero(
-            object_positions[recovery_candidates, 2] >= reference_z + 0.025
+            object_positions[recovery_candidates, 2] >= reference_z + 0.015
         )
     ]
     if lifted.size:
@@ -345,19 +383,33 @@ def _select_keyframes(act: Rollout, reim: Rollout) -> list[Keyframe]:
         max(transport, lift + 1), max(reim_final - 1, lift + 1)
     )
 
-    # On the ACT branch, prefer the first explicit physical failure event.  If
-    # the environment only times out, use a late state that makes the unresolved
-    # trajectory visually distinct from its final timeout.
+    # On the ACT branch, prefer an explicit physical failure event but do not
+    # treat the terminal timeout itself as trajectory drift.  If no physical
+    # event exists, show ACT's best task progress before its final timeout; this
+    # gives a semantically meaningful and temporally separated comparison.
     failure_events = [
         index
         for index, info in enumerate(act.infos)
-        if index > disturbance and bool(info.get("failure", False))
+        if index > disturbance
+        and bool(info.get("failure", False))
+        and not any(
+            token in str(info.get("failure_reason", "")).lower()
+            for token in ("timeout", "time limit", "time_limit", "truncated")
+        )
     ]
-    act_drift = int(
-        failure_events[0]
-        if failure_events
-        else max(disturbance + 1, round(0.70 * act_final))
-    )
+    if failure_events:
+        act_drift = int(failure_events[0])
+    else:
+        act_candidates = np.arange(
+            min(disturbance + 1, act_final - 1), max(act_final, disturbance + 2)
+        )
+        act_distances = np.asarray([_distance(info) for info in act.infos])
+        finite = act_candidates[np.isfinite(act_distances[act_candidates])]
+        act_drift = int(
+            finite[np.argmin(act_distances[finite])]
+            if finite.size
+            else max(disturbance + 1, round(0.55 * act_final))
+        )
     act_drift = min(act_drift, max(act_final - 1, disturbance + 1))
 
     risk = (
@@ -473,6 +525,7 @@ def _save_outputs(
     noise_level: float,
     failure_threshold: float,
     recovery_budget: int,
+    camera: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Save paired raw frames, trajectories, figures, and provenance metadata."""
 
@@ -485,6 +538,10 @@ def _save_outputs(
     output_dir.mkdir(parents=True, exist_ok=True)
     frame_dir = output_dir / f"{stem}_frames"
     frame_dir.mkdir(parents=True, exist_ok=True)
+    # These are reproducible derived artifacts. Remove only stale keyframes for
+    # the selected qualitative seed before writing the new semantic selection.
+    for stale_frame in frame_dir.glob(f"*_seed{reim.seed}_t*.png"):
+        stale_frame.unlink()
     raw_frame_paths: list[Path] = []
     for order, keyframe in enumerate(keyframes, start=1):
         source = act if keyframe.rollout == "act" else reim
@@ -720,6 +777,7 @@ def _save_outputs(
         },
         "noise_level": noise_level,
         "failure_threshold": failure_threshold,
+        "camera": _json_value(camera),
         "recovery_control_rule": (
             "Imitation recovery holds control until task success or "
             f"{recovery_budget}-step budget"
@@ -854,6 +912,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Headless MuJoCo rendering backend.",
     )
     parser.add_argument("--log-level", default="INFO")
+    parser.add_argument(
+        "--camera-lookat",
+        type=float,
+        nargs=3,
+        default=(0.0, 0.70, 0.12),
+        metavar=("X", "Y", "Z"),
+        help="Free-camera look-at point for the qualitative sequence.",
+    )
+    parser.add_argument("--camera-distance", type=float, default=1.0)
+    parser.add_argument("--camera-azimuth", type=float, default=150.0)
+    parser.add_argument("--camera-elevation", type=float, default=-22.0)
     return parser
 
 
@@ -998,6 +1067,14 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
                     render_mode="rgb_array",
                 )
                 try:
+                    for rendered_env in (rendered_act_env, rendered_reim_env):
+                        _configure_camera(
+                            rendered_env,
+                            lookat=args.camera_lookat,
+                            distance=args.camera_distance,
+                            azimuth=args.camera_azimuth,
+                            elevation=args.camera_elevation,
+                        )
                     rendered_act = _run_rollout(
                         rendered_act_env,
                         method="bc",
@@ -1109,6 +1186,12 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
         noise_level=args.noise_level,
         failure_threshold=args.failure_threshold,
         recovery_budget=args.recovery_budget,
+        camera={
+            "lookat": args.camera_lookat,
+            "distance": args.camera_distance,
+            "azimuth": args.camera_azimuth,
+            "elevation": args.camera_elevation,
+        },
     )
     LOGGER.info(
         (

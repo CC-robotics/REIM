@@ -11,6 +11,16 @@
   },
   "noise_level": 0.2,
   "failure_threshold": 0.2,
+  "camera": {
+    "lookat": [
+      0.0,
+      0.7,
+      0.12
+    ],
+    "distance": 1.0,
+    "azimuth": 150.0,
+    "elevation": -22.0
+  },
   "recovery_control_rule": "Imitation recovery holds control until task success or 150-step budget",
   "act": {
     "success": false,
@@ -54,9 +64,9 @@
       "rollout": "act",
       "key": "act_unrecovered",
       "title": "(c) ACT drift",
-      "subtitle": "ACT | t=199 | d=0.188 m",
-      "frame_index": 199,
-      "raw_frame": "results/figures/recovery_operation_sequence_frames/03_act_unrecovered_seed8300042_t199.png"
+      "subtitle": "ACT | t=68 | d=0.162 m",
+      "frame_index": 68,
+      "raw_frame": "results/figures/recovery_operation_sequence_frames/03_act_unrecovered_seed8300042_t068.png"
     },
     {
       "rollout": "act",
@@ -78,17 +88,17 @@
       "rollout": "reim",
       "key": "reim_relift",
       "title": "(f) Recovery grasp / lift",
-      "subtitle": "REIM | t=60 | z=0.052 m",
-      "frame_index": 60,
-      "raw_frame": "results/figures/recovery_operation_sequence_frames/06_reim_relift_seed8300042_t060.png"
+      "subtitle": "REIM | t=40 | z=0.035 m",
+      "frame_index": 40,
+      "raw_frame": "results/figures/recovery_operation_sequence_frames/06_reim_relift_seed8300042_t040.png"
     },
     {
       "rollout": "reim",
       "key": "reim_transport",
       "title": "(g) Recovery transport",
-      "subtitle": "REIM | t=61 | d=0.074 m",
-      "frame_index": 61,
-      "raw_frame": "results/figures/recovery_operation_sequence_frames/07_reim_transport_seed8300042_t061.png"
+      "subtitle": "REIM | t=51 | d=0.153 m",
+      "frame_index": 51,
+      "raw_frame": "results/figures/recovery_operation_sequence_frames/07_reim_transport_seed8300042_t051.png"
     },
     {
       "rollout": "reim",
@@ -101,60 +111,60 @@
   ],
   "artifacts": {
     "results/figures/recovery_operation_sequence_frames/01_act_initial_seed8300042_t000.png": {
-      "sha256": "96adebfa26bdbf15b5e1196a22479644d9bf1092bd2493e071c1b1c8665df610",
-      "bytes": 190265
+      "sha256": "4d13cf5482a58023d3f017508251fec023ce16ce00d2c5a440090feb6fd07c22",
+      "bytes": 244120
     },
     "results/figures/recovery_operation_sequence_frames/02_act_disturbance_seed8300042_t003.png": {
-      "sha256": "1886f81bbeabb5f89a20c2b0e6e522be7ccec9203b703455786accc78b3ddfa6",
-      "bytes": 190375
+      "sha256": "03329f36eb6c018789350cc7a86bc04573a3787d7b8bba8b9461039c1935919e",
+      "bytes": 244473
     },
-    "results/figures/recovery_operation_sequence_frames/03_act_unrecovered_seed8300042_t199.png": {
-      "sha256": "1649ff1acbb3b00c2c4420b42f02b34cfbded63e34195bb491383faaa891d92f",
-      "bytes": 188072
+    "results/figures/recovery_operation_sequence_frames/03_act_unrecovered_seed8300042_t068.png": {
+      "sha256": "a1df7eb12e15aee773a4b2aac6ea20d0d6cfb66306842a7a2483d365e863f8fc",
+      "bytes": 250763
     },
     "results/figures/recovery_operation_sequence_frames/04_act_failure_seed8300042_t200.png": {
-      "sha256": "77132ff50aa06ffb34bfc3ff2dbf45892941d874a9ba0ff3f4e0f7693498b19b",
-      "bytes": 188019
+      "sha256": "953e33c6b8adf185be0ef3b3b19de0bc89a76ff275be5a213ba67529d870646a",
+      "bytes": 250010
     },
     "results/figures/recovery_operation_sequence_frames/05_reim_trigger_seed8300042_t009.png": {
-      "sha256": "a6bd8acb07b5096d9525c2b09b7e83d280203cbe108ca5f6d89244814e457c71",
-      "bytes": 190167
+      "sha256": "613c193bb767b6cd6afb0a3d260e0bd8b397b5bb5763a093819b463cce4ea290",
+      "bytes": 244969
     },
-    "results/figures/recovery_operation_sequence_frames/06_reim_relift_seed8300042_t060.png": {
-      "sha256": "f3e73a956e37efd173b66793f2b2ec4d4dcd8e8ee4b9078c9107eb09ed113667",
-      "bytes": 187087
+    "results/figures/recovery_operation_sequence_frames/06_reim_relift_seed8300042_t040.png": {
+      "sha256": "58632125510c47a78dbe7f36b5dd9f0b7a805067b0e03a49953f5dc913b9a8eb",
+      "bytes": 246283
     },
-    "results/figures/recovery_operation_sequence_frames/07_reim_transport_seed8300042_t061.png": {
-      "sha256": "440624efea24fb47e1b4371f77ca1724be6f05e7ac7d882c2e43bb07468bb0e2",
-      "bytes": 186810
+    "results/figures/recovery_operation_sequence_frames/07_reim_transport_seed8300042_t051.png": {
+      "sha256": "f28da02453c401f2ef24002e0263381cba4683436613e8da10b586e42bed2a1a",
+      "bytes": 247166
     },
     "results/figures/recovery_operation_sequence_frames/08_reim_success_seed8300042_t062.png": {
-      "sha256": "79ddcee671b6b20692d5c4fb7c6347dea0cf4f9134e7e393984c845c080d3d11",
-      "bytes": 186798
+      "sha256": "20fe693126d9890d4d5caf458cab7b632b73aa4445fa36fdda418cd264d4bdce",
+      "bytes": 250372
     },
     "results/figures/recovery_operation_sequence.png": {
-      "sha256": "e48fcf4cd5b7d62e04a1ecb1e3a73a0246a7074f872843b3732eef10b1ff2c90",
-      "bytes": 652928
+      "sha256": "7aa83104772ecbc7952f9ed7de48ca232dd5414bc11bc972a2e93c7b368156b7",
+      "bytes": 820341
     },
     "results/figures/recovery_operation_sequence.pdf": {
-      "sha256": "a0efbb18287e5f818441d8c211b886d38db26b297e60e379c79ae7a45e1b6967",
-      "bytes": 187406
+      "sha256": "a1345e3c27d8f6ddabe68166a5b25da37a48b0b6ebe508d51c46918ed7aabf1f",
+      "bytes": 194046
     },
     "results/figures/recovery_operation_sequence_act_failure_trace.json": {
-      "sha256": "9edf8bdd13e602059acee31799b74de392d7a974ad4464286219913e697e8b6d",
-      "bytes": 213326
+      "sha256": "8ff218d86dbe1e844da35be3c5f6e9de94e26267316a13aee83bd3939bb2f9e0",
+      "bytes": 213329
     },
     "results/figures/recovery_operation_sequence_reim_success_trace.json": {
-      "sha256": "91a209b9d1af2ae5a51e2bb50ff6510e559c33c9416bfe14d22de0fbebb61f5a",
-      "bytes": 67865
+      "sha256": "ffc8cbaa9da927e9bcba421c07b03efe598300392a6725fdd8babf8cb2f31aca",
+      "bytes": 67871
     },
     "paper_assets/Figure5_operation_sequence.png": {
-      "sha256": "e48fcf4cd5b7d62e04a1ecb1e3a73a0246a7074f872843b3732eef10b1ff2c90",
-      "bytes": 652928
+      "sha256": "7aa83104772ecbc7952f9ed7de48ca232dd5414bc11bc972a2e93c7b368156b7",
+      "bytes": 820341
     },
     "paper_assets/Figure5_operation_sequence.pdf": {
-      "sha256": "a0efbb18287e5f818441d8c211b886d38db26b297e60e379c79ae7a45e1b6967",
-      "bytes": 187406
+      "sha256": "a1345e3c27d8f6ddabe68166a5b25da37a48b0b6ebe508d51c46918ed7aabf1f",
+      "bytes": 194046
     }
   }
 }
