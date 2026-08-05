@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -254,12 +255,39 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     device_name = select_device(args.device or config.get("device", "auto"))
     seed_everything(seed)
     logger = configure_logging("train_act", "results/logs/train_act.log")
+    attention_backend = str(training.get("attention_backend", "math")).lower()
+    if device_name.startswith("cuda"):
+        if attention_backend == "math":
+            # The cuDNN SDPA backward kernel in some CUDA 12.8 development
+            # stacks over-subscribes resources on Blackwell GPUs. The exact
+            # PyTorch math backend is slower per operation but supports large
+            # physical batches reliably and is recorded in every checkpoint.
+            for function_name in (
+                "enable_flash_sdp",
+                "enable_mem_efficient_sdp",
+                "enable_cudnn_sdp",
+            ):
+                function = getattr(torch.backends.cuda, function_name, None)
+                if function is not None:
+                    function(False)
+            torch.backends.cuda.enable_math_sdp(True)
+        elif attention_backend != "default":
+            raise ValueError("training.attention_backend must be 'math' or 'default'.")
+        logger.info("ACT scaled-dot-product attention backend=%s", attention_backend)
 
     data_path = resolve_path(args.data_dir or config.get("data_dir", "datasets/demonstrations"))
     data_manifest_path = data_path / "manifest.json"
     data_manifest_sha256 = (
         file_sha256(data_manifest_path) if data_manifest_path.is_file() else None
     )
+    data_manifest = (
+        json.loads(data_manifest_path.read_text(encoding="utf-8"))
+        if data_manifest_path.is_file()
+        else {}
+    )
+    task_vocabulary = list(data_manifest.get("task_vocabulary", []))
+    task_vocabulary_sha256 = data_manifest.get("task_vocabulary_sha256")
+    benchmark_name = data_manifest.get("benchmark")
     output_path = resolve_path(
         args.checkpoint or config.get("checkpoint", "checkpoints/bc_policy.pt")
     )
@@ -313,7 +341,8 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     if resume_path is not None:
         if not resume_path.exists():
             raise FileNotFoundError(f"Resume checkpoint not found: {resume_path}")
-        resume_checkpoint = _torch_load(resume_path, device_name)
+        # RNG and DataLoader generator snapshots must remain CPU ByteTensors.
+        resume_checkpoint = _torch_load(resume_path, "cpu")
         if str(resume_checkpoint.get("policy_type", "")).upper() != "ACT":
             raise ValueError("Resume checkpoint is not an ACT policy.")
         model_config = dict(resume_checkpoint.get("model_config", model_config))
@@ -329,6 +358,12 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         actions = np.clip(actions, -1.0, 1.0)
         data = DemonstrationData(states, actions, data.groups, data.files)
     state_dim, action_dim = states.shape[-1], actions.shape[-1]
+    if task_vocabulary and state_dim != 39 + len(task_vocabulary):
+        raise ValueError(
+            "Demonstration task vocabulary is incompatible with state_dim: "
+            f"{len(task_vocabulary)} tasks require {39 + len(task_vocabulary)}, "
+            f"found {state_dim}."
+        )
     train_indices, validation_indices = group_train_validation_split(
         data.groups,
         float(training.get("validation_fraction", 0.1)),
@@ -353,6 +388,13 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             raise ValueError("Resume checkpoint state_dim does not match demonstrations.")
         if int(resume_checkpoint.get("action_dim", action_dim)) != action_dim:
             raise ValueError("Resume checkpoint action_dim does not match demonstrations.")
+        if resume_checkpoint.get("task_vocabulary", task_vocabulary) != task_vocabulary:
+            raise ValueError("Resume checkpoint task vocabulary has changed.")
+        if (
+            resume_checkpoint.get("task_vocabulary_sha256", task_vocabulary_sha256)
+            != task_vocabulary_sha256
+        ):
+            raise ValueError("Resume checkpoint task vocabulary hash has changed.")
         stored_train_groups = resume_checkpoint.get("train_group_ids")
         stored_validation_groups = resume_checkpoint.get("validation_group_ids")
         if stored_train_groups is not None and set(stored_train_groups) != set(
@@ -367,13 +409,18 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     train_dataset = ActionChunkDataset(data, train_indices, chunk_size)
     validation_dataset = ActionChunkDataset(data, validation_indices, chunk_size)
     generator = torch.Generator().manual_seed(seed)
+    effective_train_batch_size = min(batch_size, len(train_dataset))
+    drop_last_batch = bool(training.get("drop_last_batch", True)) and len(
+        train_dataset
+    ) > effective_train_batch_size
     train_loader = DataLoader(
         train_dataset,
-        batch_size=min(batch_size, len(train_dataset)),
+        batch_size=effective_train_batch_size,
         shuffle=True,
         num_workers=num_workers,
         pin_memory=device_name.startswith("cuda"),
         generator=generator,
+        drop_last=drop_last_batch,
     )
     validation_loader = DataLoader(
         validation_dataset,
@@ -504,10 +551,15 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             "state_std": state_std,
             "reconstruction_loss": "l1",
             "kl_weight": kl_weight,
+            "attention_backend": attention_backend,
+            "drop_last_batch": drop_last_batch,
             "best_validation_loss": best_validation_loss,
             "epochs_without_improvement": epochs_without_improvement,
             "history": history,
             "seed": seed,
+            "benchmark": benchmark_name,
+            "task_vocabulary": task_vocabulary,
+            "task_vocabulary_sha256": task_vocabulary_sha256,
             "data_manifest_sha256": data_manifest_sha256,
             "train_group_ids": np.unique(data.groups[train_indices]).tolist(),
             "validation_group_ids": np.unique(
@@ -554,6 +606,11 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "curve": str(curve_path),
         "device": device_name,
         "seed": seed,
+        "attention_backend": attention_backend,
+        "drop_last_batch": drop_last_batch,
+        "benchmark": benchmark_name,
+        "task_vocabulary": task_vocabulary,
+        "task_vocabulary_sha256": task_vocabulary_sha256,
     }
     atomic_json_dump(summary, summary_path)
     logger.info(

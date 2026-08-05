@@ -11,6 +11,15 @@ from .metaworld_pickplace import (
     ScriptedPickPlaceExpert,
     make_scripted_expert,
 )
+from .metaworld_multitask import (
+    ENV_POLICY_MAP,
+    MetaWorldMultiTaskEnv,
+    OFFICIAL_MAX_EPISODE_STEPS,
+    OFFICIAL_VARIANTS_PER_TASK,
+    REIMMetaWorldMultiTaskEnv,
+    SUPPORTED_BENCHMARKS,
+    SUPPORTED_METAWORLD_VERSION,
+)
 
 __all__ = [
     "ACTION_DIM",
@@ -22,4 +31,11 @@ __all__ = [
     "REIMPickPlaceEnv",
     "ScriptedPickPlaceExpert",
     "make_scripted_expert",
+    "ENV_POLICY_MAP",
+    "MetaWorldMultiTaskEnv",
+    "OFFICIAL_MAX_EPISODE_STEPS",
+    "OFFICIAL_VARIANTS_PER_TASK",
+    "REIMMetaWorldMultiTaskEnv",
+    "SUPPORTED_BENCHMARKS",
+    "SUPPORTED_METAWORLD_VERSION",
 ]

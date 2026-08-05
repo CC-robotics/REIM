@@ -1,0 +1,29 @@
+seed: 7
+device: auto
+data_dir: datasets/smoke/multitask/failures
+checkpoint: checkpoints/smoke/multitask/failure_detector.pt
+latest_checkpoint: checkpoints/smoke/multitask/failure_detector_latest.pt
+curve_path: results/smoke/multitask/detector_training.png
+confusion_matrix_path: results/smoke/multitask/detector_confusion.png
+history_path: results/smoke/multitask/detector_training.csv
+metrics_path: results/smoke/multitask/detector_metrics.json
+
+model:
+  sequence_length: 10
+  hidden_size: 32
+  num_layers: 1
+  mlp_hidden: 16
+  dropout: 0.0
+
+training:
+  epochs: 1
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.0
+  validation_fraction: 0.2
+  positive_weight: auto
+  patience: 1
+  checkpoint_every: 1
+  grad_clip_norm: 5.0
+  threshold: 0.5
+  deployment_threshold: 0.3

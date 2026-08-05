@@ -1,0 +1,47 @@
+benchmark: MT50
+model_seed: 42
+observation_schema: raw39_plus_official_task_one_hot
+task_count: 50
+state_dim: 89
+action_dim: 4
+max_episode_steps: 500
+
+banks:
+  demonstrations: 20261050
+  failure_training: 20262050
+  recovery_training: 20263050
+  validation: 20264050
+  final_evaluation: 20265050
+
+data:
+  demonstrations_per_task: 50
+  failure_rollouts_per_task: 50
+  recovery_rollouts_per_task: 50
+  max_attempts_per_success: 6
+
+failure_labels:
+  sequence_length: 10
+  prediction_horizon: 10
+  expert_action_disagreement_l1: 0.35
+  terminal_positive_horizon: 25
+
+disturbance:
+  levels: [0.0, 0.1, 0.2, 0.3, 0.4]
+  action_std_scale: 0.40
+  observation_std_scale: 0.025
+  object_position_noise: false
+
+recovery:
+  collection_threshold: 0.20
+  deployment_threshold: 0.30
+  max_consecutive_steps_within_episode: 250
+
+evaluation:
+  episodes_per_task: 50
+  clean_methods: [act, heuristic_recovery, reim]
+  disturbed_methods: [act, heuristic_recovery, reim]
+  appendix_reset_baseline: [act_retry]
+  terminate_on_success: true
+  total_episode_horizon: 500
+  paired_common_random_numbers: true
+  primary_metric: task_macro_success

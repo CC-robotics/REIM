@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -195,6 +196,14 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     data_manifest_sha256 = (
         file_sha256(data_manifest_path) if data_manifest_path.is_file() else None
     )
+    data_manifest = (
+        json.loads(data_manifest_path.read_text(encoding="utf-8"))
+        if data_manifest_path.is_file()
+        else {}
+    )
+    task_vocabulary = list(data_manifest.get("task_vocabulary", []))
+    task_vocabulary_sha256 = data_manifest.get("task_vocabulary_sha256")
+    benchmark_name = data_manifest.get("benchmark")
     output_path = resolve_path(
         args.checkpoint or config.get("checkpoint", "checkpoints/failure_detector.pt")
     )
@@ -288,6 +297,12 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "sequence_length": sequence_length,
     }
     model = FailureDetector(data.windows.shape[-1], **detector_kwargs).to(device_name)
+    if task_vocabulary and model.state_dim != 39 + len(task_vocabulary):
+        raise ValueError(
+            "Failure-data task vocabulary is incompatible with state_dim: "
+            f"{len(task_vocabulary)} tasks require {39 + len(task_vocabulary)}, "
+            f"found {model.state_dim}."
+        )
     model.set_normalization(state_mean, state_std)
     optimizer = torch.optim.AdamW(
         model.parameters(),
@@ -318,7 +333,8 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         resume_path = latest_path if resume_value == "auto" else resolve_path(resume_value)
         if not resume_path.exists():
             raise FileNotFoundError(f"Resume checkpoint not found: {resume_path}")
-        checkpoint = _torch_load(resume_path, device_name)
+        # RNG and DataLoader generator snapshots must remain CPU ByteTensors.
+        checkpoint = _torch_load(resume_path, "cpu")
         if int(checkpoint.get("seed", seed)) != seed:
             raise ValueError("Resume detector seed does not match --seed.")
         stored_manifest_hash = checkpoint.get("data_manifest_sha256")
@@ -329,6 +345,13 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             raise ValueError("Resume detector failure-data manifest has changed.")
         if int(checkpoint.get("state_dim", model.state_dim)) != model.state_dim:
             raise ValueError("Resume detector state_dim does not match the dataset.")
+        if checkpoint.get("task_vocabulary", task_vocabulary) != task_vocabulary:
+            raise ValueError("Resume detector task vocabulary has changed.")
+        if (
+            checkpoint.get("task_vocabulary_sha256", task_vocabulary_sha256)
+            != task_vocabulary_sha256
+        ):
+            raise ValueError("Resume detector task vocabulary hash has changed.")
         checkpoint_model_config = dict(checkpoint.get("model_config", detector_kwargs))
         architecture_fields = (
             "hidden_dim",
@@ -488,6 +511,9 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             "history": history,
             "validation_metrics": final_metrics,
             "seed": seed,
+            "benchmark": benchmark_name,
+            "task_vocabulary": task_vocabulary,
+            "task_vocabulary_sha256": task_vocabulary_sha256,
             "data_manifest_sha256": data_manifest_sha256,
             "train_group_ids": np.unique(data.groups[train_indices]).tolist(),
             "validation_group_ids": np.unique(

@@ -6,6 +6,12 @@ __pycache__/
 .mypy_cache/
 *.egg-info/
 results/logs/
+results/smoke/
+
+# Generated multi-task corpora are provenance-hashed but too large for Git.
+datasets/mt10/
+datasets/mt50/
+datasets/smoke/
 
 # Local editor and operating-system files
 .DS_Store

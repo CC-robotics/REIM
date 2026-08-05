@@ -1,0 +1,29 @@
+seed: 42
+device: auto
+data_dir: datasets/mt10/failures
+checkpoint: checkpoints/mt10/seed_42/failure_detector.pt
+latest_checkpoint: checkpoints/mt10/seed_42/failure_detector_latest.pt
+curve_path: results/figures/mt10_detector_training.png
+confusion_matrix_path: results/figures/mt10_detector_confusion.png
+history_path: results/tables/mt10_detector_training.csv
+summary_path: results/tables/mt10_detector_training.json
+
+model:
+  sequence_length: 10
+  hidden_size: 192
+  num_layers: 1
+  mlp_hidden: 96
+  dropout: 0.1
+
+training:
+  epochs: 40
+  batch_size: 1024
+  learning_rate: 0.0005
+  weight_decay: 0.00001
+  validation_fraction: 0.2
+  positive_weight: auto
+  patience: 10
+  checkpoint_every: 5
+  grad_clip_norm: 5.0
+  threshold: 0.5
+  deployment_threshold: 0.30

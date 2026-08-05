@@ -456,6 +456,17 @@ class ACTPolicy(nn.Module):
             if key in metadata and key not in model_config:
                 model_config[key] = metadata[key]
         model = cls(state_dim=state_dim, action_dim=action_dim, **model_config)
+        model.provenance = {
+            key: metadata[key]
+            for key in (
+                "benchmark",
+                "task_vocabulary",
+                "task_vocabulary_sha256",
+                "data_manifest_sha256",
+                "seed",
+            )
+            if key in metadata
+        }
         incompatible = model.load_state_dict(state_dict, strict=False)
         allowed_missing = {"state_mean", "state_std"}
         missing = set(incompatible.missing_keys) - allowed_missing

@@ -238,6 +238,17 @@ class FailureDetector(nn.Module):
             dropout=float(metadata.get("dropout", 0.1)),
             sequence_length=int(metadata.get("sequence_length", 10)),
         )
+        model.provenance = {
+            key: metadata[key]
+            for key in (
+                "benchmark",
+                "task_vocabulary",
+                "task_vocabulary_sha256",
+                "data_manifest_sha256",
+                "seed",
+            )
+            if key in metadata
+        }
         incompatible = model.load_state_dict(state_dict, strict=False)
         allowed_missing = {"state_mean", "state_std"}
         missing = set(incompatible.missing_keys) - allowed_missing
@@ -250,4 +261,3 @@ class FailureDetector(nn.Module):
         model.to(map_location)
         model.eval()
         return model
-

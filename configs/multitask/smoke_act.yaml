@@ -1,0 +1,38 @@
+seed: 7
+device: auto
+data_dir: datasets/smoke/multitask/demonstrations
+checkpoint: checkpoints/smoke/multitask/act.pt
+latest_checkpoint: checkpoints/smoke/multitask/act_latest.pt
+curve_path: results/smoke/multitask/act_training.png
+history_path: results/smoke/multitask/act_training.csv
+summary_path: results/smoke/multitask/act_training.json
+
+model:
+  policy_type: ACT
+  chunk_size: 8
+  hidden_dim: 64
+  n_heads: 4
+  encoder_layers: 1
+  decoder_layers: 1
+  dim_feedforward: 128
+  latent_dim: 8
+  dropout: 0.0
+  temporal_ensemble: false
+  ensemble_decay: 0.05
+
+training:
+  epochs: 1
+  # The repository smoke test deliberately uses a tiny physical batch so it
+  # also runs on conservative CUDA/attention kernels.
+  batch_size: 8
+  learning_rate: 0.001
+  weight_decay: 0.0
+  validation_fraction: 0.2
+  num_workers: 0
+  patience: 1
+  checkpoint_every: 1
+  grad_clip_norm: 5.0
+  reconstruction_loss: l1
+  kl_weight: 1.0
+  attention_backend: math
+  drop_last_batch: false
