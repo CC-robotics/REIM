@@ -8,6 +8,12 @@
 \newif\ifREIMFinalResults
 \REIMFinalResultstrue
 
+% MT10/MT50 paper claims have an independent publication gate.  It remains
+% closed until both official-clean suites and every disturbed extension pass
+% completeness, provenance, and paired-protocol validation.
+\newif\ifREIMMultiTaskResults
+\REIMMultiTaskResultsfalse
+
 \newcommand{\PendingMetric}{\textnormal{\textsc{tbd}}}
 \newcommand{\PendingInterval}{[\textnormal{\textsc{tbd}}]}
 \newcommand{\NotApplicable}{--}
@@ -98,6 +104,21 @@
 \newcommand{\PlannedMainEpisodes}{1{,}000}
 \newcommand{\PlannedRobustnessEpisodes}{200}
 \newcommand{\RobustnessLevels}{0\%, 10\%, 20\%, 30\%, and 40\%}
+
+% Shared known-task MT10/MT50 protocol.  These are configuration constants,
+% not experimental outcomes.
+\newcommand{\MTTenBenchmark}{\textsc{MT10}}
+\newcommand{\MTFiftyBenchmark}{\textsc{MT50}}
+\newcommand{\MTRawObservationDim}{39}
+\newcommand{\MTTenStateDim}{49}
+\newcommand{\MTFiftyStateDim}{89}
+\newcommand{\MTPerTaskDemonstrations}{50}
+\newcommand{\MTPerTaskEvaluationEpisodes}{50}
+\newcommand{\MTMaxEpisodeSteps}{500}
+\newcommand{\MTDisturbanceLevels}{0\%, 10\%, 20\%, 30\%, and 40\%}
+\newcommand{\MTFailureThresholdQuantile}{0.90}
+\newcommand{\MTFailureForecastHorizon}{10}
+\newcommand{\MTTerminalFailureTail}{25}
 
 % ---------------------------------------------------------------------------
 % Completed component diagnostics (not final end-to-end benchmark evidence)
@@ -212,6 +233,39 @@
 \newcommand{\FinalREIMGainAtTwentyNoise}{+15.5\,pp}
 \newcommand{\FinalREIMGainAtThirtyNoise}{+26.0\,pp}
 \newcommand{\FinalREIMGainAtFortyNoise}{+32.0\,pp}
+
+% ---------------------------------------------------------------------------
+% Pending MT10/MT50 breadth results.  These placeholders are never rendered
+% while \ifREIMMultiTaskResults is false.  A future publication-gate script
+% must populate every value atomically before enabling the gate.
+% ---------------------------------------------------------------------------
+\newcommand{\MTTenMLPCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenACTCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenHeuristicCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenREIMCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyMLPCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyACTCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyHeuristicCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyREIMCleanSuccess}{\PendingMetric}
+
+\newcommand{\MTTenMLPWorstQuartile}{\PendingMetric}
+\newcommand{\MTTenACTWorstQuartile}{\PendingMetric}
+\newcommand{\MTTenHeuristicWorstQuartile}{\PendingMetric}
+\newcommand{\MTTenREIMWorstQuartile}{\PendingMetric}
+\newcommand{\MTFiftyMLPWorstQuartile}{\PendingMetric}
+\newcommand{\MTFiftyACTWorstQuartile}{\PendingMetric}
+\newcommand{\MTFiftyHeuristicWorstQuartile}{\PendingMetric}
+\newcommand{\MTFiftyREIMWorstQuartile}{\PendingMetric}
+
+\newcommand{\MTTenHeuristicIntervention}{\PendingMetric}
+\newcommand{\MTTenREIMIntervention}{\PendingMetric}
+\newcommand{\MTFiftyHeuristicIntervention}{\PendingMetric}
+\newcommand{\MTFiftyREIMIntervention}{\PendingMetric}
+
+\newcommand{\MTTenREIMDeltaVsACT}{\PendingMetric}
+\newcommand{\MTTenREIMDeltaVsACTCI}{\PendingInterval}
+\newcommand{\MTFiftyREIMDeltaVsACT}{\PendingMetric}
+\newcommand{\MTFiftyREIMDeltaVsACTCI}{\PendingInterval}
 
 % Separate post-freeze gate audit. The matched heuristic point uses the same
 % serialized 200-episode CRN bank as the LSTM-threshold sweep.

@@ -826,6 +826,19 @@ def generate(
             f"{benchmark_name} ({RAW_OBSERVATION_DIM + len(task_vocabulary)}"
             f"->{ACTION_DIM})"
         )
+    act_provenance = getattr(act, "provenance", None)
+    if isinstance(act, ACTPolicy) and not isinstance(act_provenance, Mapping):
+        raise ValueError("ACT checkpoint lacks ordered multi-task provenance")
+    if isinstance(act_provenance, Mapping):
+        if list(act_provenance.get("task_vocabulary", [])) != task_vocabulary:
+            raise ValueError("ACT checkpoint task vocabulary does not match benchmark")
+        if act_provenance.get("task_vocabulary_sha256") != _task_vocabulary_sha256(
+            task_vocabulary
+        ):
+            raise ValueError("ACT checkpoint task vocabulary hash does not match")
+        stored_benchmark = act_provenance.get("benchmark")
+        if stored_benchmark is not None and str(stored_benchmark).upper() != benchmark_name:
+            raise ValueError("ACT checkpoint benchmark provenance does not match")
 
     output_dir = Path(args.output_dir).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)

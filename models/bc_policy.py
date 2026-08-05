@@ -483,7 +483,14 @@ class ACTPolicy(nn.Module):
 
 
 class MLPBCPolicy(nn.Module):
-    """Legacy two-layer behavior-cloning baseline, for ablations only."""
+    """Task-conditioned MLP behavior-cloning baseline.
+
+    The class is intentionally smaller than :class:`ACTPolicy`, but follows
+    the same checkpoint contract: normalization statistics live in the state
+    dict and :meth:`from_checkpoint` exposes auditable experiment provenance.
+    This makes the baseline independently deployable instead of relying on a
+    trainer to reconstruct its architecture or preprocessing.
+    """
 
     policy_type = "MLP_BC"
 
@@ -497,6 +504,11 @@ class MLPBCPolicy(nn.Module):
         self.state_dim = int(state_dim)
         self.action_dim = int(action_dim)
         self.hidden_dims = tuple(int(width) for width in hidden_dims)
+        if self.state_dim <= 0 or self.action_dim <= 0:
+            raise ValueError("state_dim and action_dim must be positive.")
+        if not self.hidden_dims or any(width <= 0 for width in self.hidden_dims):
+            raise ValueError("hidden_dims must contain positive layer widths.")
+        self.provenance: dict[str, Any] = {}
         layers: list[nn.Module] = []
         previous = self.state_dim
         for width in self.hidden_dims:
@@ -507,14 +519,31 @@ class MLPBCPolicy(nn.Module):
         self.register_buffer("state_mean", torch.zeros(self.state_dim))
         self.register_buffer("state_std", torch.ones(self.state_dim))
 
+    @property
+    def model_config(self) -> dict[str, Any]:
+        """JSON-compatible architecture needed to reconstruct this policy."""
+
+        return {"hidden_dims": list(self.hidden_dims)}
+
     def forward(self, states: Tensor) -> Tensor:
         return self.network((states - self.state_mean) / self.state_std)
 
     @torch.no_grad()
-    def set_normalization(self, mean: Tensor | np.ndarray, std: Tensor | np.ndarray) -> None:
-        self.state_mean.copy_(torch.as_tensor(mean).reshape_as(self.state_mean))
+    def set_normalization(
+        self,
+        mean: Tensor | np.ndarray,
+        std: Tensor | np.ndarray,
+        epsilon: float = 1e-6,
+    ) -> None:
+        mean_tensor = torch.as_tensor(mean, dtype=self.state_mean.dtype)
+        std_tensor = torch.as_tensor(std, dtype=self.state_std.dtype)
+        if mean_tensor.numel() != self.state_dim or std_tensor.numel() != self.state_dim:
+            raise ValueError(f"Expected {self.state_dim} state normalization values.")
+        if not torch.isfinite(mean_tensor).all() or not torch.isfinite(std_tensor).all():
+            raise ValueError("State normalization values must be finite.")
+        self.state_mean.copy_(mean_tensor.reshape_as(self.state_mean))
         self.state_std.copy_(
-            torch.as_tensor(std).reshape_as(self.state_std).clamp_min(1e-6)
+            std_tensor.reshape_as(self.state_std).clamp_min(float(epsilon))
         )
 
     def reset(self) -> None:
@@ -528,6 +557,116 @@ class MLPBCPolicy(nn.Module):
         return self(tensor).detach().cpu().numpy()
 
     predict = act
+
+    @classmethod
+    def from_checkpoint(
+        cls,
+        path: str | Path,
+        *,
+        map_location: str | torch.device = "cpu",
+        state_dim: int | None = None,
+        action_dim: int | None = None,
+    ) -> "MLPBCPolicy":
+        """Restore an MLP baseline and its auditable training provenance.
+
+        Dimensions and hidden widths are inferred for legacy state-dict-only
+        checkpoints. Metadata, when present, remains authoritative and is
+        checked against the tensors while loading.
+        """
+
+        checkpoint = _torch_load(path, map_location)
+        metadata = checkpoint if isinstance(checkpoint, dict) else {}
+        policy_type = str(metadata.get("policy_type", "MLP_BC")).upper().replace(
+            "-", "_"
+        )
+        if policy_type not in {"MLP_BC", "MLPBC", "MLPBCPOLICY"}:
+            raise ValueError(
+                f"Checkpoint policy_type={policy_type!r} is not an MLP-BC checkpoint."
+            )
+        state_dict = _clean_state_dict(_extract_state_dict(checkpoint))
+        linear_weights: list[tuple[int, Tensor]] = []
+        for key, value in state_dict.items():
+            parts = key.split(".")
+            if (
+                len(parts) == 3
+                and parts[0] == "network"
+                and parts[1].isdigit()
+                and parts[2] == "weight"
+                and value.ndim == 2
+            ):
+                linear_weights.append((int(parts[1]), value))
+        linear_weights.sort(key=lambda item: item[0])
+        if not linear_weights:
+            raise KeyError("MLP-BC checkpoint contains no network linear weights.")
+        inferred_state_dim = int(linear_weights[0][1].shape[1])
+        inferred_action_dim = int(linear_weights[-1][1].shape[0])
+        inferred_hidden_dims = tuple(
+            int(weight.shape[0]) for _, weight in linear_weights[:-1]
+        )
+        resolved_state_dim = int(metadata.get("state_dim", state_dim or inferred_state_dim))
+        resolved_action_dim = int(
+            metadata.get("action_dim", action_dim or inferred_action_dim)
+        )
+        model_config = dict(metadata.get("model_config", {}))
+        hidden_dims = tuple(
+            int(width)
+            for width in model_config.get(
+                "hidden_dims", metadata.get("hidden_dims", inferred_hidden_dims)
+            )
+        )
+        if resolved_state_dim != inferred_state_dim:
+            raise ValueError(
+                "MLP-BC checkpoint state_dim metadata disagrees with network weights."
+            )
+        if resolved_action_dim != inferred_action_dim:
+            raise ValueError(
+                "MLP-BC checkpoint action_dim metadata disagrees with network weights."
+            )
+        if hidden_dims != inferred_hidden_dims:
+            raise ValueError(
+                "MLP-BC checkpoint hidden_dims metadata disagrees with network weights."
+            )
+        model = cls(
+            state_dim=resolved_state_dim,
+            action_dim=resolved_action_dim,
+            hidden_dims=hidden_dims,
+        )
+        provenance_keys = (
+            "format_version",
+            "training_schema",
+            "epoch",
+            "benchmark",
+            "metaworld_version",
+            "task_vocabulary",
+            "task_vocabulary_sha256",
+            "data_manifest_sha256",
+            "data_schema_version",
+            "dataset_type",
+            "split_sha256",
+            "train_trajectories",
+            "validation_trajectories",
+            "normalization_scope",
+            "loss",
+            "best_validation_loss",
+            "seed",
+        )
+        model.provenance = {
+            key: metadata[key] for key in provenance_keys if key in metadata
+        }
+        incompatible = model.load_state_dict(state_dict, strict=False)
+        allowed_missing = {"state_mean", "state_std"}
+        missing = set(incompatible.missing_keys) - allowed_missing
+        unexpected = set(incompatible.unexpected_keys)
+        if missing or unexpected:
+            raise RuntimeError(
+                f"Incompatible MLP-BC checkpoint. Missing={sorted(missing)}, "
+                f"unexpected={sorted(unexpected)}"
+            )
+        if "state_mean" not in state_dict and "state_mean" in metadata:
+            model.set_normalization(metadata["state_mean"], metadata["state_std"])
+        model.to(map_location)
+        model.eval()
+        return model
 
 
 # Backward-compatible import name; ACT is intentionally the default.

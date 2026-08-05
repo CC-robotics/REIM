@@ -33,7 +33,7 @@ from evaluation.multitask_metrics import (
     aggregate_multitask_metrics,
     paired_task_stratified_bootstrap_delta,
 )
-from models.bc_policy import ACTPolicy
+from models.bc_policy import ACTPolicy, MLPBCPolicy
 from models.failure_detector import FailureDetector
 from models.imitation_recovery_policy import ImitationRecoveryPolicy
 from utils.common import configure_logging, seed_everything, select_device
@@ -42,12 +42,13 @@ SCHEMA_VERSION = "reim-multitask-evaluation-v2"
 RUN_SIDECAR_SCHEMA_VERSION = "reim-multitask-evaluation-run-v1"
 OFFICIAL_MAX_EPISODE_STEPS = 500
 OFFICIAL_TASK_VARIANTS_PER_CLASS = 50
-METHODS = ("act", "act_retry", "heuristic_recovery", "reim")
-DEFAULT_OFFICIAL_METHODS = ("act", "heuristic_recovery", "reim")
+METHODS = ("mlp_bc", "act", "act_retry", "heuristic_recovery", "reim")
+DEFAULT_OFFICIAL_METHODS = ("mlp_bc", "act", "heuristic_recovery", "reim")
 METHOD_LABELS = {
+    "mlp_bc": "MT-MLP BC",
     "act": "MT-ACT",
     "act_retry": "MT-ACT + Retry",
-    "heuristic_recovery": "MT-ACT + Heuristic Recovery",
+    "heuristic_recovery": "MT-ACT + Heuristic-Gated Learned Recovery",
     "reim": "MT-REIM",
 }
 CSV_FIELDS = (
@@ -155,6 +156,9 @@ def _validate_evaluation_arguments(
         raise ValueError(f"Unknown methods: {sorted(unknown)}")
     if len(set(methods)) != len(methods):
         raise ValueError("--methods must not contain duplicates")
+    mlp_checkpoint = getattr(args, "mlp_checkpoint", None)
+    if "mlp_bc" in methods and not str(mlp_checkpoint or "").strip():
+        raise ValueError("--mlp-checkpoint is required when selecting mlp_bc")
 
     _require_integer(
         "--episodes-per-task",
@@ -190,7 +194,35 @@ def _validate_evaluation_arguments(
     noise_level = _require_finite("--noise-level", args.noise_level, minimum=0.0)
     _require_finite("--action-std-scale", args.action_std_scale, minimum=0.0)
     _require_finite("--observation-std-scale", args.observation_std_scale, minimum=0.0)
-    _require_finite("--threshold", args.threshold, minimum=0.0, maximum=1.0)
+    trigger_threshold = _require_finite(
+        "--threshold", args.threshold, minimum=0.0, maximum=1.0
+    )
+    release_threshold = _require_finite(
+        "--release-threshold",
+        getattr(args, "release_threshold", 0.15),
+        minimum=0.0,
+        maximum=1.0,
+    )
+    if release_threshold >= trigger_threshold:
+        raise ValueError("--release-threshold must be smaller than --threshold")
+    _require_integer(
+        "--release-patience",
+        getattr(args, "release_patience", 5),
+        minimum=1,
+        maximum=int(args.max_steps),
+    )
+    _require_integer(
+        "--min-recovery-steps",
+        getattr(args, "min_recovery_steps", 5),
+        minimum=1,
+        maximum=int(args.recovery_budget),
+    )
+    _require_integer(
+        "--intervention-cooldown",
+        getattr(args, "intervention_cooldown", 10),
+        minimum=0,
+        maximum=int(args.max_steps),
+    )
     _require_finite("--heuristic-tolerance", args.heuristic_tolerance, minimum=0.0)
 
     requested_task_ids = tuple(
@@ -285,6 +317,10 @@ def _build_run_protocol(
         "observation_std_scale": float(args.observation_std_scale),
         "object_position_noise": False,
         "detector_threshold": float(args.threshold),
+        "release_threshold": float(getattr(args, "release_threshold", 0.15)),
+        "release_patience": int(getattr(args, "release_patience", 5)),
+        "min_recovery_steps": int(getattr(args, "min_recovery_steps", 5)),
+        "intervention_cooldown": int(getattr(args, "intervention_cooldown", 10)),
         "recovery_budget": int(args.recovery_budget),
         "heuristic_min_steps": int(args.heuristic_min_steps),
         "heuristic_window": int(args.heuristic_window),
@@ -550,6 +586,59 @@ def _risk(
     return float(probability.detach().cpu().numpy().reshape(-1)[0])
 
 
+def _is_sha256(value: Any) -> bool:
+    text = str(value)
+    return len(text) == 64 and all(
+        character in "0123456789abcdef" for character in text
+    )
+
+
+def _validate_multitask_provenance(
+    checkpoint_name: str,
+    provenance: Any,
+    *,
+    benchmark: str,
+    task_vocabulary: Sequence[str],
+    require_mlp_manifest: bool = False,
+) -> None:
+    """Fail closed on task-conditioning identity and MLP data provenance."""
+
+    if not isinstance(provenance, Mapping):
+        raise ValueError(f"{checkpoint_name} checkpoint lacks multi-task provenance")
+    expected_vocabulary_sha256 = _canonical_sha256(list(task_vocabulary))
+    if list(provenance.get("task_vocabulary", [])) != list(task_vocabulary):
+        raise ValueError(
+            f"{checkpoint_name} checkpoint task vocabulary does not match benchmark"
+        )
+    if provenance.get("task_vocabulary_sha256") != expected_vocabulary_sha256:
+        raise ValueError(
+            f"{checkpoint_name} checkpoint task vocabulary hash does not match benchmark"
+        )
+    stored_benchmark = provenance.get("benchmark")
+    if require_mlp_manifest and stored_benchmark is None:
+        raise ValueError(f"{checkpoint_name} checkpoint lacks benchmark provenance")
+    if stored_benchmark is not None and str(stored_benchmark).upper() != benchmark:
+        raise ValueError(f"{checkpoint_name} checkpoint benchmark does not match")
+    if not require_mlp_manifest:
+        return
+
+    if provenance.get("training_schema") != "reim-multitask-mlp-training-v1":
+        raise ValueError(f"{checkpoint_name} checkpoint has invalid training provenance")
+    if provenance.get("data_schema_version") != "reim-multitask-demonstrations-v1":
+        raise ValueError(f"{checkpoint_name} checkpoint has invalid data manifest schema")
+    if (
+        provenance.get("dataset_type")
+        != "balanced_multitask_scripted_expert_demonstrations"
+    ):
+        raise ValueError(f"{checkpoint_name} checkpoint has invalid dataset provenance")
+    if not _is_sha256(provenance.get("data_manifest_sha256")):
+        raise ValueError(
+            f"{checkpoint_name} checkpoint lacks a valid data manifest SHA-256"
+        )
+    if not _is_sha256(provenance.get("split_sha256")):
+        raise ValueError(f"{checkpoint_name} checkpoint lacks a valid split SHA-256")
+
+
 def _noise_arrays(
     seed: int,
     max_steps: int,
@@ -581,18 +670,30 @@ def _rollout(
     detector: FailureDetector,
     recovery: ImitationRecoveryPolicy,
     threshold: float,
+    release_threshold: float = 0.15,
+    release_patience: int = 5,
+    min_recovery_steps: int = 5,
+    intervention_cooldown: int = 0,
     recovery_budget: int,
     heuristic_min_steps: int,
     heuristic_window: int,
     heuristic_tolerance: float,
+    mlp: MLPBCPolicy | None = None,
 ) -> dict[str, Any]:
     env.set_task(task)
     raw, _ = env.reset(seed=episode_seed)
-    act.reset()
+    if method == "mlp_bc":
+        if mlp is None:
+            raise ValueError("mlp_bc rollout requires an MLPBCPolicy")
+        mlp.reset()
+    else:
+        act.reset()
     history: deque[np.ndarray] = deque(maxlen=detector.sequence_length)
     rewards: deque[float] = deque(maxlen=heuristic_window)
     recovery_active = False
     recovery_steps = 0
+    safe_streak = 0
+    cooldown_until = 0
     intervention_count = 0
     recovery_success = 0
     trigger_step = -1
@@ -614,15 +715,34 @@ def _rollout(
             values = np.asarray(rewards, dtype=np.float64)
             heuristic_trigger = float(values.max() - values.min()) < heuristic_tolerance
         learned_trigger = method == "reim" and probability >= threshold
-        if not recovery_active and (heuristic_trigger or learned_trigger):
+        if (
+            recovery_active
+            and method == "reim"
+            and recovery_steps >= min_recovery_steps
+        ):
+            safe_streak = safe_streak + 1 if probability <= release_threshold else 0
+            if safe_streak >= release_patience:
+                recovery_active = False
+                recovery_success += 1
+                cooldown_until = step + intervention_cooldown
+                act.reset()
+        if (
+            not recovery_active
+            and step >= cooldown_until
+            and (heuristic_trigger or learned_trigger)
+        ):
             recovery_active = True
             recovery_steps = 0
+            safe_streak = 0
             intervention_count += 1
             if trigger_step < 0:
                 trigger_step = step
         if recovery_active:
             intended = np.asarray(recovery.act(state), dtype=np.float32).reshape(4)
             recovery_steps += 1
+        elif method == "mlp_bc":
+            assert mlp is not None
+            intended = np.asarray(mlp.act(state), dtype=np.float32).reshape(4)
         else:
             intended = np.asarray(act.act(state), dtype=np.float32).reshape(4)
         executed = np.clip(intended + action_noise[step], -1.0, 1.0)
@@ -631,10 +751,13 @@ def _rollout(
         rewards.append(float(reward))
         success = bool(info.get("success", False))
         if success:
-            recovery_success = int(recovery_active)
+            if recovery_active:
+                recovery_success += 1
             break
         if recovery_active and recovery_steps >= recovery_budget:
             recovery_active = False
+            safe_streak = 0
+            cooldown_until = step + intervention_cooldown
             act.reset()
         if terminated or truncated:
             break
@@ -663,6 +786,10 @@ def _retry_rollout(
     detector: FailureDetector,
     recovery: ImitationRecoveryPolicy,
     threshold: float,
+    release_threshold: float,
+    release_patience: int,
+    min_recovery_steps: int,
+    intervention_cooldown: int,
     recovery_budget: int,
     heuristic_min_steps: int,
     heuristic_window: int,
@@ -688,6 +815,10 @@ def _retry_rollout(
         detector=detector,
         recovery=recovery,
         threshold=threshold,
+        release_threshold=release_threshold,
+        release_patience=release_patience,
+        min_recovery_steps=min_recovery_steps,
+        intervention_cooldown=intervention_cooldown,
         recovery_budget=recovery_budget,
         heuristic_min_steps=heuristic_min_steps,
         heuristic_window=heuristic_window,
@@ -758,6 +889,12 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "detector": file_sha256(detector_path),
         "recovery": file_sha256(recovery_path),
     }
+    mlp_path: Path | None = None
+    mlp: MLPBCPolicy | None = None
+    if "mlp_bc" in methods:
+        mlp_path = Path(args.mlp_checkpoint).expanduser().resolve()
+        checkpoint_sha256["mlp_bc"] = file_sha256(mlp_path)
+        mlp = MLPBCPolicy.from_checkpoint(mlp_path, map_location=device)
     act = ACTPolicy.from_checkpoint(act_path, map_location=device)
     detector = FailureDetector.from_checkpoint(
         detector_path, map_location=device, state_dim=39 + task_count
@@ -765,11 +902,31 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     recovery = ImitationRecoveryPolicy.load(recovery_path, device=device)
     if {act.state_dim, detector.state_dim, recovery.state_dim} != {39 + task_count}:
         raise ValueError("Checkpoint observation dimensions do not match benchmark")
+    if mlp is not None and mlp.state_dim != 39 + task_count:
+        raise ValueError("MLP checkpoint observation dimensions do not match benchmark")
     if act.action_dim != 4 or recovery.action_dim != 4:
         raise ValueError("Checkpoint action dimensions do not match Meta-World")
-    recovery_vocab = recovery.provenance.get("task_vocabulary")
-    if recovery_vocab is not None and list(recovery_vocab) != task_vocabulary:
-        raise ValueError("Recovery checkpoint task vocabulary does not match benchmark")
+    if mlp is not None and mlp.action_dim != 4:
+        raise ValueError("MLP checkpoint action dimensions do not match Meta-World")
+    for checkpoint_name, provenance in (
+        ("ACT", getattr(act, "provenance", None)),
+        ("detector", getattr(detector, "provenance", None)),
+        ("recovery", getattr(recovery, "provenance", None)),
+    ):
+        _validate_multitask_provenance(
+            checkpoint_name,
+            provenance,
+            benchmark=args.benchmark,
+            task_vocabulary=task_vocabulary,
+        )
+    if mlp is not None:
+        _validate_multitask_provenance(
+            "MLP-BC",
+            getattr(mlp, "provenance", None),
+            benchmark=args.benchmark,
+            task_vocabulary=task_vocabulary,
+            require_mlp_manifest=True,
+        )
 
     metaworld_version = importlib.metadata.version("metaworld")
     protocol = _build_run_protocol(
@@ -846,10 +1003,15 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                                 detector=detector,
                                 recovery=recovery,
                                 threshold=args.threshold,
+                                release_threshold=args.release_threshold,
+                                release_patience=args.release_patience,
+                                min_recovery_steps=args.min_recovery_steps,
+                                intervention_cooldown=args.intervention_cooldown,
                                 recovery_budget=args.recovery_budget,
                                 heuristic_min_steps=args.heuristic_min_steps,
                                 heuristic_window=args.heuristic_window,
                                 heuristic_tolerance=args.heuristic_tolerance,
+                                mlp=mlp,
                             )
                         result = _retry_rollout(
                             primary=act_primary,
@@ -865,6 +1027,10 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                             detector=detector,
                             recovery=recovery,
                             threshold=args.threshold,
+                            release_threshold=args.release_threshold,
+                            release_patience=args.release_patience,
+                            min_recovery_steps=args.min_recovery_steps,
+                            intervention_cooldown=args.intervention_cooldown,
                             recovery_budget=args.recovery_budget,
                             heuristic_min_steps=args.heuristic_min_steps,
                             heuristic_window=args.heuristic_window,
@@ -885,10 +1051,15 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                             detector=detector,
                             recovery=recovery,
                             threshold=args.threshold,
+                            release_threshold=args.release_threshold,
+                            release_patience=args.release_patience,
+                            min_recovery_steps=args.min_recovery_steps,
+                            intervention_cooldown=args.intervention_cooldown,
                             recovery_budget=args.recovery_budget,
                             heuristic_min_steps=args.heuristic_min_steps,
                             heuristic_window=args.heuristic_window,
                             heuristic_tolerance=args.heuristic_tolerance,
+                            mlp=mlp,
                         )
                         result["attempt_count"] = 1
                         if method == "act":
@@ -1008,6 +1179,10 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "observation_noise_std": observation_std,
         "object_position_noise": False,
         "detector_threshold": args.threshold,
+        "release_threshold": args.release_threshold,
+        "release_patience": args.release_patience,
+        "min_recovery_steps": args.min_recovery_steps,
+        "intervention_cooldown": args.intervention_cooldown,
         "recovery_budget": args.recovery_budget,
         "methods": list(methods),
         "episode_csv": str(output_csv),
@@ -1026,6 +1201,11 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "aggregates": aggregates,
         "paired_vs_act": paired,
     }
+    if mlp_path is not None:
+        summary["checkpoints"]["mlp_bc"] = {
+            "path": str(mlp_path),
+            "sha256": checkpoint_sha256["mlp_bc"],
+        }
     atomic_write_json(Path(args.output_summary).expanduser().resolve(), summary)
     logger.info(
         "%s %s complete: %d rows; MT-REIM macro success=%s",
@@ -1043,6 +1223,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--condition", required=True)
     parser.add_argument("--benchmark-seed", type=int, required=True)
     parser.add_argument("--act-checkpoint", required=True)
+    parser.add_argument("--mlp-checkpoint")
     parser.add_argument("--detector-checkpoint", required=True)
     parser.add_argument("--recovery-checkpoint", required=True)
     parser.add_argument("--output-csv", required=True)
@@ -1054,6 +1235,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--action-std-scale", type=float, default=0.40)
     parser.add_argument("--observation-std-scale", type=float, default=0.025)
     parser.add_argument("--threshold", type=float, default=0.30)
+    parser.add_argument("--release-threshold", type=float, default=0.15)
+    parser.add_argument("--release-patience", type=int, default=5)
+    parser.add_argument("--min-recovery-steps", type=int, default=5)
+    parser.add_argument("--intervention-cooldown", type=int, default=10)
     parser.add_argument("--recovery-budget", type=int, default=250)
     parser.add_argument("--heuristic-min-steps", type=int, default=30)
     parser.add_argument("--heuristic-window", type=int, default=20)

@@ -1,0 +1,25 @@
+benchmark: MT10
+seed: 42
+device: auto
+data_dir: datasets/mt10/demonstrations
+checkpoint: checkpoints/mt10/seed_42/mlp_bc.pt
+latest_checkpoint: checkpoints/mt10/seed_42/mlp_bc_latest.pt
+curve_path: results/figures/mt10_mlp_training.png
+history_path: results/tables/mt10_mlp_training.csv
+summary_path: results/tables/mt10_mlp_training.json
+log_path: results/logs/mt10_mlp_training.log
+
+model:
+  policy_type: MLP_BC
+  hidden_dims: [256, 256]
+
+training:
+  epochs: 120
+  batch_size: 512
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  validation_fraction: 0.1
+  num_workers: 0
+  patience: 25
+  checkpoint_every: 5
+  grad_clip_norm: 5.0

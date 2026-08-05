@@ -1,12 +1,12 @@
 seed: 42
 device: auto
-data_dir: datasets/mt50/failures
+data_dir: datasets/mt50/failures_calibrated
 checkpoint: checkpoints/mt50/seed_42/failure_detector.pt
 latest_checkpoint: checkpoints/mt50/seed_42/failure_detector_latest.pt
 curve_path: results/figures/mt50_detector_training.png
 confusion_matrix_path: results/figures/mt50_detector_confusion.png
 history_path: results/tables/mt50_detector_training.csv
-summary_path: results/tables/mt50_detector_training.json
+metrics_path: results/tables/mt50_detector_training.json
 
 model:
   sequence_length: 10

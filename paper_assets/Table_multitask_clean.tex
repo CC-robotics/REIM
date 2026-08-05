@@ -1,0 +1,43 @@
+% This table is intentionally invisible until the independent MT10/MT50
+% publication gate is enabled after validating all raw episode records.
+\ifREIMMultiTaskResults
+\begin{table*}[t]
+  \centering
+  \caption{Official-clean, goal-observable known-task evaluation on
+  \MTTenBenchmark{} and \MTFiftyBenchmark{}. All methods receive the official
+  task one-hot and use the same task payloads and paired episode seeds. Success
+  is averaged equally across tasks; worst quartile is the mean over the lowest
+  quarter of per-task success rates. Intervention is the fraction of episodes
+  in which a recovery controller acts. Nonzero disturbances are excluded from
+  this table and reported only as a separate REIM robustness extension.}
+  \label{tab:multitask-clean}
+  \scriptsize
+  \setlength{\tabcolsep}{3.2pt}
+  \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{3}{c}{\MTTenBenchmark{}} &
+      \multicolumn{3}{c}{\MTFiftyBenchmark{}} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
+    Method & Task macro $\uparrow$ & Worst quartile $\uparrow$ & Interv. &
+      Task macro $\uparrow$ & Worst quartile $\uparrow$ & Interv. \\
+    \midrule
+    MT-MLP BC &
+      \MTTenMLPCleanSuccess & \MTTenMLPWorstQuartile & \NotApplicable &
+      \MTFiftyMLPCleanSuccess & \MTFiftyMLPWorstQuartile & \NotApplicable \\
+    MT-ACT &
+      \MTTenACTCleanSuccess & \MTTenACTWorstQuartile & \NotApplicable &
+      \MTFiftyACTCleanSuccess & \MTFiftyACTWorstQuartile & \NotApplicable \\
+    MT-ACT + heuristic-gated recovery &
+      \MTTenHeuristicCleanSuccess & \MTTenHeuristicWorstQuartile &
+      \MTTenHeuristicIntervention &
+      \MTFiftyHeuristicCleanSuccess & \MTFiftyHeuristicWorstQuartile &
+      \MTFiftyHeuristicIntervention \\
+    MT-REIM (ours) &
+      \MTTenREIMCleanSuccess & \MTTenREIMWorstQuartile &
+      \MTTenREIMIntervention &
+      \MTFiftyREIMCleanSuccess & \MTFiftyREIMWorstQuartile &
+      \MTFiftyREIMIntervention \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+\fi

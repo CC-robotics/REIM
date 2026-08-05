@@ -20,12 +20,17 @@ banks:
 data:
   demonstrations_per_task: 50
   failure_rollouts_per_task: 50
+  validation_rollouts_per_task: 20
   recovery_rollouts_per_task: 50
   max_attempts_per_success: 5
 
 failure_labels:
   sequence_length: 10
   prediction_horizon: 10
+  calibration_mode: task_conditional_quantile
+  calibration_quantile: 0.90
+  # Kept only in the immutable raw collection as a diagnostic event trace.
+  # Detector training uses the calibrated task-specific thresholds above.
   expert_action_disagreement_l1: 0.35
   terminal_positive_horizon: 25
 
@@ -40,12 +45,16 @@ disturbance:
 recovery:
   collection_threshold: 0.20
   deployment_threshold: 0.30
+  release_threshold: 0.15
+  release_patience: 5
+  min_recovery_steps: 5
+  intervention_cooldown: 10
   max_consecutive_steps_within_episode: 250
 
 evaluation:
   episodes_per_task: 50
-  clean_methods: [act, heuristic_recovery, reim]
-  disturbed_methods: [act, heuristic_recovery, reim]
+  clean_methods: [mlp_bc, act, heuristic_recovery, reim]
+  disturbed_methods: [mlp_bc, act, heuristic_recovery, reim]
   appendix_reset_baseline: [act_retry]
   terminate_on_success: true
   total_episode_horizon: 500

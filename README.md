@@ -10,11 +10,20 @@ monitors runtime failure risk from the last 10 observations, and a
 trigger-aligned supervised imitation policy takes control early enough to
 correct the trajectory and finish the task.
 
+The evidence is organized in two layers. PickPlace remains the mechanism study:
+it supports the trigger-state curriculum, detector diagnostics, controller
+ablation, and qualitative operation sequence. A separate shared-policy MT10/MT50
+protocol tests breadth across known task families. Its official-clean condition
+is kept separate from a task-universal action/observation-noise extension. The
+multi-task paper-results gate is currently closed, so no MT10/MT50 number or
+trend is claimed in this README or the compiled manuscript.
+
 The repository contains data collection, resumable training, closed-loop
 evaluation, robustness and ablation studies, plots, LaTeX tables, checkpoints,
 and an auditable run manifest. The `toy` backend is only an explicit CI
-facility. Results intended as Meta-World benchmark evidence must use
-`--backend metaworld --profile full`.
+facility. PickPlace results intended as Meta-World evidence must use
+`--backend metaworld --profile full`; MT10/MT50 evidence must use the dedicated
+multi-task runner and pass its independent completeness/provenance gate.
 
 ## Method
 
@@ -85,12 +94,15 @@ The default semantic observation is 21-dimensional:
 
 The action is `[dx, dy, dz, gripper]` in `[-1, 1]^4`. The wrapper also exposes
 the official 39-dimensional Meta-World observation through `state_mode: raw`.
+For MT10/MT50, one shared policy receives that raw observation concatenated with
+the benchmark's ordered task one-hot. Task identity is therefore known at
+evaluation; this is not an unseen-task or meta-learning protocol.
 
 ## Project layout
 
 ```text
 REIM/
-├── configs/                 # environment, ACT, detector, imitation recovery
+├── configs/                 # PickPlace and MT10/MT50 protocol configurations
 ├── env/                     # Meta-World/Gymnasium wrapper and disturbances
 ├── scripts/                 # demonstrations, failures, trigger states, provenance
 ├── models/                  # ACT, LSTM detector, standalone recovery actor
@@ -99,6 +111,7 @@ REIM/
 ├── experiments/             # robustness, gate sensitivity, component ablation
 ├── visualization/           # publication plots and LaTeX asset generation
 ├── run_all.sh               # full protocol and isolated toy smoke runner
+├── run_multitask.sh         # dry-run-first MT10/MT50 staged runner
 ├── datasets/                # trajectories, failure windows, exact trigger states
 ├── checkpoints/             # learned policies
 ├── results/                 # episode records, aggregate tables, figures
@@ -259,7 +272,59 @@ ACT and detector trainers accept `--resume [PATH]`. The canonical
 recovery-imitation actor is selected by validation loss and exported with an
 immutable audit.
 
-## Evaluation
+## MT10/MT50 breadth protocol (results pending)
+
+The multi-task extension trains one task-conditioned stack per suite. Its input
+is the official raw 39-dimensional observation plus the ordered MT10 or MT50
+task one-hot; the four-dimensional Cartesian/gripper action is unchanged. The
+shared comparison contains MT-MLP BC, MT-ACT, heuristic-gated learned recovery,
+and MT-REIM. These suites expose known task identities, so they test breadth
+across task families rather than unseen-task generalization.
+
+Failure labels are calibrated without using validation or final-evaluation
+data. For each task, the failure-training bank fits a threshold at the 0.90
+quantile of ACT--expert action L1 disagreement. A deviation crossing is OR'ed
+with the final 25 steps of an unsuccessful episode, and the causal target covers
+the inclusive current-to-10-step-ahead window. The resulting per-task
+thresholds are frozen and reused unchanged for validation and final evaluation.
+A fixed raw-disagreement cutoff is diagnostic only, not the multi-task training
+label. Expert actions are never available to the deployed detector or policy.
+
+The runner is dry-run by default. Inspect the complete MT10 and MT50 plan
+without collecting data, training, evaluating, or writing outputs:
+
+```bash
+./run_multitask.sh all both
+```
+
+Execute the suites separately so each completed milestone can be audited:
+
+```bash
+./run_multitask.sh all MT10 --execute
+./run_multitask.sh all MT50 --execute
+```
+
+Safely continue collectors, evaluations, and trainers with an existing latest
+checkpoint:
+
+```bash
+./run_multitask.sh all both --execute --resume
+```
+
+Individual subcommands are `collect_demos`, `train_act`, `train_mlp`,
+`generate_failures`, `train_detector`, `collect_recovery`, `train_recovery`,
+`evaluate_clean`, and `evaluate_disturbed`. Official-clean evaluation uses the
+environment success signal and task-macro aggregation. Nonzero disturbance
+levels use only task-universal action and observation noise and are a REIM
+robustness extension, not official Meta-World scores. Fresh-task retry is kept
+outside the primary multi-task comparison.
+
+Partial checkpoints or training curves are engineering artifacts, not paper
+evidence. `paper_assets/Table_multitask_clean.tex` is currently protected by
+`\REIMMultiTaskResultsfalse`; it renders no numbers until complete MT10 and
+MT50 clean and disturbed episode records pass an independent publication gate.
+
+## PickPlace evaluation
 
 Evaluate the full four-method table on 1,000 episodes per method:
 
@@ -368,6 +433,8 @@ capture threshold is independently controlled by
 
 ## Results
 
+### PickPlace mechanism results
+
 Aggregate results are generated from disjoint paired episode seeds and live in:
 
 - `results/tables/baseline.csv`
@@ -423,6 +490,18 @@ recovery-start splits, `imitation_recovery.pt` and its audit, table-shape checks
 and disjoint training/evaluation seeds. Toy, legacy, or partial results must not
 be treated as scientific evidence.
 
+### MT10/MT50 breadth status
+
+The protocol, staged runner, task-conditioned models, and gated LaTeX table are
+implemented. The independent multi-task paper-results gate remains closed.
+Accordingly, partial MT10/MT50 training summaries, checkpoints, or figures in a
+working tree must not be quoted as success rates or used to infer a robustness
+trend. The expected final evidence consists of complete clean summaries and
+per-episode CSVs for both suites plus all configured disturbed-condition
+summaries, immutable run sidecars, checkpoint hashes, and task-vocabulary/task-
+bank provenance. Only after those inputs pass the publication gate may the
+multi-task table macros be populated and rendered.
+
 ## Paper assets
 
 `visualization/plot_results.py` creates:
@@ -438,6 +517,7 @@ be treated as scientific evidence.
 - `paper_assets/Table1_baseline.tex`
 - `paper_assets/Table2_ablation.tex`
 - `paper_assets/Table3_component_diagnostics.tex`
+- `paper_assets/Table_multitask_clean.tex` (publication-gated skeleton)
 - `paper_assets/Figure1_final_framework.png`
 - `paper_assets/Figure2_final_results.png`
 - `paper_assets/Figure3_detector.png`
@@ -449,6 +529,10 @@ Tables use `booktabs`, explicit metric directions, consistent precision, and
 minimal rules. The framework figure uses a closed-loop embodied-AI layout:
 perception/state, ACT action chunking, environment feedback, risk gating,
 recovery, and return to nominal control.
+
+The multi-task table is structurally present but expands to no LaTeX output
+while `\ifREIMMultiTaskResults` is false. This prevents placeholder macros from
+appearing in the PDF.
 
 `Figure5_operation_sequence` contains frames rendered from one actual
 Meta-World/MuJoCo rollout in this repository: paired ACT failure, LSTM trigger,
@@ -478,7 +562,9 @@ plot generation.
 - Train/validation splits are made by trajectory, not individual timesteps.
 - Checkpoints include model structure, normalization statistics, optimizer
   state, epoch/timestep, seed, and history.
-- `--resume` is implemented for ACT and detector.
+- PickPlace ACT/detector and the staged multi-task collectors, MLP, ACT,
+  detector, recovery trainer, and evaluator expose provenance-checked resume
+  paths.
 - The final recovery checkpoint is a standalone deterministic actor. Its audit
   records source/data hashes, zero environment-training steps or
   policy-gradient updates, and exact action-equivalence results.
@@ -496,20 +582,25 @@ plot generation.
 
 ## Legacy / archived controls
 
-Archived files retain the earlier MLP task-policy and PPO recovery controls for
-provenance and engineering comparison. They are not part of the manuscript's
-ACT→LSTM→supervised-recovery method or headline result tables, and the final
-evaluator does not silently substitute them for `imitation_recovery.pt`.
+Archived files retain the earlier PickPlace MLP task-policy and PPO recovery
+controls for provenance and engineering comparison. They are not part of the
+manuscript's ACT→LSTM→supervised-recovery method or PickPlace headline table,
+and the final evaluator does not silently substitute them for
+`imitation_recovery.pt`. The new MT-MLP BC is a separate audited shared-policy,
+task-conditioned capacity baseline for MT10/MT50; it is not the archived
+single-task policy and is never presented as REIM.
 
 ## Future work
 
-The current paper-ready baseline focuses on one state-observed Meta-World task
-and one trained ACT/LSTM/recovery stack. Stronger evidence should propagate all
-model-training seeds, add multiple Meta-World tasks, camera observations,
-post-grasp and true post-drop recovery data, calibrated risk-monitor thresholds
-under covariate shift, uncertainty-aware switching, sim-to-real perturbations,
-and a real Sawyer evaluation. ACT chunk size and temporal-ensemble decay should
-also be ablated jointly with recovery latency.
+The mechanism study remains focused on one state-observed Meta-World task and
+one trained ACT/LSTM/recovery stack. The MT10/MT50 breadth protocol covers known
+task identities only and remains excluded from paper claims until its result
+gate passes. Stronger evidence should propagate all model-training seeds, test
+unseen-task generalization, add camera observations, collect post-grasp and true
+post-drop recovery data, calibrate risk under covariate shift, study
+uncertainty-aware switching and sim-to-real perturbations, and evaluate a real
+Sawyer. ACT chunk size and temporal-ensemble decay should also be ablated
+jointly with recovery latency.
 
 ## References
 

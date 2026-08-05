@@ -61,6 +61,9 @@ retry. The same recovery actor with a semantic heuristic gate reaches
 disturbance, REIM retains
 \FinalREIMSuccessAtFortyNoise{} success versus
 \FinalACTSuccessAtFortyNoise{} for ACT.
+We additionally define a shared task-conditioned instantiation for the
+goal-observable, known-task Meta-World MT10 and MT50 suites, with official-clean
+evaluation separated from a task-universal disturbance extension.
 All experiments in this paper use the simulated Sawyer model in
 Meta-World/MuJoCo; no physical-robot evaluation is claimed.
 \end{abstract}
@@ -100,9 +103,10 @@ contributions are:
   \item trigger-aligned supervised recovery trained on successful expert
   continuations with a trajectory-disjoint validation split, exported as a
   standalone actor with zero reinforcement-learning interactions; and
-  \item a reproducible paired simulation protocol that separates classifier
-  diagnostics, model-selection validation, intervention-conditioned task
-  completion, final task success, and controller intervention burden.
+  \item a two-level reproducible evaluation design: a PickPlace mechanism study
+  separating classifier, recovery, success, and intervention evidence, plus a
+  publication-gated MT10/MT50 known-task breadth protocol that keeps official
+  clean scores distinct from task-universal disturbed evaluation.
 \end{itemize}
 
 \section{Related Work}
@@ -156,7 +160,10 @@ joint positions, end-effector position and quaternion, object position, goal
 position, and gripper state. The action contains end-effector displacement
 $(\Delta x,\Delta y,\Delta z)$ and gripper command $g$. Task success is the
 environment's explicit object-at-goal event. REIM learns a nominal policy
-$\policyact$, risk predictor $f_\phi$, and recovery policy $\policyrec$.
+$\policyact$, risk predictor $f_\phi$, and recovery policy $\policyrec$. This
+semantic-state formulation is the PickPlace mechanism instantiation; the shared
+multi-task representation is specified below rather than silently conflated
+with the 21-dimensional input.
 
 \subsection{Chunked Nominal Policy}
 
@@ -267,6 +274,35 @@ If the task remains active after an exhausted intervention, ACT resumes with its
 temporal ensemble reset. All evaluation entry points use this same
 configuration.
 
+\subsection{Shared Multi-Task Instantiation}
+
+For the breadth study, one task-conditioned controller is learned per benchmark
+suite rather than one controller per task. Given the official raw observation
+$o_t\in\mathbb{R}^{\MTRawObservationDim}$ and known task index $j$, the shared
+input is $x_t=[o_t;e_j]$, where $e_j$ is the official ordered task one-hot. This
+gives \MTTenStateDim{} inputs for \MTTenBenchmark{} and \MTFiftyStateDim{} for
+\MTFiftyBenchmark{}; the Cartesian action remains four-dimensional. The shared
+ACT, causal LSTM, and recovery MLP all receive the same conditioned input.
+
+Multi-task risk supervision is deliberately task agnostic in meaning but is not
+identical to the PickPlace event ontology. During data generation only, the
+matching Meta-World scripted expert supplies a counterfactual action. For each
+task $k$, the behavioral-deviation threshold $\tau_k$ is fitted exclusively on
+that task's failure-training bank as the $q=\MTFailureThresholdQuantile$
+quantile of ACT--expert action L1 disagreement. The event label is the threshold
+crossing, OR the final \MTTerminalFailureTail{} steps of an unsuccessful
+episode; causal targets then ask whether an event occurs in the inclusive
+window $[t,t+\MTFailureForecastHorizon]$. All $\tau_k$ values are frozen after
+this training-bank fit and reused unchanged for validation and final
+evaluation. A
+fixed raw-disagreement cutoff is retained only as a scale diagnostic, not as a
+universal training-label threshold, and the deployed LSTM never accesses expert
+actions. At the first detector trigger, the expert takes over in the same online
+rollout, and only successful continuations contribute recovery-imitation
+targets. Thus the multi-task study preserves learner-induced, trigger-aligned
+correction while making no claim that it uses the exact simulator-snapshot
+restoration of the PickPlace curriculum.
+
 \begin{figure*}[t]
   \centering
   \PaperGraphic{Figure1_final_framework}{0.96\textwidth}{%
@@ -286,7 +322,7 @@ configuration.
 
 \subsection{Simulation Environment and Data}
 
-Experiments use the Meta-World 3.1.1 \REIMTask{} single-task,
+The mechanism study uses the Meta-World 3.1.1 \REIMTask{} single-task,
 goal-observable environment~\cite{yu2020metaworld} with MuJoCo
 dynamics~\cite{todorov2012mujoco}. The requested benchmark is the historical
 PickPlace-v2 Sawyer task. Meta-World 3.1.1 exposes its maintained Gymnasium
@@ -341,7 +377,7 @@ actor.
 
 \subsection{Evaluation and Metrics}
 
-The main evaluation uses \PlannedMainEpisodes{} paired CRN episode
+The PickPlace main evaluation uses \PlannedMainEpisodes{} paired CRN episode
 specifications per method under \CurriculumNoiseLevel{} mixed disturbance,
 spanning seeds 8{,}000{,}042--8{,}001{,}041. Robustness uses
 \PlannedRobustnessEpisodes{} paired episodes at each of
@@ -364,8 +400,33 @@ frozen before the primary evaluation. A separate post-freeze sweep on 200
 previously unused CRN episodes is reported only as a sensitivity diagnostic;
 it does not select or alter the primary gate.
 
+\subsection{Known-Task MT10/MT50 Protocol}
+
+The breadth protocol follows Meta-World's goal-observable multi-task setting:
+\MTTenBenchmark{} and \MTFiftyBenchmark{} contain known task families, and the
+ordered task identity is supplied to every method. It is therefore a shared
+known-task evaluation, not an unseen-task, transfer, or meta-learning claim.
+Each task contributes the same number of successful expert demonstrations and
+\MTPerTaskEvaluationEpisodes{} final episodes. Clean evaluation uses the
+official environment success signal and a \MTMaxEpisodeSteps{}-step horizon.
+Separate task-bank seeds and payload hashes isolate demonstration, failure,
+recovery, validation, and final-evaluation data.
+
+The comparison contains a shared two-layer MLP behavior-cloning capacity
+baseline, shared ACT, ACT with the learned recovery actor activated by a
+semantic heuristic, and full REIM. The primary statistic is task-macro success;
+we also retain per-task success, worst-quartile task success, intervention
+burden, and a task-stratified paired bootstrap against ACT. The zero-disturbance
+condition is the official-clean anchor. Nonzero levels in
+\MTDisturbanceLevels{} apply only task-universal action and observation noise,
+never a PickPlace-specific object teleportation, and are labeled a REIM
+robustness extension rather than official Meta-World scores. A fresh-task retry
+is appendix-only and does not enter the primary multi-task comparison.
+
 \section{Results}
 \label{sec:results}
+
+\subsection{PickPlace Mechanism Results}
 
 \input{Table1_final_baseline.tex}
 
@@ -439,6 +500,27 @@ is not substituted for the primary benchmark or used for threshold selection.
   selection.}
   \label{fig:gate-sensitivity}
 \end{figure}
+
+\subsection{Known-Task Multi-Task Breadth}
+
+\input{Table_multitask_clean.tex}
+
+\ifREIMMultiTaskResults
+Table~\ref{tab:multitask-clean} reports the official-clean known-task breadth
+evaluation. The paired MT-REIM--MT-ACT task-macro differences are
+\MTTenREIMDeltaVsACT{} (\ConfidenceLevel{} CI \MTTenREIMDeltaVsACTCI) on
+\MTTenBenchmark{} and \MTFiftyREIMDeltaVsACT{} (CI
+\MTFiftyREIMDeltaVsACTCI) on \MTFiftyBenchmark{}. Nonzero-disturbance results
+are reported separately as a robustness extension and are not described as
+official clean benchmark scores.
+\else
+\paragraph{Result status.}
+The MT10/MT50 protocol and artifact schema are implemented, but complete clean
+and disturbed episode records have not yet passed the independent publication
+gate. Consequently, this manuscript currently makes no MT10/MT50 success,
+intervention, comparative, or robustness-trend claim, and the numerical
+multi-task table is intentionally suppressed.
+\fi
 
 \subsection{Completed Component Diagnostics}
 
@@ -539,22 +621,26 @@ make no separate marginal claim about those coupled design choices.
 \section{Limitations}
 \label{sec:limitations}
 
-The current study has several boundaries. First, it evaluates one
-state-observed Meta-World task; visual perception, multi-task transfer, and
-contact sensing are outside scope. Second, exact simulator restoration depends
-on privileged MuJoCo state and task bookkeeping. It is a controlled way to
-align recovery training in simulation, not a deployable physical-robot reset
-mechanism. Hardware would require state estimation and safe physical
-repositioning or real failure collection. Third, filtering recovery-imitation
+The current study has several boundaries. First, its mechanism evidence and
+component ablations concentrate on state-observed PickPlace. The MT10/MT50
+breadth protocol supplies known task identity and therefore cannot establish
+unseen-task generalization, meta-learning, or transfer; visual perception and
+contact sensing also remain outside scope. Second, exact simulator restoration
+in the PickPlace curriculum depends on privileged MuJoCo state and task
+bookkeeping. It is a controlled way to align recovery training in simulation,
+not a deployable physical-robot reset mechanism. Hardware would require state
+estimation and safe physical repositioning or real failure collection. Third,
+filtering recovery-imitation
 trajectories by scripted-expert success biases training toward recoverable states and may
 exclude precisely the hardest failures. Fourth, detector metrics are measured
-on disturbed rollouts from one nominal policy and may shift as ACT or the
-disturbance distribution changes. Moreover, the inclusive label makes the
-standard confusion matrix predominantly a current-event diagnostic, and
+on rollouts from a fixed nominal policy in each protocol and may shift as ACT or
+the disturbance distribution changes. Moreover, the PickPlace inclusive label
+makes the standard confusion matrix predominantly a current-event diagnostic, and
 \DetectorNonEventTrajectoryAlert{} of validation trajectories without a labeled
 event still contain an alert at the deployed threshold. Fifth, the main table
-is conditional on one trained ACT, detector, and supervised recovery actor, so
-it does not propagate all model-training uncertainty. Sixth, the validation
+is conditional on one trained ACT, detector, and supervised recovery actor; the
+multi-task protocol likewise uses one trained stack per suite. Paired episode
+uncertainty therefore does not propagate all model-training uncertainty. Sixth, the validation
 pairs select the recovery epoch and therefore provide model-selection rather
 than independent test evidence. Finally, the reported ``intervention outcome''
 is task completion while the recovery option remains in control: the
@@ -571,14 +657,17 @@ and a persistent trigger-aligned imitation recovery option in one closed-loop
 manipulation controller. Corrective demonstrations are collected from complete
 simulator states captured at online risk-monitor triggers, and a deterministic
 recovery actor is selected by trajectory-disjoint validation loss without
-reinforcement-learning interaction. In paired
-Meta-World/MuJoCo evaluation, REIM improves ACT by \FinalREIMGain{} and remains
+reinforcement-learning interaction. In paired PickPlace Meta-World/MuJoCo
+evaluation, REIM improves ACT by \FinalREIMGain{} and remains
 substantially more robust at strong disturbances. Its LSTM gate reduces
 interventions by \FinalREIMInterventionReductionVsRL{} relative to
 heuristic-triggered recovery while improving success by
 \FinalREIMDeltaVsRL{} in the primary paired benchmark; a separate
 burden-matched audit yields \GateTauSeventeenFiveGainVsHeuristic{} at
 $p=\GateTauSeventeenFiveP$.
+A shared task-conditioned instantiation additionally defines a known-task
+MT10/MT50 breadth test whose official-clean evidence is kept separate from the
+task-universal disturbance extension.
 The captured distribution is approximately 99\% pre-grasp/early correction,
 so the evidence supports selective simulated failure prevention and recovery,
 not general post-drop repair, visual perception, sim-to-real transfer, or a

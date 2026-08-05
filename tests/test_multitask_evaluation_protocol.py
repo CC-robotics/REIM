@@ -20,11 +20,12 @@ def _args(**overrides: object) -> Namespace:
         "condition": "clean",
         "benchmark_seed": 20265010,
         "act_checkpoint": "act.pt",
+        "mlp_checkpoint": "mlp.pt",
         "detector_checkpoint": "detector.pt",
         "recovery_checkpoint": "recovery.pt",
         "output_csv": "episodes.csv",
         "output_summary": "summary.json",
-        "methods": ("act", "heuristic_recovery", "reim"),
+        "methods": ("mlp_bc", "act", "heuristic_recovery", "reim"),
         "episodes_per_task": 50,
         "max_steps": 500,
         "noise_level": 0.0,
@@ -84,6 +85,7 @@ def test_protocol_argument_ranges_fail_closed(
 
 def test_zero_noise_clean_run_rejects_retry() -> None:
     assert evaluation.build_parser().get_default("methods") == (
+        "mlp_bc",
         "act",
         "heuristic_recovery",
         "reim",
@@ -105,6 +107,19 @@ def test_zero_noise_clean_run_rejects_retry() -> None:
     assert condition == "noisy"
     assert methods == ("act_retry", "act")
     assert task_ids == (2, 7)
+
+
+def test_mlp_checkpoint_is_required_only_when_mlp_is_selected() -> None:
+    condition, methods, _ = evaluation._validate_evaluation_arguments(
+        _args(methods=("act",), mlp_checkpoint=None), task_count=10
+    )
+    assert condition == "clean"
+    assert methods == ("act",)
+
+    with pytest.raises(ValueError, match="--mlp-checkpoint.*mlp_bc"):
+        evaluation._validate_evaluation_arguments(
+            _args(methods=("mlp_bc",), mlp_checkpoint=None), task_count=10
+        )
 
 
 BASE_PROTOCOL = {
@@ -283,7 +298,7 @@ def _completed(
 
 
 def test_official_clean_eligibility_is_per_method_and_fail_closed() -> None:
-    methods = ("act", "heuristic_recovery", "reim")
+    methods = ("mlp_bc", "act", "heuristic_recovery", "reim")
     complete = _completed(methods, task_count=10, episodes_per_task=2)
     eligible = evaluation._official_clean_eligibility(
         noise_level=0.0,
@@ -352,11 +367,15 @@ class _RolloutEnv:
 
 
 class _Act:
+    def __init__(self) -> None:
+        self.calls = 0
+
     def reset(self) -> None:
         pass
 
     def act(self, state: np.ndarray) -> np.ndarray:
         del state
+        self.calls += 1
         return np.zeros(4, dtype=np.float32)
 
 
@@ -364,6 +383,127 @@ class _Recovery:
     def act(self, state: np.ndarray) -> np.ndarray:
         del state
         return np.zeros(4, dtype=np.float32)
+
+
+class _MLP:
+    def __init__(self) -> None:
+        self.states: list[np.ndarray] = []
+        self.reset_calls = 0
+
+    def reset(self) -> None:
+        self.reset_calls += 1
+
+    def act(self, state: np.ndarray) -> np.ndarray:
+        self.states.append(np.asarray(state).copy())
+        return np.full(4, 0.25, dtype=np.float32)
+
+
+def test_mlp_rollout_uses_current_conditioned_state_without_act() -> None:
+    max_steps = 3
+    act = _Act()
+    mlp = _MLP()
+    result = evaluation._rollout(
+        env=_RolloutEnv(max_steps),
+        task=object(),
+        task_id=3,
+        task_count=10,
+        method="mlp_bc",
+        episode_seed=42,
+        max_steps=max_steps,
+        action_noise=np.zeros((max_steps, 4), dtype=np.float32),
+        observation_noise=np.zeros((max_steps, 39), dtype=np.float32),
+        act=act,
+        detector=SimpleNamespace(sequence_length=1, state_dim=49),
+        recovery=_Recovery(),
+        threshold=0.5,
+        recovery_budget=max_steps,
+        heuristic_min_steps=1,
+        heuristic_window=1,
+        heuristic_tolerance=0.0,
+        mlp=mlp,  # type: ignore[arg-type]
+    )
+    assert result["steps"] == max_steps
+    assert mlp.reset_calls == 1
+    assert len(mlp.states) == max_steps
+    assert act.calls == 0
+    for state in mlp.states:
+        assert state.shape == (49,)
+        np.testing.assert_array_equal(state[39:], np.eye(10, dtype=np.float32)[3])
+
+
+def _valid_mlp_provenance() -> dict[str, object]:
+    vocabulary = [f"task-{index}" for index in range(10)]
+    return {
+        "training_schema": "reim-multitask-mlp-training-v1",
+        "benchmark": "MT10",
+        "task_vocabulary": vocabulary,
+        "task_vocabulary_sha256": evaluation._canonical_sha256(vocabulary),
+        "data_manifest_sha256": "a" * 64,
+        "data_schema_version": "reim-multitask-demonstrations-v1",
+        "dataset_type": "balanced_multitask_scripted_expert_demonstrations",
+        "split_sha256": "b" * 64,
+    }
+
+
+def test_mlp_provenance_requires_benchmark_vocab_hash_and_manifest() -> None:
+    provenance = _valid_mlp_provenance()
+    vocabulary = provenance["task_vocabulary"]
+    assert isinstance(vocabulary, list)
+    evaluation._validate_multitask_provenance(
+        "MLP-BC",
+        provenance,
+        benchmark="MT10",
+        task_vocabulary=vocabulary,
+        require_mlp_manifest=True,
+    )
+
+    corruptions = {
+        "benchmark": "MT50",
+        "task_vocabulary": list(reversed(vocabulary)),
+        "task_vocabulary_sha256": "c" * 64,
+        "data_manifest_sha256": None,
+        "data_schema_version": "unknown",
+        "dataset_type": "unknown",
+        "split_sha256": "short",
+    }
+    for field, value in corruptions.items():
+        invalid = dict(provenance)
+        invalid[field] = value
+        with pytest.raises(ValueError):
+            evaluation._validate_multitask_provenance(
+                "MLP-BC",
+                invalid,
+                benchmark="MT10",
+                task_vocabulary=vocabulary,
+                require_mlp_manifest=True,
+            )
+
+
+def test_run_protocol_fingerprints_only_supplied_checkpoint_set() -> None:
+    vocabulary = [f"task-{index}" for index in range(10)]
+    common = {
+        "args": _args(methods=("mlp_bc", "act")),
+        "condition": "clean",
+        "methods": ("mlp_bc", "act"),
+        "task_ids": tuple(range(10)),
+        "task_vocabulary": vocabulary,
+        "task_bank_sha256": "d" * 64,
+        "metaworld_version": "3.0.0",
+        "execution_device": "cpu",
+    }
+    with_mlp = evaluation._build_run_protocol(
+        **common,
+        checkpoint_sha256={"act": "a" * 64, "mlp_bc": "b" * 64},
+    )
+    assert with_mlp["checkpoint_sha256"] == {
+        "act": "a" * 64,
+        "mlp_bc": "b" * 64,
+    }
+    changed = copy.deepcopy(with_mlp)
+    changed["checkpoint_sha256"]["mlp_bc"] = "c" * 64
+    assert evaluation._canonical_sha256(with_mlp) != evaluation._canonical_sha256(
+        changed
+    )
 
 
 def test_rollout_preserves_first_trigger_across_repeated_interventions(
@@ -391,4 +531,40 @@ def test_rollout_preserves_first_trigger_across_repeated_interventions(
         heuristic_tolerance=0.0,
     )
     assert result["intervention_count"] == max_steps
+    assert result["trigger_step"] == 0
+
+
+def test_reim_hysteresis_releases_recovery_back_to_act(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    probabilities = iter((1.0, 0.1, 0.1, 0.1))
+    monkeypatch.setattr(
+        evaluation, "_risk", lambda detector, history: next(probabilities)
+    )
+    max_steps = 4
+    result = evaluation._rollout(
+        env=_RolloutEnv(max_steps),
+        task=object(),
+        task_id=0,
+        task_count=10,
+        method="reim",
+        episode_seed=42,
+        max_steps=max_steps,
+        action_noise=np.zeros((max_steps, 4), dtype=np.float32),
+        observation_noise=np.zeros((max_steps, 39), dtype=np.float32),
+        act=_Act(),
+        detector=SimpleNamespace(sequence_length=1, state_dim=49),
+        recovery=_Recovery(),
+        threshold=0.5,
+        release_threshold=0.2,
+        release_patience=2,
+        min_recovery_steps=1,
+        intervention_cooldown=10,
+        recovery_budget=4,
+        heuristic_min_steps=1,
+        heuristic_window=1,
+        heuristic_tolerance=0.0,
+    )
+    assert result["intervention_count"] == 1
+    assert result["recovery_success"] == 1
     assert result["trigger_step"] == 0
