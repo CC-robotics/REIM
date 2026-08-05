@@ -240,13 +240,21 @@
 % must populate every value atomically before enabling the gate.
 % ---------------------------------------------------------------------------
 \newcommand{\MTTenMLPCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenMLPCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTTenACTCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenACTCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTTenHeuristicCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenHeuristicCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTTenREIMCleanSuccess}{\PendingMetric}
+\newcommand{\MTTenREIMCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTFiftyMLPCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyMLPCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTFiftyACTCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyACTCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTFiftyHeuristicCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyHeuristicCleanSuccessCI}{\PendingInterval}
 \newcommand{\MTFiftyREIMCleanSuccess}{\PendingMetric}
+\newcommand{\MTFiftyREIMCleanSuccessCI}{\PendingInterval}
 
 \newcommand{\MTTenMLPWorstQuartile}{\PendingMetric}
 \newcommand{\MTTenACTWorstQuartile}{\PendingMetric}
@@ -264,8 +272,21 @@
 
 \newcommand{\MTTenREIMDeltaVsACT}{\PendingMetric}
 \newcommand{\MTTenREIMDeltaVsACTCI}{\PendingInterval}
+\newcommand{\MTTenMLPDeltaVsACT}{\PendingMetric}
+\newcommand{\MTTenMLPDeltaVsACTCI}{\PendingInterval}
+\newcommand{\MTTenHeuristicDeltaVsACT}{\PendingMetric}
+\newcommand{\MTTenHeuristicDeltaVsACTCI}{\PendingInterval}
 \newcommand{\MTFiftyREIMDeltaVsACT}{\PendingMetric}
 \newcommand{\MTFiftyREIMDeltaVsACTCI}{\PendingInterval}
+\newcommand{\MTFiftyMLPDeltaVsACT}{\PendingMetric}
+\newcommand{\MTFiftyMLPDeltaVsACTCI}{\PendingInterval}
+\newcommand{\MTFiftyHeuristicDeltaVsACT}{\PendingMetric}
+\newcommand{\MTFiftyHeuristicDeltaVsACTCI}{\PendingInterval}
+
+% This generated file is absent until the independent publication gate has
+% validated both suites, all disturbance conditions, and both five-bank
+% separation audits.  A fresh or incomplete run therefore remains closed.
+\InputIfFileExists{multitask_results.tex}{\input{multitask_results.tex}}{}
 
 % Separate post-freeze gate audit. The matched heuristic point uses the same
 % serialized 200-episode CRN bank as the LSTM-threshold sweep.

@@ -28,6 +28,7 @@ from scripts.audit_multitask_banks import (
     _snapshot,
     audit,
     build_parser,
+    main,
 )
 
 
@@ -457,16 +458,94 @@ def test_current_metaworld_version_must_match_recorded_version(
         audit(args, benchmark_loader=wrong_version_loader)
 
 
-def test_cli_exposes_no_output_file_mutation_option() -> None:
+def test_cli_exposes_only_atomic_report_output_mutation() -> None:
     parser = build_parser()
     option_strings = {
         value
         for action in parser._actions
         for value in action.option_strings
     }
+    assert "--output-json" in option_strings
     assert "--output" not in option_strings
     assert "--overwrite" not in option_strings
     assert "--resume" not in option_strings
+
+
+def test_cli_atomically_persists_successful_audit_report(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    report = {
+        "schema_version": "reim-multitask-bank-separation-audit-v1",
+        "read_only": True,
+        "passed": True,
+        "benchmark": "MT10",
+    }
+    monkeypatch.setattr(
+        "scripts.audit_multitask_banks.audit", lambda args: report
+    )
+    destination = tmp_path / "results" / "audits" / "mt10_bank_separation.json"
+    exit_code = main(
+        [
+            "--benchmark",
+            "MT10",
+            "--demonstrations",
+            "demo.json",
+            "--failure-train",
+            "failure-train.json",
+            "--failure-validation",
+            "failure-validation.json",
+            "--recovery",
+            "recovery.json",
+            "--final-evaluation-sidecar",
+            "clean.csv.run.json",
+            "--final-evaluation-csv",
+            "clean.csv",
+            "--output-json",
+            str(destination),
+        ]
+    )
+    assert exit_code == 0
+    assert json.loads(destination.read_text(encoding="utf-8")) == report
+    assert json.loads(capsys.readouterr().out) == report
+    assert not list(destination.parent.glob("*.tmp"))
+
+
+def test_failed_audit_does_not_replace_published_report(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination = tmp_path / "mt10_bank_separation.json"
+    previous = {"passed": True, "generation": "previous"}
+    _write_json(destination, previous)
+
+    def fail(_args: Namespace) -> dict[str, object]:
+        raise BankAuditError("new evidence is incomplete")
+
+    monkeypatch.setattr("scripts.audit_multitask_banks.audit", fail)
+    exit_code = main(
+        [
+            "--benchmark",
+            "MT10",
+            "--demonstrations",
+            "demo.json",
+            "--failure-train",
+            "failure-train.json",
+            "--failure-validation",
+            "failure-validation.json",
+            "--recovery",
+            "recovery.json",
+            "--final-evaluation-sidecar",
+            "clean.csv.run.json",
+            "--final-evaluation-csv",
+            "clean.csv",
+            "--output-json",
+            str(destination),
+        ]
+    )
+    assert exit_code == 2
+    assert json.loads(destination.read_text(encoding="utf-8")) == previous
 
 
 def test_mt50_reconstruction_requires_fifty_classes_and_2500_payloads() -> None:

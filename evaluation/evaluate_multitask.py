@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import torch
 from tqdm import tqdm
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -42,6 +43,14 @@ SCHEMA_VERSION = "reim-multitask-evaluation-v2"
 RUN_SIDECAR_SCHEMA_VERSION = "reim-multitask-evaluation-run-v1"
 OFFICIAL_MAX_EPISODE_STEPS = 500
 OFFICIAL_TASK_VARIANTS_PER_CLASS = 50
+OFFICIAL_CLEAN_CONDITION = "official_clean"
+DEMONSTRATION_SCHEMA = "reim-multitask-demonstrations-v1"
+DEMONSTRATION_DATASET_TYPE = "balanced_multitask_scripted_expert_demonstrations"
+DETECTOR_TRAINING_SCHEMA = "reim-failure-detector-training-v2"
+FAILURE_DATA_SCHEMA = "reim-multitask-failures-v2"
+FAILURE_DATASET_TYPE = "task_conditioned_behavioral_deviation_risk"
+CALIBRATION_SCHEMA = "reim-task-conditional-risk-calibration-v1"
+RECOVERY_TRAINING_SCHEMA = "reim-multitask-recovery-training-v1"
 METHODS = ("mlp_bc", "act", "act_retry", "heuristic_recovery", "reim")
 DEFAULT_OFFICIAL_METHODS = ("mlp_bc", "act", "heuristic_recovery", "reim")
 METHOD_LABELS = {
@@ -535,6 +544,7 @@ def _validate_protocol_rows(
 
 def _official_clean_eligibility(
     *,
+    condition: str,
     noise_level: float,
     max_steps: int,
     task_ids: Sequence[int],
@@ -545,10 +555,14 @@ def _official_clean_eligibility(
 ) -> dict[str, dict[str, Any]]:
     full_suite = tuple(sorted(task_ids)) == tuple(range(task_count))
     run_reasons: list[str] = []
+    if condition != OFFICIAL_CLEAN_CONDITION:
+        run_reasons.append("non_official_condition")
     if noise_level != 0.0:
         run_reasons.append("nonzero_noise")
     if max_steps != OFFICIAL_MAX_EPISODE_STEPS:
         run_reasons.append("non_official_horizon")
+    if episodes_per_task != OFFICIAL_TASK_VARIANTS_PER_CLASS:
+        run_reasons.append("non_official_episodes_per_task")
     if not full_suite:
         run_reasons.append("partial_task_suite")
     if "act_retry" in methods:
@@ -573,6 +587,35 @@ def _official_clean_eligibility(
     return result
 
 
+def _publication_readiness(
+    *,
+    benchmark: str,
+    official_clean_protocol: bool,
+) -> dict[str, Any]:
+    """Separate rollout validity from the external data-isolation gate.
+
+    Evaluation deliberately does not require the five-bank audit before a run:
+    doing so would make diagnostic rollouts impossible.  Conversely, a valid
+    rollout protocol alone must never be presented as publication-ready.
+    """
+
+    reasons = ["external_five_bank_payload_isolation_audit_required"]
+    if not official_clean_protocol:
+        reasons.insert(0, "official_clean_rollout_protocol_ineligible")
+    return {
+        "eligible": False,
+        "rollout_protocol_eligible": bool(official_clean_protocol),
+        "audit_required": True,
+        "audit_scope": (
+            "demonstrations,failure_training,failure_validation,"
+            "recovery,final_evaluation"
+        ),
+        "audit_benchmark": benchmark,
+        "external_audit_consumed": False,
+        "reasons": reasons,
+    }
+
+
 def _risk(
     detector: FailureDetector,
     history: deque[np.ndarray],
@@ -593,20 +636,82 @@ def _is_sha256(value: Any) -> bool:
     )
 
 
+_CHECKPOINT_METADATA_FIELDS = frozenset(
+    {
+        "policy_type",
+        "format_version",
+        "state_dim",
+        "action_dim",
+        "benchmark",
+        "task_vocabulary",
+        "task_vocabulary_sha256",
+        "data_manifest_sha256",
+        "detector_training_schema",
+        "data_schema_version",
+        "dataset_type",
+        "dataset_role",
+        "label_calibration_mode",
+        "label_calibration_quantile",
+        "label_calibration_fingerprint_sha256",
+        "label_calibration_source_sha256",
+        "dataset_fingerprint_sha256",
+        "label_calibration",
+    }
+)
+
+
+def _checkpoint_metadata(path: Path) -> dict[str, Any]:
+    """Load only the provenance fields needed for fail-closed evaluation.
+
+    The policy loaders intentionally expose a small backwards-compatible
+    provenance subset.  Evaluation needs stricter, model-specific contracts,
+    so it independently extracts the checkpoint's top-level metadata.  Tensor
+    payloads are discarded before this function returns.
+    """
+
+    try:
+        checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+    except TypeError:  # PyTorch < 2.0
+        checkpoint = torch.load(path, map_location="cpu")
+    if not isinstance(checkpoint, Mapping):
+        raise ValueError(f"Checkpoint {path} is not a metadata mapping")
+    return {
+        key: checkpoint[key]
+        for key in _CHECKPOINT_METADATA_FIELDS
+        if key in checkpoint
+    }
+
+
+def _require_provenance_sha256(
+    checkpoint_name: str,
+    provenance: Mapping[str, Any],
+    field: str,
+) -> str:
+    value = provenance.get(field)
+    if not _is_sha256(value):
+        raise ValueError(
+            f"{checkpoint_name} checkpoint lacks a valid {field} SHA-256"
+        )
+    return str(value)
+
+
 def _validate_multitask_provenance(
     checkpoint_name: str,
     provenance: Any,
     *,
     benchmark: str,
     task_vocabulary: Sequence[str],
-    require_mlp_manifest: bool = False,
+    checkpoint_kind: str,
+    linked_checkpoint_sha256: Mapping[str, str] | None = None,
 ) -> None:
-    """Fail closed on task-conditioning identity and MLP data provenance."""
+    """Fail closed on model-specific multi-task training provenance."""
 
     if not isinstance(provenance, Mapping):
         raise ValueError(f"{checkpoint_name} checkpoint lacks multi-task provenance")
+    if checkpoint_kind not in {"act", "detector", "recovery", "mlp_bc"}:
+        raise ValueError(f"Unknown checkpoint provenance kind {checkpoint_kind!r}")
     expected_vocabulary_sha256 = _canonical_sha256(list(task_vocabulary))
-    if list(provenance.get("task_vocabulary", [])) != list(task_vocabulary):
+    if provenance.get("task_vocabulary") != list(task_vocabulary):
         raise ValueError(
             f"{checkpoint_name} checkpoint task vocabulary does not match benchmark"
         )
@@ -614,29 +719,131 @@ def _validate_multitask_provenance(
         raise ValueError(
             f"{checkpoint_name} checkpoint task vocabulary hash does not match benchmark"
         )
-    stored_benchmark = provenance.get("benchmark")
-    if require_mlp_manifest and stored_benchmark is None:
-        raise ValueError(f"{checkpoint_name} checkpoint lacks benchmark provenance")
-    if stored_benchmark is not None and str(stored_benchmark).upper() != benchmark:
+    if provenance.get("benchmark") != benchmark:
         raise ValueError(f"{checkpoint_name} checkpoint benchmark does not match")
-    if not require_mlp_manifest:
+
+    if checkpoint_kind == "act":
+        if provenance.get("policy_type") != "ACT":
+            raise ValueError(f"{checkpoint_name} checkpoint is not an explicit ACT policy")
+        if provenance.get("state_dim") != 39 + len(task_vocabulary):
+            raise ValueError(f"{checkpoint_name} checkpoint state_dim does not match")
+        if provenance.get("action_dim") != 4:
+            raise ValueError(f"{checkpoint_name} checkpoint action_dim does not match")
+        _require_provenance_sha256(
+            checkpoint_name, provenance, "data_manifest_sha256"
+        )
+        return
+
+    if checkpoint_kind == "detector":
+        if provenance.get("detector_training_schema") != DETECTOR_TRAINING_SCHEMA:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid detector training schema"
+            )
+        if provenance.get("data_schema_version") != FAILURE_DATA_SCHEMA:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid failure data schema"
+            )
+        if provenance.get("dataset_type") != FAILURE_DATASET_TYPE:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid failure dataset type"
+            )
+        if provenance.get("dataset_role") != "training":
+            raise ValueError(
+                f"{checkpoint_name} checkpoint was not trained on a training-role bank"
+            )
+        if provenance.get("label_calibration_mode") != "fit-task-quantile":
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid label calibration mode"
+            )
+        try:
+            quantile = float(provenance.get("label_calibration_quantile"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint lacks a calibration quantile"
+            ) from exc
+        if not math.isfinite(quantile) or not 0.0 < quantile < 1.0:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid calibration quantile"
+            )
+        _require_provenance_sha256(
+            checkpoint_name, provenance, "data_manifest_sha256"
+        )
+        calibration_fingerprint = _require_provenance_sha256(
+            checkpoint_name,
+            provenance,
+            "label_calibration_fingerprint_sha256",
+        )
+        calibration_source_sha256 = _require_provenance_sha256(
+            checkpoint_name,
+            provenance,
+            "label_calibration_source_sha256",
+        )
+        _require_provenance_sha256(
+            checkpoint_name, provenance, "dataset_fingerprint_sha256"
+        )
+        calibration = provenance.get("label_calibration")
+        if not isinstance(calibration, Mapping):
+            raise ValueError(
+                f"{checkpoint_name} checkpoint lacks full label calibration provenance"
+            )
+        if _canonical_sha256(dict(calibration)) != calibration_fingerprint:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint label calibration fingerprint mismatch"
+            )
+        if (
+            calibration.get("schema_version") != CALIBRATION_SCHEMA
+            or calibration.get("mode") != "fit-task-quantile"
+            or calibration.get("dataset_role") != "training"
+            or calibration.get("benchmark") != benchmark
+            or calibration.get("task_vocabulary_sha256")
+            != expected_vocabulary_sha256
+            or calibration.get("quantile") != quantile
+        ):
+            raise ValueError(
+                f"{checkpoint_name} checkpoint label calibration metadata is inconsistent"
+            )
+        calibration_source = calibration.get("calibration_source")
+        if (
+            not isinstance(calibration_source, Mapping)
+            or calibration_source.get("sha256") != calibration_source_sha256
+        ):
+            raise ValueError(
+                f"{checkpoint_name} checkpoint calibration source hash is inconsistent"
+            )
+        return
+
+    if checkpoint_kind == "recovery":
+        if provenance.get("schema_version") != RECOVERY_TRAINING_SCHEMA:
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid recovery training schema"
+            )
+        _require_provenance_sha256(
+            checkpoint_name, provenance, "dataset_manifest_sha256"
+        )
+        source_training = provenance.get("source_training")
+        if (
+            not isinstance(source_training, Mapping)
+            or source_training.get("algorithm") != "task_balanced_smooth_l1"
+        ):
+            raise ValueError(
+                f"{checkpoint_name} checkpoint has invalid recovery training provenance"
+            )
+        for field, expected in (linked_checkpoint_sha256 or {}).items():
+            stored = provenance.get(field)
+            if stored is not None and stored != expected:
+                raise ValueError(
+                    f"{checkpoint_name} checkpoint {field} does not match evaluation"
+                )
         return
 
     if provenance.get("training_schema") != "reim-multitask-mlp-training-v1":
         raise ValueError(f"{checkpoint_name} checkpoint has invalid training provenance")
-    if provenance.get("data_schema_version") != "reim-multitask-demonstrations-v1":
+    if provenance.get("data_schema_version") != DEMONSTRATION_SCHEMA:
         raise ValueError(f"{checkpoint_name} checkpoint has invalid data manifest schema")
-    if (
-        provenance.get("dataset_type")
-        != "balanced_multitask_scripted_expert_demonstrations"
-    ):
+    if provenance.get("dataset_type") != DEMONSTRATION_DATASET_TYPE:
         raise ValueError(f"{checkpoint_name} checkpoint has invalid dataset provenance")
-    if not _is_sha256(provenance.get("data_manifest_sha256")):
-        raise ValueError(
-            f"{checkpoint_name} checkpoint lacks a valid data manifest SHA-256"
-        )
-    if not _is_sha256(provenance.get("split_sha256")):
-        raise ValueError(f"{checkpoint_name} checkpoint lacks a valid split SHA-256")
+    _require_provenance_sha256(checkpoint_name, provenance, "data_manifest_sha256")
+    _require_provenance_sha256(checkpoint_name, provenance, "split_sha256")
 
 
 def _noise_arrays(
@@ -908,24 +1115,38 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("Checkpoint action dimensions do not match Meta-World")
     if mlp is not None and mlp.action_dim != 4:
         raise ValueError("MLP checkpoint action dimensions do not match Meta-World")
-    for checkpoint_name, provenance in (
-        ("ACT", getattr(act, "provenance", None)),
-        ("detector", getattr(detector, "provenance", None)),
-        ("recovery", getattr(recovery, "provenance", None)),
-    ):
-        _validate_multitask_provenance(
-            checkpoint_name,
-            provenance,
-            benchmark=args.benchmark,
-            task_vocabulary=task_vocabulary,
-        )
+    _validate_multitask_provenance(
+        "ACT",
+        _checkpoint_metadata(act_path),
+        benchmark=args.benchmark,
+        task_vocabulary=task_vocabulary,
+        checkpoint_kind="act",
+    )
+    _validate_multitask_provenance(
+        "detector",
+        _checkpoint_metadata(detector_path),
+        benchmark=args.benchmark,
+        task_vocabulary=task_vocabulary,
+        checkpoint_kind="detector",
+    )
+    _validate_multitask_provenance(
+        "recovery",
+        getattr(recovery, "provenance", None),
+        benchmark=args.benchmark,
+        task_vocabulary=task_vocabulary,
+        checkpoint_kind="recovery",
+        linked_checkpoint_sha256={
+            "act_checkpoint_sha256": checkpoint_sha256["act"],
+            "detector_checkpoint_sha256": checkpoint_sha256["detector"],
+        },
+    )
     if mlp is not None:
         _validate_multitask_provenance(
             "MLP-BC",
             getattr(mlp, "provenance", None),
             benchmark=args.benchmark,
             task_vocabulary=task_vocabulary,
-            require_mlp_manifest=True,
+            checkpoint_kind="mlp_bc",
         )
 
     metaworld_version = importlib.metadata.version("metaworld")
@@ -1144,6 +1365,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 seed=args.seed + 2026,
             )
     eligibility = _official_clean_eligibility(
+        condition=condition,
         noise_level=float(args.noise_level),
         max_steps=int(args.max_steps),
         task_ids=task_ids,
@@ -1155,6 +1377,10 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     official_clean_protocol = bool(eligibility) and all(
         item["eligible"] for item in eligibility.values()
     )
+    publication_readiness = _publication_readiness(
+        benchmark=args.benchmark,
+        official_clean_protocol=official_clean_protocol,
+    )
     summary = {
         "schema_version": SCHEMA_VERSION,
         "run_fingerprint": run_fingerprint,
@@ -1163,7 +1389,11 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "benchmark": args.benchmark,
         "condition": condition,
         "official_clean_protocol": official_clean_protocol,
+        "official_clean_protocol_scope": "rollout_protocol_only",
         "official_clean_eligibility_by_method": eligibility,
+        "publication_eligible": publication_readiness["eligible"],
+        "publication_audit_required": publication_readiness["audit_required"],
+        "publication_readiness": publication_readiness,
         "robustness_extension": args.noise_level != 0.0,
         "metaworld_version": metaworld_version,
         "benchmark_seed": args.benchmark_seed,

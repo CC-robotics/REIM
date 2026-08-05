@@ -3,40 +3,51 @@
 \ifREIMMultiTaskResults
 \begin{table*}[t]
   \centering
-  \caption{Official-clean, goal-observable known-task evaluation on
-  \MTTenBenchmark{} and \MTFiftyBenchmark{}. All methods receive the official
-  task one-hot and use the same task payloads and paired episode seeds. Success
-  is averaged equally across tasks; worst quartile is the mean over the lowest
-  quarter of per-task success rates. Intervention is the fraction of episodes
-  in which a recovery controller acts. Nonzero disturbances are excluded from
-  this table and reported only as a separate REIM robustness extension.}
+  \caption{Official-clean, goal-observable known-task evaluation. All methods
+  receive the same official task one-hot, task payloads, and paired episode
+  seeds. Success is averaged equally across tasks; brackets are 95\% within-task
+  episode-bootstrap intervals. Differences use a paired, task-stratified
+  bootstrap against MT-ACT. Worst quartile is the mean of the lowest
+  $\lceil T/4\rceil$ task rates, and intervention is the task-macro fraction of
+  episodes in which recovery acts. Nonzero disturbances are excluded and
+  reported only as a non-official REIM robustness extension.}
   \label{tab:multitask-clean}
   \scriptsize
-  \setlength{\tabcolsep}{3.2pt}
-  \begin{tabular}{lcccccc}
+  \setlength{\tabcolsep}{4.0pt}
+  \begin{tabular}{llcccc}
     \toprule
-    & \multicolumn{3}{c}{\MTTenBenchmark{}} &
-      \multicolumn{3}{c}{\MTFiftyBenchmark{}} \\
-    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
-    Method & Task macro $\uparrow$ & Worst quartile $\uparrow$ & Interv. &
-      Task macro $\uparrow$ & Worst quartile $\uparrow$ & Interv. \\
+    Benchmark & Method & Task macro [95\% CI] $\uparrow$ &
+      $\Delta$ vs. MT-ACT [95\% CI] & Worst quartile $\uparrow$ & Interv. \\
     \midrule
-    MT-MLP BC &
-      \MTTenMLPCleanSuccess & \MTTenMLPWorstQuartile & \NotApplicable &
-      \MTFiftyMLPCleanSuccess & \MTFiftyMLPWorstQuartile & \NotApplicable \\
-    MT-ACT &
-      \MTTenACTCleanSuccess & \MTTenACTWorstQuartile & \NotApplicable &
-      \MTFiftyACTCleanSuccess & \MTFiftyACTWorstQuartile & \NotApplicable \\
-    MT-ACT + heuristic-gated recovery &
-      \MTTenHeuristicCleanSuccess & \MTTenHeuristicWorstQuartile &
-      \MTTenHeuristicIntervention &
-      \MTFiftyHeuristicCleanSuccess & \MTFiftyHeuristicWorstQuartile &
-      \MTFiftyHeuristicIntervention \\
-    MT-REIM (ours) &
-      \MTTenREIMCleanSuccess & \MTTenREIMWorstQuartile &
-      \MTTenREIMIntervention &
-      \MTFiftyREIMCleanSuccess & \MTFiftyREIMWorstQuartile &
-      \MTFiftyREIMIntervention \\
+    \multirow{4}{*}{\MTTenBenchmark{}}
+      & MT-MLP BC & \MTTenMLPCleanSuccess{} \MTTenMLPCleanSuccessCI &
+        \MTTenMLPDeltaVsACT{} \MTTenMLPDeltaVsACTCI &
+        \MTTenMLPWorstQuartile & \NotApplicable \\
+      & MT-ACT & \MTTenACTCleanSuccess{} \MTTenACTCleanSuccessCI &
+        \NotApplicable & \MTTenACTWorstQuartile & \NotApplicable \\
+      & Heuristic-gated recovery &
+        \MTTenHeuristicCleanSuccess{} \MTTenHeuristicCleanSuccessCI &
+        \MTTenHeuristicDeltaVsACT{} \MTTenHeuristicDeltaVsACTCI &
+        \MTTenHeuristicWorstQuartile & \MTTenHeuristicIntervention \\
+      & \textbf{MT-REIM (ours)} &
+        \textbf{\MTTenREIMCleanSuccess{} \MTTenREIMCleanSuccessCI} &
+        \textbf{\MTTenREIMDeltaVsACT{} \MTTenREIMDeltaVsACTCI} &
+        \textbf{\MTTenREIMWorstQuartile} & \MTTenREIMIntervention \\
+    \midrule
+    \multirow{4}{*}{\MTFiftyBenchmark{}}
+      & MT-MLP BC & \MTFiftyMLPCleanSuccess{} \MTFiftyMLPCleanSuccessCI &
+        \MTFiftyMLPDeltaVsACT{} \MTFiftyMLPDeltaVsACTCI &
+        \MTFiftyMLPWorstQuartile & \NotApplicable \\
+      & MT-ACT & \MTFiftyACTCleanSuccess{} \MTFiftyACTCleanSuccessCI &
+        \NotApplicable & \MTFiftyACTWorstQuartile & \NotApplicable \\
+      & Heuristic-gated recovery &
+        \MTFiftyHeuristicCleanSuccess{} \MTFiftyHeuristicCleanSuccessCI &
+        \MTFiftyHeuristicDeltaVsACT{} \MTFiftyHeuristicDeltaVsACTCI &
+        \MTFiftyHeuristicWorstQuartile & \MTFiftyHeuristicIntervention \\
+      & \textbf{MT-REIM (ours)} &
+        \textbf{\MTFiftyREIMCleanSuccess{} \MTFiftyREIMCleanSuccessCI} &
+        \textbf{\MTFiftyREIMDeltaVsACT{} \MTFiftyREIMDeltaVsACTCI} &
+        \textbf{\MTFiftyREIMWorstQuartile} & \MTFiftyREIMIntervention \\
     \bottomrule
   \end{tabular}
 \end{table*}

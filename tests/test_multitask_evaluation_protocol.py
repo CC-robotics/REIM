@@ -10,6 +10,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
+import torch
 
 from evaluation import evaluate_multitask as evaluation
 
@@ -299,19 +300,76 @@ def _completed(
 
 def test_official_clean_eligibility_is_per_method_and_fail_closed() -> None:
     methods = ("mlp_bc", "act", "heuristic_recovery", "reim")
-    complete = _completed(methods, task_count=10, episodes_per_task=2)
+    complete = _completed(methods, task_count=10, episodes_per_task=50)
     eligible = evaluation._official_clean_eligibility(
+        condition="official_clean",
         noise_level=0.0,
         max_steps=500,
         task_ids=tuple(range(10)),
         task_count=10,
         methods=methods,
-        episodes_per_task=2,
+        episodes_per_task=50,
         completed=complete,
     )
     assert all(item["eligible"] for item in eligible.values())
 
+    one_incomplete = set(complete)
+    one_incomplete.remove(("reim", 9, "9-49"))
+    per_method = evaluation._official_clean_eligibility(
+        condition="official_clean",
+        noise_level=0.0,
+        max_steps=500,
+        task_ids=tuple(range(10)),
+        task_count=10,
+        methods=methods,
+        episodes_per_task=50,
+        completed=one_incomplete,
+    )
+    assert per_method["act"]["eligible"]
+    assert not per_method["reim"]["eligible"]
+    assert per_method["reim"]["reasons"] == ["incomplete_rows"]
+
+    undersampled = evaluation._official_clean_eligibility(
+        condition="official_clean",
+        noise_level=0.0,
+        max_steps=500,
+        task_ids=tuple(range(10)),
+        task_count=10,
+        methods=("act",),
+        episodes_per_task=2,
+        completed=_completed(("act",), task_count=10, episodes_per_task=2),
+    )
+    assert not undersampled["act"]["eligible"]
+    assert "non_official_episodes_per_task" in undersampled["act"]["reasons"]
+
+    mislabeled = evaluation._official_clean_eligibility(
+        condition="robustness_noise_00",
+        noise_level=0.0,
+        max_steps=500,
+        task_ids=tuple(range(10)),
+        task_count=10,
+        methods=("act",),
+        episodes_per_task=50,
+        completed=_completed(("act",), task_count=10, episodes_per_task=50),
+    )
+    assert not mislabeled["act"]["eligible"]
+    assert "non_official_condition" in mislabeled["act"]["reasons"]
+
+    short_horizon = evaluation._official_clean_eligibility(
+        condition="official_clean",
+        noise_level=0.0,
+        max_steps=499,
+        task_ids=tuple(range(10)),
+        task_count=10,
+        methods=("act",),
+        episodes_per_task=50,
+        completed=_completed(("act",), task_count=10, episodes_per_task=50),
+    )
+    assert not short_horizon["act"]["eligible"]
+    assert "non_official_horizon" in short_horizon["act"]["reasons"]
+
     partial = evaluation._official_clean_eligibility(
+        condition="official_clean",
         noise_level=0.0,
         max_steps=500,
         task_ids=(0, 1),
@@ -325,6 +383,7 @@ def test_official_clean_eligibility_is_per_method_and_fail_closed() -> None:
     assert "incomplete_rows" in partial["act"]["reasons"]
 
     noisy = evaluation._official_clean_eligibility(
+        condition="official_clean",
         noise_level=0.2,
         max_steps=500,
         task_ids=tuple(range(10)),
@@ -445,6 +504,71 @@ def _valid_mlp_provenance() -> dict[str, object]:
     }
 
 
+def _valid_act_provenance() -> dict[str, object]:
+    vocabulary = [f"task-{index}" for index in range(10)]
+    return {
+        "policy_type": "ACT",
+        "state_dim": 49,
+        "action_dim": 4,
+        "benchmark": "MT10",
+        "task_vocabulary": vocabulary,
+        "task_vocabulary_sha256": evaluation._canonical_sha256(vocabulary),
+        "data_manifest_sha256": "a" * 64,
+    }
+
+
+def _valid_detector_provenance() -> dict[str, object]:
+    vocabulary = [f"task-{index}" for index in range(10)]
+    source_sha256 = "b" * 64
+    calibration = {
+        "schema_version": "reim-task-conditional-risk-calibration-v1",
+        "mode": "fit-task-quantile",
+        "dataset_role": "training",
+        "benchmark": "MT10",
+        "task_vocabulary_sha256": evaluation._canonical_sha256(vocabulary),
+        "quantile": 0.9,
+        "calibration_source": {
+            "kind": "training_bank_raw_action_disagreement",
+            "sha256": source_sha256,
+        },
+    }
+    return {
+        "detector_training_schema": "reim-failure-detector-training-v2",
+        "benchmark": "MT10",
+        "task_vocabulary": vocabulary,
+        "task_vocabulary_sha256": evaluation._canonical_sha256(vocabulary),
+        "data_manifest_sha256": "c" * 64,
+        "data_schema_version": "reim-multitask-failures-v2",
+        "dataset_type": "task_conditioned_behavioral_deviation_risk",
+        "dataset_role": "training",
+        "label_calibration_mode": "fit-task-quantile",
+        "label_calibration_quantile": 0.9,
+        "label_calibration_fingerprint_sha256": evaluation._canonical_sha256(
+            calibration
+        ),
+        "label_calibration_source_sha256": source_sha256,
+        "dataset_fingerprint_sha256": "d" * 64,
+        "label_calibration": calibration,
+    }
+
+
+def _valid_recovery_provenance() -> dict[str, object]:
+    vocabulary = [f"task-{index}" for index in range(10)]
+    return {
+        "schema_version": "reim-multitask-recovery-training-v1",
+        "benchmark": "MT10",
+        "task_vocabulary": vocabulary,
+        "task_vocabulary_sha256": evaluation._canonical_sha256(vocabulary),
+        "dataset_manifest_sha256": "e" * 64,
+        "source_training": {
+            "algorithm": "task_balanced_smooth_l1",
+            "num_timesteps": 0,
+        },
+        "act_checkpoint_sha256": "f" * 64,
+        "detector_checkpoint_sha256": "1" * 64,
+    }
+
+
 def test_mlp_provenance_requires_benchmark_vocab_hash_and_manifest() -> None:
     provenance = _valid_mlp_provenance()
     vocabulary = provenance["task_vocabulary"]
@@ -454,7 +578,7 @@ def test_mlp_provenance_requires_benchmark_vocab_hash_and_manifest() -> None:
         provenance,
         benchmark="MT10",
         task_vocabulary=vocabulary,
-        require_mlp_manifest=True,
+        checkpoint_kind="mlp_bc",
     )
 
     corruptions = {
@@ -475,8 +599,194 @@ def test_mlp_provenance_requires_benchmark_vocab_hash_and_manifest() -> None:
                 invalid,
                 benchmark="MT10",
                 task_vocabulary=vocabulary,
-                require_mlp_manifest=True,
+                checkpoint_kind="mlp_bc",
             )
+
+
+def test_all_checkpoint_kinds_require_exact_multitask_identity() -> None:
+    profiles = (
+        ("ACT", "act", _valid_act_provenance()),
+        ("detector", "detector", _valid_detector_provenance()),
+        ("recovery", "recovery", _valid_recovery_provenance()),
+        ("MLP-BC", "mlp_bc", _valid_mlp_provenance()),
+    )
+    for name, kind, provenance in profiles:
+        vocabulary = provenance["task_vocabulary"]
+        assert isinstance(vocabulary, list)
+        linked = (
+            {
+                "act_checkpoint_sha256": "f" * 64,
+                "detector_checkpoint_sha256": "1" * 64,
+            }
+            if kind == "recovery"
+            else None
+        )
+        evaluation._validate_multitask_provenance(
+            name,
+            provenance,
+            benchmark="MT10",
+            task_vocabulary=vocabulary,
+            checkpoint_kind=kind,
+            linked_checkpoint_sha256=linked,
+        )
+        for field, replacement in (
+            ("benchmark", "mt10"),
+            ("task_vocabulary", list(reversed(vocabulary))),
+            ("task_vocabulary_sha256", "0" * 64),
+        ):
+            invalid = copy.deepcopy(provenance)
+            invalid[field] = replacement
+            with pytest.raises(ValueError):
+                evaluation._validate_multitask_provenance(
+                    name,
+                    invalid,
+                    benchmark="MT10",
+                    task_vocabulary=vocabulary,
+                    checkpoint_kind=kind,
+                    linked_checkpoint_sha256=linked,
+                )
+        missing_benchmark = copy.deepcopy(provenance)
+        missing_benchmark.pop("benchmark")
+        with pytest.raises(ValueError, match="benchmark"):
+            evaluation._validate_multitask_provenance(
+                name,
+                missing_benchmark,
+                benchmark="MT10",
+                task_vocabulary=vocabulary,
+                checkpoint_kind=kind,
+                linked_checkpoint_sha256=linked,
+            )
+
+
+def test_act_provenance_requires_explicit_policy_dimensions_and_manifest() -> None:
+    provenance = _valid_act_provenance()
+    vocabulary = provenance["task_vocabulary"]
+    assert isinstance(vocabulary, list)
+    for field, replacement in (
+        ("policy_type", "ACTPolicy"),
+        ("state_dim", 50),
+        ("action_dim", 3),
+        ("data_manifest_sha256", None),
+    ):
+        invalid = dict(provenance)
+        invalid[field] = replacement
+        with pytest.raises(ValueError):
+            evaluation._validate_multitask_provenance(
+                "ACT",
+                invalid,
+                benchmark="MT10",
+                task_vocabulary=vocabulary,
+                checkpoint_kind="act",
+            )
+
+
+def test_detector_provenance_requires_calibrated_training_chain() -> None:
+    provenance = _valid_detector_provenance()
+    vocabulary = provenance["task_vocabulary"]
+    assert isinstance(vocabulary, list)
+    corruptions = {
+        "detector_training_schema": "legacy",
+        "data_schema_version": "legacy",
+        "dataset_type": "raw_failures",
+        "dataset_role": "validation",
+        "label_calibration_mode": "frozen-task-thresholds",
+        "label_calibration_quantile": float("nan"),
+        "data_manifest_sha256": None,
+        "label_calibration_fingerprint_sha256": "0" * 64,
+        "label_calibration_source_sha256": "0" * 64,
+        "dataset_fingerprint_sha256": "short",
+        "label_calibration": None,
+    }
+    for field, replacement in corruptions.items():
+        invalid = copy.deepcopy(provenance)
+        invalid[field] = replacement
+        with pytest.raises(ValueError):
+            evaluation._validate_multitask_provenance(
+                "detector",
+                invalid,
+                benchmark="MT10",
+                task_vocabulary=vocabulary,
+                checkpoint_kind="detector",
+            )
+
+    inconsistent = copy.deepcopy(provenance)
+    assert isinstance(inconsistent["label_calibration"], dict)
+    inconsistent["label_calibration"]["dataset_role"] = "validation"
+    inconsistent["label_calibration_fingerprint_sha256"] = (
+        evaluation._canonical_sha256(inconsistent["label_calibration"])
+    )
+    with pytest.raises(ValueError, match="inconsistent"):
+        evaluation._validate_multitask_provenance(
+            "detector",
+            inconsistent,
+            benchmark="MT10",
+            task_vocabulary=vocabulary,
+            checkpoint_kind="detector",
+        )
+
+
+def test_recovery_provenance_requires_training_schema_dataset_and_links() -> None:
+    provenance = _valid_recovery_provenance()
+    vocabulary = provenance["task_vocabulary"]
+    assert isinstance(vocabulary, list)
+    links = {
+        "act_checkpoint_sha256": "f" * 64,
+        "detector_checkpoint_sha256": "1" * 64,
+    }
+    for field, replacement in (
+        ("schema_version", "legacy"),
+        ("dataset_manifest_sha256", None),
+        ("source_training", {"algorithm": "unknown"}),
+        ("detector_checkpoint_sha256", "2" * 64),
+    ):
+        invalid = copy.deepcopy(provenance)
+        invalid[field] = replacement
+        with pytest.raises(ValueError):
+            evaluation._validate_multitask_provenance(
+                "recovery",
+                invalid,
+                benchmark="MT10",
+                task_vocabulary=vocabulary,
+                checkpoint_kind="recovery",
+                linked_checkpoint_sha256=links,
+            )
+
+
+def test_checkpoint_metadata_extracts_only_audited_fields(tmp_path: Path) -> None:
+    path = tmp_path / "checkpoint.pt"
+    torch.save(
+        {
+            "policy_type": "ACT",
+            "benchmark": "MT10",
+            "state_dim": 49,
+            "model_state_dict": {"secret_weight": torch.ones(2)},
+        },
+        path,
+    )
+    assert evaluation._checkpoint_metadata(path) == {
+        "policy_type": "ACT",
+        "benchmark": "MT10",
+        "state_dim": 49,
+    }
+
+
+def test_publication_readiness_never_conflates_rollout_with_bank_audit() -> None:
+    clean = evaluation._publication_readiness(
+        benchmark="MT10", official_clean_protocol=True
+    )
+    assert clean["rollout_protocol_eligible"] is True
+    assert clean["eligible"] is False
+    assert clean["audit_required"] is True
+    assert clean["external_audit_consumed"] is False
+    assert clean["reasons"] == [
+        "external_five_bank_payload_isolation_audit_required"
+    ]
+
+    nonofficial = evaluation._publication_readiness(
+        benchmark="MT50", official_clean_protocol=False
+    )
+    assert nonofficial["eligible"] is False
+    assert "official_clean_rollout_protocol_ineligible" in nonofficial["reasons"]
 
 
 def test_run_protocol_fingerprints_only_supplied_checkpoint_set() -> None:

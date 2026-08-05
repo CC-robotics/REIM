@@ -10,9 +10,10 @@ the native ``Task.data`` bytes.  Embedded protocol fingerprints, file digests,
 materialized NPZ metadata, and final-evaluation CSV rows are then checked
 against those reconstructed banks before pairwise overlap is measured.
 
-The command has no output-file option and performs no writes.  A successful
-audit is emitted as JSON on stdout; any missing, partial, stale, inconsistent,
-or overlapping evidence raises an error and returns a non-zero exit status.
+The command never mutates audited evidence. A successful audit is emitted as
+JSON on stdout and may also be persisted atomically with ``--output-json``;
+any missing, partial, stale, inconsistent, or overlapping evidence raises an
+error and returns a non-zero exit status without publishing a new report.
 Raw episode RNG integers may intentionally be reused across *different* task
 payload banks for paired noise.  They are reported, but leakage is defined on
 the complete sampling-unit identity ``(task_name, task_payload, episode_seed)``.
@@ -38,7 +39,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from data.io import file_sha256
+from data.io import atomic_write_json, file_sha256
 
 
 SUPPORTED_BENCHMARKS = {"MT10": 10, "MT50": 50}
@@ -1137,6 +1138,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--final-evaluation-csv", required=True, help="complete clean episode CSV"
     )
+    parser.add_argument(
+        "--output-json",
+        help=(
+            "Optional persistent audit report. Written atomically only after all "
+            "five banks pass."
+        ),
+    )
     return parser
 
 
@@ -1144,6 +1152,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         result = audit(args)
+        if args.output_json:
+            output_path = Path(args.output_json).expanduser()
+            if output_path.is_symlink():
+                raise BankAuditError(
+                    f"refusing to replace symlinked audit report: {output_path}"
+                )
+            atomic_write_json(output_path, result)
     except (BankAuditError, OSError) as exc:
         print(f"bank audit failed: {exc}", file=sys.stderr)
         return 2

@@ -25,15 +25,89 @@ from evaluation.tune_multitask_detector import (
     tune,
 )
 from models.failure_detector import FailureDetector
+from trainers.data import MULTITASK_CALIBRATION_SCHEMA, _array_sha256
 
 
 TASKS = [f"task-{index}-v3" for index in range(10)]
 VALIDATION_SEED = 20264010
 FINAL_SEED = 20265010
+TRAINING_MANIFEST_SHA256 = "a" * 64
+TRAINING_RAW_SOURCE_SHA256 = "e" * 64
+TRAINING_DATASET_SHA256 = "f" * 64
+
+
+def _training_calibration(
+    vocabulary: list[str] | None = None,
+) -> dict[str, object]:
+    selected_vocabulary = vocabulary or TASKS
+    return {
+        "schema_version": MULTITASK_CALIBRATION_SCHEMA,
+        "mode": "fit-task-quantile",
+        "dataset_role": "training",
+        "benchmark": "MT10",
+        "task_vocabulary_sha256": _canonical_json_sha256(selected_vocabulary),
+        "comparison": "greater_than_or_equal",
+        "quantile": 0.9,
+        "quantile_method": "linear",
+        "prediction_horizon": 2,
+        "terminal_positive_horizon": 1,
+        "terminal_rule": "OR final N steps when official episode success is false",
+        "task_thresholds": [
+            {
+                "task_id": task_id,
+                "task_name": task_name,
+                "threshold": 1.5,
+                "samples": 4,
+            }
+            for task_id, task_name in enumerate(selected_vocabulary)
+        ],
+        "calibration_source": {
+            "kind": "training_bank_raw_action_disagreement",
+            "sha256": TRAINING_RAW_SOURCE_SHA256,
+        },
+        "target_raw_disagreement_sha256": TRAINING_RAW_SOURCE_SHA256,
+    }
 
 
 def _write_validation_bank(root: Path) -> dict[str, object]:
+    training_calibration = _training_calibration()
+    training_calibration_sha256 = _canonical_json_sha256(training_calibration)
+    disagreement = np.ones(4, dtype=np.float32)
+    raw_source_records = [
+        {
+            "file": f"task_{task_id:02d}/failure_0000.npz",
+            "task_id": task_id,
+            "length": 4,
+            "success": False,
+            "action_disagreement_sha256": _array_sha256(disagreement),
+        }
+        for task_id in range(len(TASKS))
+    ]
+    target_raw_sha256 = _canonical_json_sha256(raw_source_records)
+    validation_calibration: dict[str, object] = {
+        "schema_version": MULTITASK_CALIBRATION_SCHEMA,
+        "mode": "frozen-task-thresholds",
+        "dataset_role": "validation",
+        "benchmark": "MT10",
+        "task_vocabulary_sha256": _canonical_json_sha256(TASKS),
+        "comparison": "greater_than_or_equal",
+        "quantile": 0.9,
+        "quantile_method": "linear",
+        "prediction_horizon": 2,
+        "terminal_positive_horizon": 1,
+        "terminal_rule": "OR final N steps when official episode success is false",
+        "task_thresholds": training_calibration["task_thresholds"],
+        "calibration_source": {
+            "kind": "frozen_training_calibration_manifest",
+            "sha256": training_calibration_sha256,
+            "manifest_sha256": TRAINING_MANIFEST_SHA256,
+            "manifest_path": "training/manifest.json",
+        },
+        "target_raw_disagreement_sha256": target_raw_sha256,
+    }
+    validation_calibration_sha256 = _canonical_json_sha256(validation_calibration)
     entries: list[dict[str, object]] = []
+    per_task: dict[str, object] = {}
     for task_id, task_name in enumerate(TASKS):
         task_dir = root / f"task_{task_id:02d}"
         task_dir.mkdir(parents=True, exist_ok=True)
@@ -45,6 +119,7 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
         states = np.concatenate(
             [raw, np.broadcast_to(one_hot, (len(raw), len(TASKS)))], axis=1
         )
+        risk_events = np.asarray([0, 0, 0, 1], dtype=np.bool_)
         labels = np.asarray([0, 1, 1, 1], dtype=np.bool_)
         np.savez_compressed(
             path,
@@ -52,8 +127,8 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
             raw_observations=raw,
             actions=np.zeros((4, 4), dtype=np.float32),
             expert_actions=np.ones((4, 4), dtype=np.float32),
-            action_disagreement_l1=np.ones(4, dtype=np.float32),
-            risk_events=labels,
+            action_disagreement_l1=disagreement,
+            risk_events=risk_events,
             labels=labels,
             rewards=np.zeros(4, dtype=np.float32),
             success=np.asarray(False),
@@ -63,6 +138,16 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
             task_payload_sha256=np.asarray("b" * 64),
             episode_seed=np.asarray(VALIDATION_SEED + task_id * 100_000),
             schema_version=np.asarray(SCHEMA_VERSION),
+            label_threshold=np.asarray(1.5, dtype=np.float64),
+            label_calibration_mode=np.asarray("frozen-task-thresholds"),
+            label_calibration_source_sha256=np.asarray(
+                training_calibration_sha256
+            ),
+            label_calibration_fingerprint_sha256=np.asarray(
+                validation_calibration_sha256
+            ),
+            label_prediction_horizon=np.asarray(2, dtype=np.int32),
+            label_terminal_positive_horizon=np.asarray(1, dtype=np.int32),
         )
         entries.append(
             {
@@ -73,9 +158,22 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
                 "length": 4,
                 "success": False,
                 "positive_labels": 3,
+                "risk_events": 1,
+                "label_threshold": 1.5,
+                "label_calibration_fingerprint_sha256": (
+                    validation_calibration_sha256
+                ),
                 "sha256": file_sha256(path),
             }
         )
+        per_task[task_name] = {
+            "episodes": 1,
+            "rows": 4,
+            "success_rate": 0.0,
+            "risk_events": 1,
+            "positive_rate": 0.75,
+            "label_threshold": 1.5,
+        }
 
     vocabulary_sha256 = _canonical_json_sha256(TASKS)
     provenance = {
@@ -103,8 +201,8 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
         },
         "label_parameters": {
             "expert_action_disagreement_l1": 0.35,
-            "prediction_horizon": 10,
-            "terminal_positive_horizon": 25,
+            "prediction_horizon": 2,
+            "terminal_positive_horizon": 1,
         },
     }
     manifest: dict[str, object] = {
@@ -129,17 +227,36 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
         "observation_noise_std": 0.005,
         "object_position_noise": False,
         "expert_action_disagreement_l1": 0.35,
-        "prediction_horizon": 10,
-        "terminal_positive_horizon": 25,
+        "prediction_horizon": 2,
+        "terminal_positive_horizon": 1,
         "rollouts_per_task": 1,
         "episodes": 10,
         "rows": 40,
         "positive_rate": 0.75,
         "provenance": provenance,
         "provenance_fingerprint_sha256": _canonical_json_sha256(provenance),
+        "label_calibration": validation_calibration,
+        "label_calibration_fingerprint_sha256": validation_calibration_sha256,
+        "label_calibration_source_sha256": training_calibration_sha256,
+        "labeling_strategy": "task_conditional_quantile_calibrated_future_risk",
+        "per_task": per_task,
         "files": entries,
         "complete": True,
     }
+    manifest["dataset_fingerprint_sha256"] = _canonical_json_sha256(
+        {
+            "collection_provenance_fingerprint_sha256": manifest[
+                "provenance_fingerprint_sha256"
+            ],
+            "label_calibration_fingerprint_sha256": (
+                validation_calibration_sha256
+            ),
+            "files": [
+                {"file": entry["file"], "sha256": entry["sha256"]}
+                for entry in entries
+            ],
+        }
+    )
     (root / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -147,6 +264,9 @@ def _write_validation_bank(root: Path) -> dict[str, object]:
 
 
 def _write_checkpoint(path: Path, *, vocabulary: list[str] | None = None) -> None:
+    selected_vocabulary = vocabulary or TASKS
+    training_calibration = _training_calibration(selected_vocabulary)
+    calibration_sha256 = _canonical_json_sha256(training_calibration)
     detector = FailureDetector(
         49,
         hidden_dim=8,
@@ -165,9 +285,19 @@ def _write_checkpoint(path: Path, *, vocabulary: list[str] | None = None) -> Non
             "dropout": 0.0,
             "sequence_length": 3,
             "benchmark": "MT10",
-            "task_vocabulary": vocabulary or TASKS,
-            "task_vocabulary_sha256": _canonical_json_sha256(vocabulary or TASKS),
-            "data_manifest_sha256": "a" * 64,
+            "task_vocabulary": selected_vocabulary,
+            "task_vocabulary_sha256": _canonical_json_sha256(selected_vocabulary),
+            "detector_training_schema": "reim-failure-detector-training-v2",
+            "data_schema_version": SCHEMA_VERSION,
+            "dataset_type": DATASET_TYPE,
+            "dataset_role": "training",
+            "label_calibration_mode": "fit-task-quantile",
+            "label_calibration_quantile": 0.9,
+            "label_calibration_fingerprint_sha256": calibration_sha256,
+            "label_calibration_source_sha256": TRAINING_RAW_SOURCE_SHA256,
+            "dataset_fingerprint_sha256": TRAINING_DATASET_SHA256,
+            "label_calibration": training_calibration,
+            "data_manifest_sha256": TRAINING_MANIFEST_SHA256,
             "seed": 42,
         },
         path,
@@ -243,7 +373,7 @@ def test_validation_bank_whitelist_hashes_and_final_seed_are_fail_closed(
 
     stale = bank / "task_00" / "failure_9999.npz"
     shutil.copyfile(files[0], stale)
-    with pytest.raises(ValueError, match="inventory mismatch"):
+    with pytest.raises(ValueError, match="(?:whitelist|inventory) mismatch"):
         audit_validation_bank(
             bank,
             benchmark="MT10",
@@ -278,7 +408,7 @@ def test_checkpoint_requires_ordered_vocab_and_independent_training_manifest(
     tmp_path: Path,
 ) -> None:
     bank = tmp_path / "bank"
-    _write_validation_bank(bank)
+    validation_manifest = _write_validation_bank(bank)
     validation_digest = file_sha256(bank / "manifest.json")
     checkpoint = tmp_path / "detector.pt"
     _write_checkpoint(checkpoint, vocabulary=list(reversed(TASKS)))
@@ -287,6 +417,7 @@ def test_checkpoint_requires_ordered_vocab_and_independent_training_manifest(
             checkpoint,
             benchmark="MT10",
             task_vocabulary=TASKS,
+            validation_manifest=validation_manifest,
             validation_manifest_sha256=validation_digest,
             device="cpu",
         )
@@ -300,7 +431,57 @@ def test_checkpoint_requires_ordered_vocab_and_independent_training_manifest(
             checkpoint,
             benchmark="MT10",
             task_vocabulary=TASKS,
+            validation_manifest=validation_manifest,
             validation_manifest_sha256=validation_digest,
+            device="cpu",
+        )
+
+
+def test_raw_fixed_threshold_bank_and_mismatched_training_calibration_fail_closed(
+    tmp_path: Path,
+) -> None:
+    raw_bank = tmp_path / "raw-bank"
+    raw_manifest = _write_validation_bank(raw_bank)
+    for key in (
+        "label_calibration",
+        "label_calibration_fingerprint_sha256",
+        "label_calibration_source_sha256",
+        "dataset_fingerprint_sha256",
+    ):
+        raw_manifest.pop(key)
+    (raw_bank / "manifest.json").write_text(
+        json.dumps(raw_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="lacks label_calibration"):
+        audit_validation_bank(
+            raw_bank,
+            benchmark="MT10",
+            expected_validation_seed=VALIDATION_SEED,
+            expected_benchmark_seed=VALIDATION_SEED,
+            forbidden_final_seed=FINAL_SEED,
+        )
+
+    bank = tmp_path / "frozen-bank"
+    validation_manifest = _write_validation_bank(bank)
+    checkpoint = tmp_path / "detector.pt"
+    _write_checkpoint(checkpoint)
+    payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
+    altered = dict(payload["label_calibration"])
+    altered_thresholds = [dict(item) for item in altered["task_thresholds"]]
+    altered_thresholds[0]["threshold"] = 1.6
+    altered["task_thresholds"] = altered_thresholds
+    payload["label_calibration"] = altered
+    payload["label_calibration_fingerprint_sha256"] = _canonical_json_sha256(
+        altered
+    )
+    torch.save(payload, checkpoint)
+    with pytest.raises(ValueError, match="does not reuse this detector"):
+        _validate_detector_checkpoint(
+            checkpoint,
+            benchmark="MT10",
+            task_vocabulary=TASKS,
+            validation_manifest=validation_manifest,
+            validation_manifest_sha256=file_sha256(bank / "manifest.json"),
             device="cpu",
         )
 

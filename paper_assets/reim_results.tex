@@ -3,6 +3,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{newtxtext,newtxmath}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{xcolor}
@@ -507,12 +508,27 @@ is not substituted for the primary benchmark or used for threshold selection.
 
 \ifREIMMultiTaskResults
 Table~\ref{tab:multitask-clean} reports the official-clean known-task breadth
-evaluation. The paired MT-REIM--MT-ACT task-macro differences are
+evaluation. Each task-macro point estimate is accompanied by a 95\%
+within-task episode-bootstrap interval. The paired MT-REIM--MT-ACT task-macro differences are
 \MTTenREIMDeltaVsACT{} (\ConfidenceLevel{} CI \MTTenREIMDeltaVsACTCI) on
 \MTTenBenchmark{} and \MTFiftyREIMDeltaVsACT{} (CI
 \MTFiftyREIMDeltaVsACTCI) on \MTFiftyBenchmark{}. Nonzero-disturbance results
 are reported separately as a robustness extension and are not described as
 official clean benchmark scores.
+
+\begin{figure*}[t]
+  \centering
+  \PaperGraphic{Figure_multitask_robustness}{0.94\textwidth}{%
+  MT10 and MT50 task-macro success under task-universal disturbance.}
+  \caption{Non-official REIM robustness extension on the known-task,
+  goal-observable MT10 and MT50 suites. Curves apply task-universal Gaussian
+  action and observation noise; they do not alter object poses. Points are
+  task-macro success over 50 episodes per task, and bars are 95\%
+  within-task episode-bootstrap intervals. These disturbed conditions are
+  deliberately separated from the official-clean scores in
+  Table~\ref{tab:multitask-clean}.}
+  \label{fig:multitask-robustness}
+\end{figure*}
 \else
 \paragraph{Result status.}
 The MT10/MT50 protocol and artifact schema are implemented, but complete clean

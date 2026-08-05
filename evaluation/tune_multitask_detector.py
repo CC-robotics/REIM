@@ -33,7 +33,12 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from data.io import atomic_write_json, file_sha256
 from models.failure_detector import FailureDetector
-from trainers.data import FailureData, load_failure_data
+from trainers.data import (
+    FailureData,
+    MULTITASK_CALIBRATION_SCHEMA,
+    audit_calibrated_multitask_failure_bank,
+    load_failure_data,
+)
 from utils.common import (
     configure_logging,
     load_yaml,
@@ -47,6 +52,7 @@ LOGGER = logging.getLogger("reim.tune_multitask_detector")
 SCHEMA_VERSION = "reim-multitask-failures-v2"
 DATASET_TYPE = "task_conditioned_behavioral_deviation_risk"
 OUTPUT_SCHEMA_VERSION = "reim-multitask-detector-threshold-v1"
+DETECTOR_TRAINING_SCHEMA = "reim-failure-detector-training-v2"
 RAW_OBSERVATION_DIM = 39
 SUPPORTED_BENCHMARKS = {"MT10": 10, "MT50": 50}
 DEFAULT_VALIDATION_SEEDS = {"MT10": 20264010, "MT50": 20264050}
@@ -117,18 +123,6 @@ def _v2_top_level_fields(provenance: Mapping[str, Any]) -> dict[str, Any]:
         }
     except (KeyError, TypeError) as exc:
         raise ValueError("Validation manifest has incomplete v2 provenance") from exc
-
-
-def _read_json_object(path: Path, *, description: str) -> dict[str, Any]:
-    if path.is_symlink() or not path.is_file():
-        raise ValueError(f"{description} must be a regular, non-symlink file: {path}")
-    try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ValueError(f"Cannot parse {description}: {path}") from exc
-    if not isinstance(value, dict):
-        raise ValueError(f"{description} must contain a JSON object: {path}")
-    return value
 
 
 def _scalar(archive: Any, key: str, *, path: Path) -> Any:
@@ -298,8 +292,12 @@ def audit_validation_bank(
     if expected_validation_seed == forbidden_final_seed:
         raise ValueError("Validation and final-evaluation bank seeds must be distinct")
     directory = resolve_path(data_dir).resolve()
-    manifest_path = directory / "manifest.json"
-    manifest = _read_json_object(manifest_path, description="validation manifest")
+    audited_bank = audit_calibrated_multitask_failure_bank(
+        directory,
+        expected_role="validation",
+        expected_mode="frozen-task-thresholds",
+    )
+    manifest = audited_bank.manifest
     if manifest.get("schema_version") != SCHEMA_VERSION:
         raise ValueError("Threshold tuning requires a failure-dataset v2 manifest")
     if manifest.get("dataset_type") != DATASET_TYPE:
@@ -450,6 +448,10 @@ def audit_validation_bank(
         raise ValueError("Manifest positive_rate is invalid") from exc
     if not math.isclose(positive_rate, positives / rows, rel_tol=0.0, abs_tol=1e-15):
         raise ValueError("Manifest positive_rate disagrees with its whitelist")
+    if tuple(path.resolve() for path in listed_paths) != tuple(
+        path.resolve() for path in audited_bank.whitelist
+    ):
+        raise ValueError("Validation audit whitelist implementations disagree")
     return manifest, tuple(listed_paths)
 
 
@@ -773,6 +775,7 @@ def _validate_detector_checkpoint(
     *,
     benchmark: str,
     task_vocabulary: Sequence[str],
+    validation_manifest: Mapping[str, Any],
     validation_manifest_sha256: str,
     device: str,
 ) -> tuple[FailureDetector, Mapping[str, Any], str]:
@@ -786,6 +789,26 @@ def _validate_detector_checkpoint(
         raise ValueError("Detector checkpoint task vocabulary/order mismatch")
     if checkpoint.get("task_vocabulary_sha256") != vocabulary_digest:
         raise ValueError("Detector checkpoint task vocabulary SHA256 mismatch")
+    if checkpoint.get("detector_training_schema") != DETECTOR_TRAINING_SCHEMA:
+        raise ValueError(
+            "Detector checkpoint lacks the calibrated multi-task training schema"
+        )
+    expected_training_fields = {
+        "data_schema_version": SCHEMA_VERSION,
+        "dataset_type": DATASET_TYPE,
+        "dataset_role": "training",
+        "label_calibration_mode": "fit-task-quantile",
+    }
+    mismatched_training_fields = [
+        field
+        for field, expected in expected_training_fields.items()
+        if checkpoint.get(field) != expected
+    ]
+    if mismatched_training_fields:
+        raise ValueError(
+            "Detector checkpoint calibration provenance is missing or invalid: "
+            + ", ".join(mismatched_training_fields)
+        )
     training_manifest_digest = _require_sha256(
         checkpoint.get("data_manifest_sha256"), field="checkpoint data_manifest_sha256"
     )
@@ -793,6 +816,120 @@ def _validate_detector_checkpoint(
         raise ValueError(
             "Detector checkpoint was trained from this validation manifest; "
             "an independent validation bank is required"
+        )
+    _require_sha256(
+        checkpoint.get("dataset_fingerprint_sha256"),
+        field="checkpoint dataset_fingerprint_sha256",
+    )
+    training_calibration_digest = _require_sha256(
+        checkpoint.get("label_calibration_fingerprint_sha256"),
+        field="checkpoint label_calibration_fingerprint_sha256",
+    )
+    training_source_digest = _require_sha256(
+        checkpoint.get("label_calibration_source_sha256"),
+        field="checkpoint label_calibration_source_sha256",
+    )
+    training_calibration = checkpoint.get("label_calibration")
+    if not isinstance(training_calibration, Mapping):
+        raise ValueError("Detector checkpoint lacks full label_calibration provenance")
+    if _canonical_json_sha256(training_calibration) != training_calibration_digest:
+        raise ValueError("Detector checkpoint label_calibration fingerprint mismatch")
+    expected_calibration_fields = {
+        "schema_version": MULTITASK_CALIBRATION_SCHEMA,
+        "mode": "fit-task-quantile",
+        "dataset_role": "training",
+        "benchmark": benchmark,
+        "task_vocabulary_sha256": vocabulary_digest,
+        "comparison": "greater_than_or_equal",
+        "quantile_method": "linear",
+    }
+    mismatched_calibration_fields = [
+        field
+        for field, expected in expected_calibration_fields.items()
+        if training_calibration.get(field) != expected
+    ]
+    if mismatched_calibration_fields:
+        raise ValueError(
+            "Detector checkpoint training calibration is invalid: "
+            + ", ".join(mismatched_calibration_fields)
+        )
+    try:
+        training_quantile = float(training_calibration["quantile"])
+        checkpoint_quantile = float(checkpoint["label_calibration_quantile"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("Detector checkpoint calibration quantile is invalid") from exc
+    if (
+        not math.isfinite(training_quantile)
+        or not 0.0 < training_quantile < 1.0
+        or checkpoint_quantile != training_quantile
+    ):
+        raise ValueError("Detector checkpoint calibration quantile provenance mismatch")
+    training_source = training_calibration.get("calibration_source")
+    if not isinstance(training_source, Mapping):
+        raise ValueError("Detector checkpoint training calibration source is missing")
+    if (
+        training_source.get("kind") != "training_bank_raw_action_disagreement"
+        or training_source.get("sha256") != training_source_digest
+        or training_calibration.get("target_raw_disagreement_sha256")
+        != training_source_digest
+    ):
+        raise ValueError("Detector checkpoint training calibration source mismatch")
+    training_thresholds = training_calibration.get("task_thresholds")
+    if not isinstance(training_thresholds, list) or len(training_thresholds) != len(
+        task_vocabulary
+    ):
+        raise ValueError("Detector checkpoint lacks one threshold per benchmark task")
+    for task_id, (task_name, threshold_entry) in enumerate(
+        zip(task_vocabulary, training_thresholds, strict=True)
+    ):
+        if not isinstance(threshold_entry, Mapping):
+            raise ValueError("Detector checkpoint task threshold must be an object")
+        try:
+            threshold = float(threshold_entry["threshold"])
+            sample_count = int(threshold_entry["samples"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("Detector checkpoint task threshold is malformed") from exc
+        if (
+            threshold_entry.get("task_id") != task_id
+            or threshold_entry.get("task_name") != task_name
+            or not math.isfinite(threshold)
+            or threshold < 0.0
+            or sample_count <= 0
+        ):
+            raise ValueError(
+                "Detector checkpoint task thresholds are not in official order"
+            )
+
+    validation_calibration = validation_manifest.get("label_calibration")
+    if not isinstance(validation_calibration, Mapping):
+        raise ValueError("Validation bank lacks frozen calibration provenance")
+    validation_source = validation_calibration.get("calibration_source")
+    if not isinstance(validation_source, Mapping):
+        raise ValueError("Validation bank lacks a frozen training calibration source")
+    validation_source_digest = _require_sha256(
+        validation_source.get("sha256"), field="validation calibration source sha256"
+    )
+    validation_source_manifest_digest = _require_sha256(
+        validation_source.get("manifest_sha256"),
+        field="validation calibration source manifest_sha256",
+    )
+    if validation_source_digest != training_calibration_digest:
+        raise ValueError(
+            "Validation bank does not reuse this detector's training calibration"
+        )
+    if validation_source_manifest_digest != training_manifest_digest:
+        raise ValueError(
+            "Validation bank calibration source is not this detector's training manifest"
+        )
+    try:
+        validation_quantile = float(validation_calibration["quantile"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("Validation calibration quantile is invalid") from exc
+    if validation_quantile != training_quantile:
+        raise ValueError("Validation and detector-training quantiles differ")
+    if validation_calibration.get("task_thresholds") != training_thresholds:
+        raise ValueError(
+            "Validation bank task thresholds differ from detector-training thresholds"
         )
     expected_state_dim = RAW_OBSERVATION_DIM + len(task_vocabulary)
     if int(checkpoint.get("state_dim", -1)) != expected_state_dim:
@@ -884,6 +1021,7 @@ def tune(args: argparse.Namespace) -> dict[str, Any]:
         checkpoint_path,
         benchmark=benchmark,
         task_vocabulary=task_vocabulary,
+        validation_manifest=manifest,
         validation_manifest_sha256=manifest_digest,
         device=device,
     )
@@ -996,6 +1134,18 @@ def tune(args: argparse.Namespace) -> dict[str, Any]:
             "detector_checkpoint_sha256": checkpoint_digest,
             "detector_training_manifest_sha256": checkpoint[
                 "data_manifest_sha256"
+            ],
+            "detector_training_dataset_fingerprint_sha256": checkpoint[
+                "dataset_fingerprint_sha256"
+            ],
+            "detector_training_calibration_fingerprint_sha256": checkpoint[
+                "label_calibration_fingerprint_sha256"
+            ],
+            "validation_dataset_fingerprint_sha256": manifest[
+                "dataset_fingerprint_sha256"
+            ],
+            "validation_calibration_fingerprint_sha256": manifest[
+                "label_calibration_fingerprint_sha256"
             ],
             "task_vocabulary_sha256": manifest["task_vocabulary_sha256"],
             "manifest_whitelist_sha256": _canonical_json_sha256(

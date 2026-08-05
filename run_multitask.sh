@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Dry-run-first wrapper for the official Meta-World MT10/MT50 REIM pipeline.
+# Execute mode resolves the validation-tuned deployment gate just before each
+# evaluation and ends with the read-only five-bank separation audit.
 
 set -Eeuo pipefail
 

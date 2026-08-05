@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from argparse import Namespace
 import hashlib
 import json
 from pathlib import Path
+import shutil
 
 import numpy as np
 import pytest
+import torch
 
 from data.io import file_sha256
 from scripts.relabel_multitask_failures import (
@@ -17,6 +20,8 @@ from scripts.relabel_multitask_failures import (
     _canonical_sha256,
     relabel_failure_bank,
 )
+from trainers.data import audit_calibrated_multitask_failure_bank
+from trainers.train_detector import train as train_detector
 
 
 TASKS = [f"task-{index}-v3" for index in range(10)]
@@ -118,12 +123,15 @@ def _write_bank(root: Path, *, offset: float = 0.0) -> dict[str, object]:
         "schema_version": FAILURE_SCHEMA,
         "dataset_type": FAILURE_DATASET_TYPE,
         "benchmark": "MT10",
+        "state_dim": 49,
+        "action_dim": 4,
         "task_vocabulary": TASKS,
         "task_vocabulary_sha256": _canonical_sha256(TASKS),
         "provenance": provenance,
         "provenance_fingerprint_sha256": _canonical_sha256(provenance),
         "prediction_horizon": 2,
         "terminal_positive_horizon": 2,
+        "rollouts_per_task": 2,
         "episodes": len(entries),
         "rows": total_rows,
         "positive_rate": 1.0,
@@ -193,6 +201,14 @@ def test_task_conditional_quantile_relabels_and_preserves_raw_data(tmp_path: Pat
     )
     assert [entry["sha256"] for entry in repeated["files"]] == hashes
     assert repeated == result
+    audited = audit_calibrated_multitask_failure_bank(
+        tmp_path,
+        expected_role="training",
+        expected_mode="fit-task-quantile",
+    )
+    assert audited.dataset_fingerprint_sha256 == result[
+        "dataset_fingerprint_sha256"
+    ]
 
 
 def test_relabel_transaction_resumes_after_interruption(tmp_path: Path) -> None:
@@ -281,6 +297,33 @@ def test_relabel_fails_closed_on_shard_hash_damage(tmp_path: Path) -> None:
         relabel_failure_bank(tmp_path)
 
 
+def test_training_audit_rejects_raw_labels_and_stale_calibrated_shards(
+    tmp_path: Path,
+) -> None:
+    _write_bank(tmp_path)
+    with pytest.raises(ValueError, match="lacks label_calibration"):
+        audit_calibrated_multitask_failure_bank(
+            tmp_path,
+            expected_role="training",
+            expected_mode="fit-task-quantile",
+        )
+    manifest = relabel_failure_bank(
+        tmp_path,
+        quantile=0.90,
+        prediction_horizon=2,
+        terminal_positive_horizon=2,
+    )
+    first = tmp_path / manifest["files"][0]["file"]
+    stale = tmp_path / "task_00" / "failure_9999.npz"
+    shutil.copyfile(first, stale)
+    with pytest.raises(ValueError, match="whitelist mismatch"):
+        audit_calibrated_multitask_failure_bank(
+            tmp_path,
+            expected_role="training",
+            expected_mode="fit-task-quantile",
+        )
+
+
 def test_separate_output_is_idempotent_but_rejects_another_request(
     tmp_path: Path,
 ) -> None:
@@ -309,4 +352,109 @@ def test_separate_output_is_idempotent_but_rejects_another_request(
             quantile=0.85,
             prediction_horizon=2,
             terminal_positive_horizon=2,
+        )
+
+
+def test_detector_checkpoint_preserves_complete_training_calibration_provenance(
+    tmp_path: Path,
+) -> None:
+    bank = tmp_path / "training-bank"
+    _write_bank(bank)
+    manifest = relabel_failure_bank(
+        bank,
+        quantile=0.90,
+        prediction_horizon=2,
+        terminal_positive_horizon=2,
+    )
+    checkpoint = tmp_path / "detector.pt"
+    latest = tmp_path / "detector-latest.pt"
+    config = {
+        "seed": 7,
+        "device": "cpu",
+        "data_dir": str(bank),
+        "checkpoint": str(checkpoint),
+        "latest_checkpoint": str(latest),
+        "curve_path": str(tmp_path / "curve.png"),
+        "confusion_matrix_path": str(tmp_path / "confusion.png"),
+        "history_path": str(tmp_path / "history.csv"),
+        "metrics_path": str(tmp_path / "metrics.json"),
+        "model": {
+            "sequence_length": 3,
+            "hidden_size": 4,
+            "num_layers": 1,
+            "mlp_hidden": 4,
+            "dropout": 0.0,
+        },
+        "training": {
+            "epochs": 1,
+            "batch_size": 32,
+            "learning_rate": 0.001,
+            "weight_decay": 0.0,
+            "validation_fraction": 0.2,
+            "positive_weight": "auto",
+            "threshold": 0.5,
+            "deployment_threshold": 0.8,
+            "patience": 0,
+            "checkpoint_every": 0,
+        },
+    }
+    config_path = tmp_path / "detector.json"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+    train_detector(
+        Namespace(
+            config=str(config_path),
+            data_dir=None,
+            checkpoint=None,
+            epochs=None,
+            batch_size=None,
+            learning_rate=None,
+            seed=None,
+            device=None,
+            sequence_length=None,
+            hidden_size=None,
+            threshold=None,
+            resume=None,
+        )
+    )
+
+    payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
+    assert payload["detector_training_schema"] == (
+        "reim-failure-detector-training-v2"
+    )
+    assert payload["data_schema_version"] == FAILURE_SCHEMA
+    assert payload["dataset_type"] == FAILURE_DATASET_TYPE
+    assert payload["dataset_role"] == "training"
+    assert payload["label_calibration_mode"] == "fit-task-quantile"
+    assert payload["label_calibration_quantile"] == pytest.approx(0.90)
+    assert payload["label_calibration"] == manifest["label_calibration"]
+    assert payload["label_calibration_fingerprint_sha256"] == manifest[
+        "label_calibration_fingerprint_sha256"
+    ]
+    assert payload["label_calibration_source_sha256"] == manifest[
+        "label_calibration_source_sha256"
+    ]
+    assert payload["dataset_fingerprint_sha256"] == manifest[
+        "dataset_fingerprint_sha256"
+    ]
+    assert payload["data_manifest_sha256"] == file_sha256(bank / "manifest.json")
+
+    payload.pop("dataset_fingerprint_sha256")
+    tampered_resume = tmp_path / "detector-tampered.pt"
+    torch.save(payload, tampered_resume)
+    with pytest.raises(ValueError, match="calibration provenance"):
+        train_detector(
+            Namespace(
+                config=str(config_path),
+                data_dir=None,
+                checkpoint=None,
+                epochs=None,
+                batch_size=None,
+                learning_rate=None,
+                seed=None,
+                device=None,
+                sequence_length=None,
+                hidden_size=None,
+                threshold=None,
+                resume=str(tampered_resume),
+            )
         )

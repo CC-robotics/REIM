@@ -12,10 +12,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import shlex
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -24,8 +25,17 @@ import yaml
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PIPELINE_SCHEMA_VERSION = "reim-multitask-pipeline-v3"
+PIPELINE_SCHEMA_VERSION = "reim-multitask-pipeline-v5"
+TUNER_SCHEMA_VERSION = "reim-multitask-detector-threshold-v1"
+BANK_AUDIT_SCHEMA_VERSION = "reim-multitask-bank-separation-audit-v1"
 BENCHMARKS = ("MT10", "MT50")
+BANK_ROLES = (
+    "demonstrations",
+    "failure_training",
+    "recovery_training",
+    "validation",
+    "final_evaluation",
+)
 STAGES = (
     "collect_demos",
     "train_act",
@@ -40,6 +50,7 @@ STAGES = (
     "train_recovery",
     "evaluate_clean",
     "evaluate_disturbed",
+    "audit_banks",
 )
 EXPECTED_DISTURBANCE_LEVELS = (0.0, 0.1, 0.2, 0.3, 0.4)
 
@@ -61,6 +72,27 @@ class PipelineCommandError(RuntimeError):
 
 
 @dataclass(frozen=True)
+class TunedThresholdBinding:
+    """Fail-closed provenance contract for one validation-selected threshold."""
+
+    placeholder: str
+    artifact_path: Path
+    benchmark: str
+    root: Path
+    failure_training_seed: int
+    validation_seed: int
+    final_evaluation_seed: int
+    model_seed: int
+    detector_checkpoint: Path
+    calibrated_training_manifest: Path
+    calibrated_validation_manifest: Path
+    calibration_quantile: float
+    prediction_horizon: int
+    terminal_positive_horizon: int
+    release_threshold: float
+
+
+@dataclass(frozen=True)
 class StageCommand:
     """One fail-fast subprocess in a pipeline plan."""
 
@@ -68,6 +100,7 @@ class StageCommand:
     label: str
     argv: tuple[str, ...]
     log_path: Path
+    threshold_binding: TunedThresholdBinding | None = None
 
     def shell_line(self) -> str:
         return shlex.join(self.argv)
@@ -113,6 +146,333 @@ def _sha256(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def _canonical_json_sha256(payload: Any) -> str:
+    try:
+        encoded = json.dumps(
+            payload,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise PipelineConfigurationError(
+            "Threshold provenance is not canonical-JSON serializable"
+        ) from exc
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _require_sha256_value(value: Any, *, field: str) -> str:
+    text = str(value)
+    if len(text) != 64 or any(character not in "0123456789abcdef" for character in text):
+        raise PipelineConfigurationError(
+            f"Tuned-threshold field {field} is not a lowercase SHA-256 digest"
+        )
+    return text
+
+
+def _read_json_artifact(path: Path, *, label: str) -> dict[str, Any]:
+    expanded = path.expanduser()
+    if expanded.is_symlink() or not expanded.is_file():
+        raise PipelineConfigurationError(
+            f"Required {label} is missing or not a regular non-symlink file: {path}"
+        )
+    try:
+        payload = json.loads(expanded.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise PipelineConfigurationError(f"Cannot parse {label}: {path}") from exc
+    if not isinstance(payload, dict):
+        raise PipelineConfigurationError(f"{label} must contain a JSON object: {path}")
+    return payload
+
+
+def _recorded_path(value: Any, *, root: Path, field: str) -> Path:
+    if not isinstance(value, str) or not value:
+        raise PipelineConfigurationError(
+            f"Tuned-threshold field {field} must be a non-empty path string"
+        )
+    path = Path(value).expanduser()
+    return path.resolve() if path.is_absolute() else (root / path).resolve()
+
+
+def _resolve_tuned_threshold(binding: TunedThresholdBinding) -> float:
+    """Validate a tuner artifact and its complete calibration/checkpoint chain."""
+
+    artifact_source = binding.artifact_path.expanduser()
+    artifact_path = artifact_source.resolve()
+    payload = _read_json_artifact(
+        artifact_source, label=f"{binding.benchmark} validation tuner JSON"
+    )
+    expected_top_level = {
+        "schema_version": TUNER_SCHEMA_VERSION,
+        "benchmark": binding.benchmark,
+        "bank_role": "validation_only",
+    }
+    for field, expected in expected_top_level.items():
+        if payload.get(field) != expected:
+            raise PipelineConfigurationError(
+                f"Tuned-threshold {field}={payload.get(field)!r}, expected {expected!r}"
+            )
+    if payload.get("final_bank_accessed") is not False:
+        raise PipelineConfigurationError(
+            "Tuned-threshold final_bank_accessed must be the boolean false"
+        )
+
+    selection = payload.get("selection")
+    if not isinstance(selection, Mapping):
+        raise PipelineConfigurationError("Tuned-threshold JSON lacks selection metadata")
+    raw_threshold = selection.get("threshold")
+    if isinstance(raw_threshold, bool):
+        raise PipelineConfigurationError(
+            "Tuned-threshold selection.threshold must be numeric"
+        )
+    try:
+        threshold = float(raw_threshold)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise PipelineConfigurationError(
+            "Tuned-threshold selection.threshold must be numeric"
+        ) from exc
+    if not math.isfinite(threshold) or not 0.0 <= threshold <= 1.0:
+        raise PipelineConfigurationError(
+            "Tuned-threshold selection.threshold must be finite and in [0, 1]"
+        )
+    if threshold <= binding.release_threshold:
+        raise PipelineConfigurationError(
+            "Validation-selected detector threshold must exceed the configured "
+            f"release threshold ({threshold} <= {binding.release_threshold})"
+        )
+    threshold_grid = payload.get("threshold_grid")
+    if not isinstance(threshold_grid, list) or not any(
+        isinstance(row, Mapping)
+        and isinstance(row.get("threshold"), (int, float))
+        and not isinstance(row.get("threshold"), bool)
+        and math.isclose(float(row["threshold"]), threshold, rel_tol=0.0, abs_tol=1e-12)
+        for row in threshold_grid
+    ):
+        raise PipelineConfigurationError(
+            "Validation-selected threshold is absent from the recorded threshold grid"
+        )
+
+    training_source = binding.calibrated_training_manifest.expanduser()
+    validation_source = binding.calibrated_validation_manifest.expanduser()
+    training_path = training_source.resolve()
+    validation_path = validation_source.resolve()
+    training_manifest = _read_json_artifact(
+        training_source, label="calibrated failure-training manifest"
+    )
+    validation_manifest = _read_json_artifact(
+        validation_source, label="calibrated failure-validation manifest"
+    )
+    detector_source = binding.detector_checkpoint.expanduser()
+    detector_path = detector_source.resolve()
+    if detector_source.is_symlink() or not detector_source.is_file():
+        raise PipelineConfigurationError(
+            f"Detector checkpoint is missing or not a regular non-symlink file: {detector_path}"
+        )
+    training_digest = _sha256(training_path)
+    validation_digest = _sha256(validation_path)
+    detector_digest = _sha256(detector_path)
+
+    for label, manifest, expected_seed in (
+        ("training", training_manifest, binding.failure_training_seed),
+        ("validation", validation_manifest, binding.validation_seed),
+    ):
+        if manifest.get("complete") is not True:
+            raise PipelineConfigurationError(
+                f"Calibrated {label} manifest is not marked complete"
+            )
+        if str(manifest.get("benchmark", "")).upper() != binding.benchmark:
+            raise PipelineConfigurationError(
+                f"Calibrated {label} manifest benchmark mismatch"
+            )
+        try:
+            manifest_seed = int(manifest["benchmark_seed"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise PipelineConfigurationError(
+                f"Calibrated {label} manifest lacks a valid benchmark_seed"
+            ) from exc
+        if manifest_seed != expected_seed:
+            raise PipelineConfigurationError(
+                f"Calibrated {label} benchmark_seed={manifest_seed}, "
+                f"expected {expected_seed}"
+            )
+
+    validation_provenance = validation_manifest.get("provenance")
+    if not isinstance(validation_provenance, Mapping):
+        raise PipelineConfigurationError(
+            "Calibrated validation manifest lacks structured provenance"
+        )
+    validation_provenance_fingerprint = _require_sha256_value(
+        validation_manifest.get("provenance_fingerprint_sha256"),
+        field="validation_manifest.provenance_fingerprint_sha256",
+    )
+    if _canonical_json_sha256(validation_provenance) != validation_provenance_fingerprint:
+        raise PipelineConfigurationError(
+            "Calibrated validation manifest provenance fingerprint mismatch"
+        )
+    for field in ("collection_seed", "benchmark_seed"):
+        try:
+            stored_seed = int(validation_provenance[field])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise PipelineConfigurationError(
+                f"Calibrated validation provenance lacks a valid {field}"
+            ) from exc
+        if stored_seed != binding.validation_seed:
+            raise PipelineConfigurationError(
+                f"Calibrated validation provenance {field}={stored_seed}, "
+                f"expected {binding.validation_seed}"
+            )
+    try:
+        top_level_validation_seed = int(validation_manifest["seed"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise PipelineConfigurationError(
+            "Calibrated validation manifest lacks a valid collection seed"
+        ) from exc
+    if top_level_validation_seed != binding.validation_seed:
+        raise PipelineConfigurationError(
+            "Calibrated validation collection seed does not match the registered bank"
+        )
+
+    training_calibration = training_manifest.get("label_calibration")
+    validation_calibration = validation_manifest.get("label_calibration")
+    if not isinstance(training_calibration, Mapping) or not isinstance(
+        validation_calibration, Mapping
+    ):
+        raise PipelineConfigurationError(
+            "Training/validation manifests must contain structured label calibration"
+        )
+    expected_calibration = {
+        "quantile": binding.calibration_quantile,
+        "prediction_horizon": binding.prediction_horizon,
+        "terminal_positive_horizon": binding.terminal_positive_horizon,
+    }
+    for field, expected in expected_calibration.items():
+        if training_calibration.get(field) != expected or validation_calibration.get(
+            field
+        ) != expected:
+            raise PipelineConfigurationError(
+                f"Calibration field {field} does not match the registered protocol"
+            )
+    if (
+        training_calibration.get("mode") != "fit-task-quantile"
+        or training_calibration.get("dataset_role") != "training"
+        or validation_calibration.get("mode") != "frozen-task-thresholds"
+        or validation_calibration.get("dataset_role") != "validation"
+    ):
+        raise PipelineConfigurationError(
+            "Validation tuner must consume frozen task thresholds fitted on training only"
+        )
+    training_calibration_fingerprint = _require_sha256_value(
+        training_manifest.get("label_calibration_fingerprint_sha256"),
+        field="training_manifest.label_calibration_fingerprint_sha256",
+    )
+    validation_calibration_fingerprint = _require_sha256_value(
+        validation_manifest.get("label_calibration_fingerprint_sha256"),
+        field="validation_manifest.label_calibration_fingerprint_sha256",
+    )
+    if _canonical_json_sha256(training_calibration) != training_calibration_fingerprint:
+        raise PipelineConfigurationError(
+            "Training label-calibration fingerprint mismatch"
+        )
+    if _canonical_json_sha256(validation_calibration) != validation_calibration_fingerprint:
+        raise PipelineConfigurationError(
+            "Validation label-calibration fingerprint mismatch"
+        )
+    calibration_source = validation_calibration.get("calibration_source")
+    if not isinstance(calibration_source, Mapping):
+        raise PipelineConfigurationError(
+            "Validation label calibration lacks a frozen training source"
+        )
+    expected_source = {
+        "kind": "frozen_training_calibration_manifest",
+        "manifest_sha256": training_digest,
+        "sha256": training_calibration_fingerprint,
+    }
+    for field, expected in expected_source.items():
+        if calibration_source.get(field) != expected:
+            raise PipelineConfigurationError(
+                f"Validation calibration source {field} does not match training provenance"
+            )
+    if validation_manifest.get(
+        "label_calibration_source_sha256"
+    ) != training_calibration_fingerprint:
+        raise PipelineConfigurationError(
+            "Validation calibration source fingerprint does not match training"
+        )
+    if validation_calibration.get("task_thresholds") != training_calibration.get(
+        "task_thresholds"
+    ):
+        raise PipelineConfigurationError(
+            "Validation task thresholds are not the frozen training thresholds"
+        )
+    training_vocabulary = _require_sha256_value(
+        training_manifest.get("task_vocabulary_sha256"),
+        field="training_manifest.task_vocabulary_sha256",
+    )
+    if validation_manifest.get("task_vocabulary_sha256") != training_vocabulary:
+        raise PipelineConfigurationError(
+            "Training and validation task-vocabulary provenance differs"
+        )
+
+    provenance = payload.get("provenance")
+    if not isinstance(provenance, Mapping):
+        raise PipelineConfigurationError("Tuned-threshold JSON lacks provenance metadata")
+    expected_provenance = {
+        "validation_manifest_sha256": validation_digest,
+        "validation_provenance_fingerprint_sha256": validation_provenance_fingerprint,
+        "validation_collection_seed": binding.validation_seed,
+        "validation_benchmark_seed": binding.validation_seed,
+        "reserved_final_evaluation_seed": binding.final_evaluation_seed,
+        "detector_checkpoint_sha256": detector_digest,
+        "detector_training_manifest_sha256": training_digest,
+        "task_vocabulary_sha256": training_vocabulary,
+        "seed": binding.model_seed,
+    }
+    for field, expected in expected_provenance.items():
+        if provenance.get(field) != expected:
+            raise PipelineConfigurationError(
+                f"Tuned-threshold provenance {field}={provenance.get(field)!r}, "
+                f"expected {expected!r}"
+            )
+    recorded_validation = _recorded_path(
+        provenance.get("validation_manifest"),
+        root=binding.root,
+        field="provenance.validation_manifest",
+    )
+    recorded_detector = _recorded_path(
+        provenance.get("detector_checkpoint"),
+        root=binding.root,
+        field="provenance.detector_checkpoint",
+    )
+    if recorded_validation != validation_path or recorded_detector != detector_path:
+        raise PipelineConfigurationError(
+            "Tuned-threshold provenance points to unexpected validation/checkpoint paths"
+        )
+    outputs = payload.get("outputs")
+    if not isinstance(outputs, Mapping) or _recorded_path(
+        outputs.get("json"), root=binding.root, field="outputs.json"
+    ) != artifact_path:
+        raise PipelineConfigurationError(
+            "Tuned-threshold outputs.json does not identify the consumed artifact"
+        )
+    return threshold
+
+
+def _materialize_command(command: StageCommand) -> StageCommand:
+    binding = command.threshold_binding
+    if binding is None:
+        return command
+    if command.argv.count(binding.placeholder) != 1:
+        raise PipelineConfigurationError(
+            f"Stage {command.label!r} has an invalid tuned-threshold placeholder contract"
+        )
+    threshold = _as_cli_number(_resolve_tuned_threshold(binding))
+    argv = tuple(
+        threshold if value == binding.placeholder else value for value in command.argv
+    )
+    return replace(command, argv=argv, threshold_binding=None)
 
 
 def _mapping(parent: Mapping[str, Any], key: str) -> Mapping[str, Any]:
@@ -296,16 +656,26 @@ def load_context(
         )
 
     banks = _mapping(config, "banks")
-    failure_training_seed = _integer(banks, "failure_training", minimum=0)
-    validation_seed = _integer(banks, "validation", minimum=0)
-    final_seed = _integer(banks, "final_evaluation", minimum=0)
-    if len({failure_training_seed, validation_seed, final_seed}) != 3:
+    bank_seeds = {
+        role: _integer(banks, role, minimum=0)
+        for role in BANK_ROLES
+    }
+    if len(set(bank_seeds.values())) != len(BANK_ROLES):
+        collisions: dict[int, list[str]] = {}
+        for role, seed in bank_seeds.items():
+            collisions.setdefault(seed, []).append(role)
+        repeated = {
+            seed: roles for seed, roles in collisions.items() if len(roles) > 1
+        }
         raise PipelineConfigurationError(
-            "failure_training, validation, and final_evaluation bank seeds "
-            "must be pairwise distinct"
+            "demonstrations, failure_training, recovery_training, validation, "
+            "and final_evaluation bank seeds must all be pairwise distinct; "
+            f"collisions={repeated}"
         )
     data = _mapping(config, "data")
     _integer(data, "validation_rollouts_per_task", minimum=1)
+    if "recovery_max_attempts_multiplier" in data:
+        _integer(data, "recovery_max_attempts_multiplier", minimum=1)
     failure_labels = _mapping(config, "failure_labels")
     if failure_labels.get("calibration_mode") != "task_conditional_quantile":
         raise PipelineConfigurationError(
@@ -367,12 +737,15 @@ def _stage_command(
     stage: str,
     label: str,
     argv: Sequence[str],
+    *,
+    threshold_binding: TunedThresholdBinding | None = None,
 ) -> StageCommand:
     return StageCommand(
         stage=stage,
         label=label,
         argv=tuple(str(value) for value in argv),
         log_path=context.log_dir / f"{label}.log",
+        threshold_binding=threshold_binding,
     )
 
 
@@ -447,6 +820,31 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
     device = context.device or str(context.act_config.get("device", "auto"))
     script = lambda value: _command_path(context.root, context.root / value)
     artifact = lambda value: _command_path(context.root, value)
+    release_threshold = _number(recovery, "release_threshold")
+    threshold_placeholder = (
+        f"<validated-threshold:{artifact(tuned_threshold_json)}>"
+    )
+    threshold_binding = TunedThresholdBinding(
+        placeholder=threshold_placeholder,
+        artifact_path=tuned_threshold_json,
+        benchmark=context.benchmark,
+        root=context.root,
+        failure_training_seed=_integer(banks, "failure_training", minimum=0),
+        validation_seed=_integer(banks, "validation", minimum=0),
+        final_evaluation_seed=_integer(banks, "final_evaluation", minimum=0),
+        model_seed=model_seed,
+        detector_checkpoint=detector_checkpoint,
+        calibrated_training_manifest=calibrated_failures_dir / "manifest.json",
+        calibrated_validation_manifest=(
+            calibrated_validation_failures_dir / "manifest.json"
+        ),
+        calibration_quantile=_number(labels, "calibration_quantile"),
+        prediction_horizon=_integer(labels, "prediction_horizon", minimum=1),
+        terminal_positive_horizon=_integer(
+            labels, "terminal_positive_horizon", minimum=1
+        ),
+        release_threshold=release_threshold,
+    )
 
     if stage == "collect_demos":
         argv = [
@@ -681,6 +1079,11 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         return [_stage_command(context, stage, stage, argv)]
 
     if stage == "collect_recovery":
+        recovery_attempts_field = (
+            "recovery_max_attempts_multiplier"
+            if "recovery_max_attempts_multiplier" in data
+            else "max_attempts_per_success"
+        )
         argv = [
             context.python,
             script("scripts/collect_multitask_recovery.py"),
@@ -697,7 +1100,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--target-per-task",
             str(_integer(data, "recovery_rollouts_per_task", minimum=1)),
             "--max-attempts-multiplier",
-            str(_integer(data, "max_attempts_per_success", minimum=1)),
+            str(_integer(data, recovery_attempts_field, minimum=1)),
             "--max-steps",
             str(max_steps),
             "--threshold",
@@ -787,6 +1190,38 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         )
         return [_stage_command(context, stage, stage, argv)]
 
+    if stage == "audit_banks":
+        clean_csv = (
+            context.root / "results" / "tables" / f"{context.slug}_clean_episodes.csv"
+        )
+        audit_json = (
+            context.root
+            / "results"
+            / "audits"
+            / f"{context.slug}_bank_separation.json"
+        )
+        argv = [
+            context.python,
+            script("scripts/audit_multitask_banks.py"),
+            "--benchmark",
+            context.benchmark,
+            "--demonstrations",
+            artifact(demos_dir / "manifest.json"),
+            "--failure-train",
+            artifact(raw_failures_dir / "manifest.json"),
+            "--failure-validation",
+            artifact(validation_failures_dir / "manifest.json"),
+            "--recovery",
+            artifact(recovery_dir / "manifest.json"),
+            "--final-evaluation-sidecar",
+            artifact(clean_csv.with_suffix(clean_csv.suffix + ".run.json")),
+            "--final-evaluation-csv",
+            artifact(clean_csv),
+            "--output-json",
+            artifact(audit_json),
+        ]
+        return [_stage_command(context, stage, stage, argv)]
+
     clean_methods = _validate_methods(
         evaluation.get("clean_methods"), field="clean_methods"
     )
@@ -794,12 +1229,6 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         evaluation.get("disturbed_methods"), field="disturbed_methods"
     )
     episodes = _integer(evaluation, "episodes_per_task", minimum=1)
-    threshold = _number(recovery, "deployment_threshold")
-    release_threshold = _number(recovery, "release_threshold")
-    if release_threshold >= threshold:
-        raise PipelineConfigurationError(
-            "recovery.release_threshold must be below deployment_threshold"
-        )
     release_patience = _integer(recovery, "release_patience", minimum=1)
     min_recovery_steps = _integer(recovery, "min_recovery_steps", minimum=1)
     intervention_cooldown = _integer(
@@ -854,7 +1283,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--observation-std-scale",
             _as_cli_number(observation_scale),
             "--threshold",
-            _as_cli_number(threshold),
+            threshold_placeholder,
             "--release-threshold",
             _as_cli_number(release_threshold),
             "--release-patience",
@@ -874,7 +1303,13 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         ]
         if context.resume:
             argv.append("--resume")
-        return _stage_command(context, stage, label, argv)
+        return _stage_command(
+            context,
+            stage,
+            label,
+            argv,
+            threshold_binding=threshold_binding,
+        )
 
     if stage == "evaluate_clean":
         return [
@@ -926,6 +1361,12 @@ def _plan_payload(
         / "tables"
         / f"{context.slug}_detector_threshold_grid.csv"
     )
+    bank_audit_json = (
+        context.root
+        / "results"
+        / "audits"
+        / f"{context.slug}_bank_separation.json"
+    )
     recovery = _mapping(context.config, "recovery")
     return {
         "schema_version": PIPELINE_SCHEMA_VERSION,
@@ -975,14 +1416,33 @@ def _plan_payload(
             "detector_threshold_tuning": {
                 "json": _command_path(context.root, tuned_json),
                 "csv": _command_path(context.root, tuned_csv),
-                "consumption": "record_only_not_applied_by_this_pipeline_schema",
+                "consumption": "fail_closed_runtime_binding",
+            },
+            "bank_separation_audit": {
+                "json": _command_path(context.root, bank_audit_json),
+                "schema_version": BANK_AUDIT_SCHEMA_VERSION,
+                "producer_stage": "audit_banks",
+                "publication_gate_requirement": True,
+                "write_mode": "atomic_after_complete_pass",
             },
         },
-        "configured_runtime_thresholds": {
-            "source": "benchmark_config_not_tuned_artifact",
-            "deployment_threshold": _number(recovery, "deployment_threshold"),
-            "collection_threshold": _number(recovery, "collection_threshold"),
+        "runtime_threshold_binding": {
+            "source": "validation_tuner_json",
+            "artifact": _command_path(context.root, tuned_json),
+            "schema_version": TUNER_SCHEMA_VERSION,
+            "consumers": [
+                "evaluate_clean",
+                "evaluate_disturbed",
+            ],
+            "missing_or_stale_artifact": "fail_closed",
+            "configured_deployment_fallback_enabled": False,
             "release_threshold": _number(recovery, "release_threshold"),
+        },
+        "recovery_collection_threshold": {
+            "source": "preregistered_benchmark_config",
+            "value": _number(recovery, "collection_threshold"),
+            "purpose": "early_coverage_training_collection",
+            "distinct_from_frozen_deployment_gate": True,
         },
         "commands": [
             {
@@ -990,6 +1450,17 @@ def _plan_payload(
                 "label": command.label,
                 "argv": list(command.argv),
                 "log": _command_path(context.root, command.log_path),
+                "threshold_dependency": (
+                    None
+                    if command.threshold_binding is None
+                    else {
+                        "artifact": _command_path(
+                            context.root, command.threshold_binding.artifact_path
+                        ),
+                        "placeholder": command.threshold_binding.placeholder,
+                        "resolution": "validated_immediately_before_subprocess",
+                    }
+                ),
             }
             for command in own_commands
         ],
@@ -1009,7 +1480,13 @@ def _write_plan(context: PipelineContext, stage: str, commands: Sequence[StageCo
 def execute_commands(commands: Sequence[StageCommand], *, cwd: Path) -> None:
     """Execute sequentially, streaming output and stopping at first failure."""
 
-    for index, command in enumerate(commands, start=1):
+    for index, planned_command in enumerate(commands, start=1):
+        command = _materialize_command(planned_command)
+        if planned_command.threshold_binding is not None:
+            print(
+                f"[{index}/{len(commands)}] validated threshold artifact: "
+                f"{_command_path(cwd, planned_command.threshold_binding.artifact_path)}"
+            )
         command.log_path.parent.mkdir(parents=True, exist_ok=True)
         print(f"[{index}/{len(commands)}] EXEC {command.label}: {command.shell_line()}")
         with command.log_path.open("a", encoding="utf-8") as log_handle:
@@ -1129,7 +1606,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(
                 f"{context.benchmark} tuned detector artifact: "
                 f"{_command_path(context.root, tuned_json)} "
-                "(recorded only; collection/evaluation still use config thresholds)"
+                "(validated and consumed at runtime by evaluation; recovery collection "
+                "uses its separate preregistered early-coverage threshold; "
+                "missing or stale artifacts fail closed)"
             )
         if not args.execute:
             print("Dry-run only: no collection, training, evaluation, or output writes occurred.")

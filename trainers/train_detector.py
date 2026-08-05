@@ -26,7 +26,13 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from models.failure_detector import FailureDetector  # noqa: E402
 from data.io import file_sha256  # noqa: E402
-from trainers.data import group_train_validation_split, load_failure_data  # noqa: E402
+from trainers.data import (  # noqa: E402
+    AuditedMultitaskFailureBank,
+    audit_calibrated_multitask_failure_bank,
+    group_train_validation_split,
+    is_multitask_failure_manifest,
+    load_failure_data,
+)
 from utils.common import (  # noqa: E402
     atomic_json_dump,
     capture_rng_state,
@@ -193,14 +199,26 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
 
     data_path = resolve_path(args.data_dir or config.get("data_dir", "datasets/failures"))
     data_manifest_path = data_path / "manifest.json"
-    data_manifest_sha256 = (
-        file_sha256(data_manifest_path) if data_manifest_path.is_file() else None
-    )
     data_manifest = (
         json.loads(data_manifest_path.read_text(encoding="utf-8"))
         if data_manifest_path.is_file()
         else {}
     )
+    if not isinstance(data_manifest, dict):
+        raise ValueError("Failure-data manifest must be a JSON object.")
+    audited_multitask_bank: AuditedMultitaskFailureBank | None = None
+    if is_multitask_failure_manifest(data_manifest):
+        audited_multitask_bank = audit_calibrated_multitask_failure_bank(
+            data_path,
+            expected_role="training",
+            expected_mode="fit-task-quantile",
+        )
+        data_manifest = audited_multitask_bank.manifest
+        data_manifest_sha256 = audited_multitask_bank.manifest_sha256
+    else:
+        data_manifest_sha256 = (
+            file_sha256(data_manifest_path) if data_manifest_path.is_file() else None
+        )
     task_vocabulary = list(data_manifest.get("task_vocabulary", []))
     task_vocabulary_sha256 = data_manifest.get("task_vocabulary_sha256")
     benchmark_name = data_manifest.get("benchmark")
@@ -246,6 +264,23 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("threshold must be between zero and one.")
 
     data = load_failure_data(data_path, sequence_length)
+    if audited_multitask_bank is not None:
+        loaded_files = tuple(path.resolve() for path in data.files)
+        audited_files = tuple(
+            path.resolve() for path in audited_multitask_bank.whitelist
+        )
+        if loaded_files != audited_files:
+            raise ValueError(
+                "Causal failure loader files differ from the calibrated manifest whitelist."
+            )
+        if len(np.unique(data.groups)) != len(audited_files):
+            raise ValueError(
+                "Every calibrated multi-task shard must contain exactly one trajectory."
+            )
+    elif data.windows.shape[-1] in (49, 89):
+        raise ValueError(
+            "MT10/MT50-shaped failure data requires a strict calibrated v2 manifest."
+        )
     train_indices, validation_indices = group_train_validation_split(
         data.groups,
         float(training.get("validation_fraction", 0.2)),
@@ -321,6 +356,27 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     loss_function = nn.BCEWithLogitsLoss(
         pos_weight=torch.tensor(positive_weight, device=device_name)
     )
+    detector_training_schema = "reim-failure-detector-training-v2"
+    calibration_provenance: dict[str, Any] = {}
+    if audited_multitask_bank is not None:
+        calibration = audited_multitask_bank.calibration
+        calibration_provenance = {
+            "data_schema_version": data_manifest["schema_version"],
+            "dataset_type": data_manifest["dataset_type"],
+            "dataset_role": calibration["dataset_role"],
+            "label_calibration_mode": calibration["mode"],
+            "label_calibration_quantile": float(calibration["quantile"]),
+            "label_calibration_fingerprint_sha256": (
+                audited_multitask_bank.calibration_fingerprint_sha256
+            ),
+            "label_calibration_source_sha256": data_manifest[
+                "label_calibration_source_sha256"
+            ],
+            "dataset_fingerprint_sha256": (
+                audited_multitask_bank.dataset_fingerprint_sha256
+            ),
+            "label_calibration": calibration,
+        }
 
     start_epoch = 0
     best_validation_loss = float("inf")
@@ -352,6 +408,21 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             != task_vocabulary_sha256
         ):
             raise ValueError("Resume detector task vocabulary hash has changed.")
+        if audited_multitask_bank is not None:
+            expected_resume_provenance = {
+                "detector_training_schema": detector_training_schema,
+                **calibration_provenance,
+            }
+            changed_fields = [
+                key
+                for key, expected in expected_resume_provenance.items()
+                if checkpoint.get(key) != expected
+            ]
+            if changed_fields:
+                raise ValueError(
+                    "Resume detector calibration provenance has changed or is "
+                    f"missing: {changed_fields}"
+                )
         checkpoint_model_config = dict(checkpoint.get("model_config", detector_kwargs))
         architecture_fields = (
             "hidden_dim",
@@ -490,7 +561,8 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             epochs_without_improvement += 1
 
         payload: dict[str, Any] = {
-            "format_version": 1,
+            "format_version": 2,
+            "detector_training_schema": detector_training_schema,
             "epoch": epoch,
             "model_state_dict": model.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
@@ -515,6 +587,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             "task_vocabulary": task_vocabulary,
             "task_vocabulary_sha256": task_vocabulary_sha256,
             "data_manifest_sha256": data_manifest_sha256,
+            **calibration_provenance,
             "train_group_ids": np.unique(data.groups[train_indices]).tolist(),
             "validation_group_ids": np.unique(
                 data.groups[validation_indices]

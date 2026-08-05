@@ -33,6 +33,14 @@ class _FakeACT:
     state_dim = 49
     action_dim = 4
 
+    def __init__(self) -> None:
+        vocabulary = [f"task-{index}-v3" for index in range(10)]
+        self.provenance = {
+            "benchmark": "MT10",
+            "task_vocabulary": vocabulary,
+            "task_vocabulary_sha256": collector._task_vocabulary_sha256(vocabulary),
+        }
+
     def reset(self) -> None:
         return None
 
@@ -44,6 +52,14 @@ class _FakeACT:
 class _FakeDetector:
     state_dim = 49
     sequence_length = 2
+
+    def __init__(self) -> None:
+        vocabulary = [f"task-{index}-v3" for index in range(10)]
+        self.provenance = {
+            "benchmark": "MT10",
+            "task_vocabulary": vocabulary,
+            "task_vocabulary_sha256": collector._task_vocabulary_sha256(vocabulary),
+        }
 
     def predict_proba(self, windows: np.ndarray, lengths: np.ndarray) -> _Probability:
         assert windows.shape == (1, 2, 49)
@@ -101,8 +117,7 @@ class _FakeBenchmark:
         if reverse:
             names.reverse()
         self.train_classes = OrderedDict(
-            (name, _environment_type(index, name))
-            for index, name in enumerate(names)
+            (name, _environment_type(index, name)) for index, name in enumerate(names)
         )
         self.train_tasks = [
             FakeTask(
@@ -116,9 +131,7 @@ class _FakeBenchmark:
 
 
 def _components(*, reverse: bool = False) -> collector.MetaWorldComponents:
-    module = SimpleNamespace(
-        MT10=lambda seed: _FakeBenchmark(seed, reverse=reverse)
-    )
+    module = SimpleNamespace(MT10=lambda seed: _FakeBenchmark(seed, reverse=reverse))
     names = [f"task-{index}-v3" for index in range(10)]
     return collector.MetaWorldComponents(
         module=module,
@@ -226,9 +239,10 @@ def test_shards_bind_contiguous_cursor_seed_hash_and_onehot(
             assert int(shard["attempt_index"]) == 1
             assert int(shard["shard_index"]) == 0
             assert int(shard["episode_seed"]) == collector._episode_seed(42, task_id, 1)
-            assert str(shard["protocol_fingerprint_sha256"]) == manifest[
-                "protocol_fingerprint_sha256"
-            ]
+            assert (
+                str(shard["protocol_fingerprint_sha256"])
+                == manifest["protocol_fingerprint_sha256"]
+            )
             states = np.asarray(shard["states"])
             assert states.shape == (1, 49)
             expected = np.zeros(10, dtype=np.float32)
@@ -283,9 +297,10 @@ def test_resume_matches_uninterrupted_and_preserves_committed_shards(
         _args(full_root, target=2), components=_components()
     )
 
-    assert resumed["protocol_fingerprint_sha256"] == uninterrupted[
-        "protocol_fingerprint_sha256"
-    ]
+    assert (
+        resumed["protocol_fingerprint_sha256"]
+        == uninterrupted["protocol_fingerprint_sha256"]
+    )
     assert resumed["collection_progress"] == uninterrupted["collection_progress"]
     assert resumed["per_task"] == uninterrupted["per_task"]
     assert _semantic_entries(resumed) == _semantic_entries(uninterrupted)
@@ -293,9 +308,10 @@ def test_resume_matches_uninterrupted_and_preserves_committed_shards(
         assert file_sha256(resumed_root / "recovery" / relative) == digest
     for left, right in zip(resumed["files"], uninterrupted["files"]):
         assert left["content_sha256"] == right["content_sha256"]
-        with np.load(resumed_root / "recovery" / left["file"]) as a, np.load(
-            full_root / "recovery" / right["file"]
-        ) as b:
+        with (
+            np.load(resumed_root / "recovery" / left["file"]) as a,
+            np.load(full_root / "recovery" / right["file"]) as b,
+        ):
             assert set(a.files) == set(b.files)
             for key in a.files:
                 np.testing.assert_array_equal(a[key], b[key])
@@ -310,13 +326,9 @@ def test_resume_rejects_shrink_and_any_fingerprinted_parameter_change(
     collector.collect(_args(root, target=2), components=_components())
 
     with pytest.raises(ValueError, match="shrink"):
-        collector.collect(
-            _args(root, target=1, resume=True), components=_components()
-        )
+        collector.collect(_args(root, target=1, resume=True), components=_components())
     with pytest.raises(ValueError, match="target_per_task"):
-        collector.collect(
-            _args(root, target=3, resume=True), components=_components()
-        )
+        collector.collect(_args(root, target=3, resume=True), components=_components())
     with pytest.raises(ValueError, match="fingerprint mismatch"):
         collector.collect(
             _args(root, target=2, resume=True, threshold=0.25),
@@ -332,7 +344,7 @@ def test_resume_rejects_shrink_and_any_fingerprinted_parameter_change(
             _args(root, target=2, resume=True, benchmark_seed=222),
             components=_components(),
         )
-    with pytest.raises(ValueError, match="fingerprint mismatch"):
+    with pytest.raises(ValueError, match="task vocabulary is incompatible"):
         collector.collect(
             _args(root, target=2, resume=True),
             components=_components(reverse=True),
@@ -373,6 +385,147 @@ def test_resume_rejects_changed_checkpoint_and_stale_or_tampered_shard(
     with tampered.open("ab") as handle:
         handle.write(b"tamper")
     with pytest.raises(ValueError, match="file hash mismatch"):
-        collector.collect(
-            _args(tampered_root, resume=True), components=_components()
-        )
+        collector.collect(_args(tampered_root, resume=True), components=_components())
+
+
+@pytest.mark.parametrize("failing_manifest_commit", [2, 3])
+def test_resume_recovers_atomic_attempt_transaction(
+    tmp_path: Path,
+    fake_models,
+    monkeypatch: pytest.MonkeyPatch,
+    failing_manifest_commit: int,
+) -> None:
+    """Resume covers crashes both before and after the successful shard write."""
+
+    resumed_root = tmp_path / f"resumed-{failing_manifest_commit}"
+    full_root = tmp_path / f"full-{failing_manifest_commit}"
+    _prepare(resumed_root)
+    _prepare(full_root)
+    real_write = collector.atomic_write_json
+    manifest_commits = 0
+
+    def interrupted_write(path: Path, payload):
+        nonlocal manifest_commits
+        if Path(path).name == "manifest.json":
+            manifest_commits += 1
+            if manifest_commits == failing_manifest_commit:
+                raise RuntimeError("simulated crash between transaction and manifest")
+        return real_write(path, payload)
+
+    monkeypatch.setattr(collector, "atomic_write_json", interrupted_write)
+    with pytest.raises(RuntimeError, match="simulated crash"):
+        collector.collect(_args(resumed_root), components=_components())
+    assert (resumed_root / "recovery" / collector.PENDING_ATTEMPT_FILENAME).is_file()
+
+    monkeypatch.setattr(collector, "atomic_write_json", real_write)
+    resumed = collector.collect(
+        _args(resumed_root, resume=True), components=_components()
+    )
+    uninterrupted = collector.collect(_args(full_root), components=_components())
+    assert resumed["collection_progress"] == uninterrupted["collection_progress"]
+    assert resumed["per_task"] == uninterrupted["per_task"]
+    assert _semantic_entries(resumed) == _semantic_entries(uninterrupted)
+    assert not (resumed_root / "recovery" / collector.PENDING_ATTEMPT_FILENAME).exists()
+    for left, right in zip(resumed["files"], uninterrupted["files"]):
+        assert left["content_sha256"] == right["content_sha256"]
+
+
+def test_trigger_aligned_targets_use_the_same_pre_action_state() -> None:
+    class SequenceProbability(_Probability):
+        def __init__(self, value: float) -> None:
+            self.value = value
+
+        def numpy(self) -> np.ndarray:
+            return np.asarray([self.value], dtype=np.float32)
+
+    class SequenceDetector(_FakeDetector):
+        def __init__(self) -> None:
+            super().__init__()
+            self.calls = 0
+
+        def predict_proba(self, windows, lengths):
+            value = 0.1 if self.calls == 0 else 0.9
+            self.calls += 1
+            return SequenceProbability(value)
+
+    class EncodingExpert:
+        def get_action(self, raw: np.ndarray) -> np.ndarray:
+            return np.asarray([raw[0] / 10.0, 0.0, 0.0, 1.0], dtype=np.float32)
+
+    class TemporalEnvironment:
+        def set_task(self, task) -> None:
+            self.task = task
+
+        def seed(self, seed: int) -> None:
+            self.last_seed = seed
+
+        def reset(self, seed=None):
+            self.step_index = 0
+            return np.zeros(39, dtype=np.float32), {}
+
+        def step(self, action: np.ndarray):
+            self.step_index += 1
+            raw = np.zeros(39, dtype=np.float32)
+            raw[0] = self.step_index
+            success = self.step_index == 3
+            return raw, float(action[0]), False, False, {"success": success}
+
+    result = collector._run_attempt(
+        env=TemporalEnvironment(),
+        task=object(),
+        expert=EncodingExpert(),
+        act=_FakeACT(),
+        detector=SequenceDetector(),
+        task_id=2,
+        task_count=10,
+        episode_seed=123,
+        max_steps=3,
+        threshold=0.5,
+        action_std=0.0,
+        observation_std=0.0,
+    )
+    assert result["triggered"] is True
+    assert result["trigger_step"] == 1
+    payload = result["payload"]
+    assert payload is not None
+    np.testing.assert_array_equal(payload["raw_observations"][:, 0], [1.0, 2.0])
+    np.testing.assert_array_equal(payload["states"][:, 0], [1.0, 2.0])
+    np.testing.assert_allclose(payload["actions"][:, 0], [0.1, 0.2])
+    np.testing.assert_allclose(payload["rewards"], [0.1, 0.2])
+
+
+def test_resume_finalizes_journal_left_after_manifest_commit(
+    tmp_path: Path, fake_models
+) -> None:
+    _prepare(tmp_path)
+    manifest = collector.collect(_args(tmp_path), components=_components())
+    task_id = 9
+    task_name = manifest["task_vocabulary"][task_id]
+    entry = next(item for item in manifest["files"] if int(item["task_id"]) == task_id)
+    pending = {
+        "schema_version": collector.PENDING_ATTEMPT_SCHEMA_VERSION,
+        "protocol_fingerprint_sha256": manifest["protocol_fingerprint_sha256"],
+        "task_id": task_id,
+        "task_name": task_name,
+        "task_variant": int(entry["task_variant"]),
+        "episode_seed": int(entry["episode_seed"]),
+        "attempt_index": int(entry["attempt_index"]),
+        "shard_index": int(entry["shard_index"]),
+        "previous_progress": {
+            "task_id": task_id,
+            "next_attempt_index": 1,
+            "attempts": 1,
+            "detector_triggers": 1,
+            "successful_continuations": 0,
+        },
+        "triggered": True,
+        "saved": True,
+        "file": entry["file"],
+        "content_sha256": entry["content_sha256"],
+    }
+    pending_path = tmp_path / "recovery" / collector.PENDING_ATTEMPT_FILENAME
+    collector.atomic_write_json(pending_path, pending)
+
+    resumed = collector.collect(_args(tmp_path, resume=True), components=_components())
+    assert resumed == manifest
+    assert not pending_path.exists()

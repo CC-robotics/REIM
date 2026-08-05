@@ -44,6 +44,8 @@ from utils.common import configure_logging, seed_everything, select_device
 LOGGER = logging.getLogger("reim.collect_multitask_recovery")
 SCHEMA_VERSION = "reim-multitask-trigger-aligned-recovery-v2"
 DATASET_TYPE = "online_detector_triggered_expert_continuations"
+PENDING_ATTEMPT_SCHEMA_VERSION = "reim-recovery-collection-transaction-v1"
+PENDING_ATTEMPT_FILENAME = ".pending_attempt.json"
 RAW_OBSERVATION_DIM = 39
 ACTION_DIM = 4
 MAX_EPISODE_STEPS = 500
@@ -129,9 +131,7 @@ def _episode_seed(base_seed: int, task_id: int, attempt_index: int) -> int:
 
 def _stream_seed(episode_seed: int, namespace: str) -> int:
     material = f"{episode_seed}:{namespace}".encode("ascii")
-    return int.from_bytes(hashlib.sha256(material).digest()[:8], "little") % (
-        2**63 - 1
-    )
+    return int.from_bytes(hashlib.sha256(material).digest()[:8], "little") % (2**63 - 1)
 
 
 def _condition(raw: np.ndarray, task_id: int, task_count: int) -> np.ndarray:
@@ -185,9 +185,7 @@ def _task_bank(
     benchmark: Any,
     task_vocabulary: Sequence[str],
 ) -> tuple[dict[str, list[Any]], dict[str, list[str]], str]:
-    tasks_by_name: dict[str, list[Any]] = {
-        name: [] for name in task_vocabulary
-    }
+    tasks_by_name: dict[str, list[Any]] = {name: [] for name in task_vocabulary}
     for task in benchmark.train_tasks:
         task_name = str(task.env_name)
         if task_name not in tasks_by_name:
@@ -233,23 +231,34 @@ def _validate_arguments(args: argparse.Namespace) -> str:
         raise ValueError("--target-per-task must be positive.")
     if int(args.max_attempts_multiplier) <= 0:
         raise ValueError("--max-attempts-multiplier must be positive.")
-    if int(args.target_per_task) * int(args.max_attempts_multiplier) >= ATTEMPT_SEED_STRIDE:
+    if (
+        int(args.target_per_task) * int(args.max_attempts_multiplier)
+        >= ATTEMPT_SEED_STRIDE
+    ):
         raise ValueError(
             "target_per_task * max_attempts_multiplier must be below 1,000,000."
         )
     if not 1 <= int(args.max_steps) <= MAX_EPISODE_STEPS:
         raise ValueError(f"--max-steps must be in [1,{MAX_EPISODE_STEPS}].")
-    for name in ("threshold", "noise_level", "action_std_scale", "observation_std_scale"):
+    for name in (
+        "threshold",
+        "noise_level",
+        "action_std_scale",
+        "observation_std_scale",
+    ):
         value = float(getattr(args, name))
         if not np.isfinite(value):
             raise ValueError(f"--{name.replace('_', '-')} must be finite.")
     if not 0.0 <= float(args.threshold) <= 1.0:
         raise ValueError("--threshold must be in [0,1].")
-    if min(
-        float(args.noise_level),
-        float(args.action_std_scale),
-        float(args.observation_std_scale),
-    ) < 0.0:
+    if (
+        min(
+            float(args.noise_level),
+            float(args.action_std_scale),
+            float(args.observation_std_scale),
+        )
+        < 0.0
+    ):
         raise ValueError("Noise levels/scales must be non-negative.")
     if bool(args.resume) and bool(args.overwrite):
         raise ValueError("--resume and --overwrite are mutually exclusive.")
@@ -391,9 +400,7 @@ def _build_manifest(
         "detector_triggers": int(
             sum(value["detector_triggers"] for value in per_task.values())
         ),
-        "collection_progress": {
-            name: dict(progress[name]) for name in task_vocabulary
-        },
+        "collection_progress": {name: dict(progress[name]) for name in task_vocabulary},
         "per_task": per_task,
         "files": ordered_entries,
     }
@@ -426,9 +433,7 @@ def _run_attempt(
     act.reset()
     history: deque[np.ndarray] = deque(maxlen=detector.sequence_length)
     action_rng = np.random.default_rng(_stream_seed(episode_seed, "action"))
-    observation_rng = np.random.default_rng(
-        _stream_seed(episode_seed, "observation")
-    )
+    observation_rng = np.random.default_rng(_stream_seed(episode_seed, "observation"))
     triggered = False
     trigger_step = -1
     trigger_probability = float("nan")
@@ -442,7 +447,9 @@ def _run_attempt(
     for step in range(max_steps):
         clean_raw = np.asarray(raw, dtype=np.float32).reshape(-1)
         if clean_raw.shape != (RAW_OBSERVATION_DIM,):
-            raise RuntimeError(f"Expected raw39 step observation, got {clean_raw.shape}.")
+            raise RuntimeError(
+                f"Expected raw39 step observation, got {clean_raw.shape}."
+            )
         observed_raw = clean_raw.copy()
         if observation_std > 0.0:
             observed_raw += observation_rng.normal(
@@ -499,9 +506,7 @@ def _run_attempt(
             "raw_observations": np.stack(continuation_raw).astype(np.float32),
             "actions": np.stack(continuation_actions).astype(np.float32),
             "rewards": np.asarray(continuation_rewards, dtype=np.float32),
-            "failure_probabilities": np.asarray(
-                continuation_risks, dtype=np.float32
-            ),
+            "failure_probabilities": np.asarray(continuation_risks, dtype=np.float32),
         }
     return {
         "triggered": triggered,
@@ -561,7 +566,9 @@ def _summarize_shard(
         raise ValueError(f"{path}: task identity does not match its manifest slot.")
     if shard_index != expected_shard_index:
         raise ValueError(f"{path}: non-contiguous shard index {shard_index}.")
-    expected_path = output_dir / f"task_{task_id:02d}" / f"recovery_{shard_index:04d}.npz"
+    expected_path = (
+        output_dir / f"task_{task_id:02d}" / f"recovery_{shard_index:04d}.npz"
+    )
     if path.resolve() != expected_path.resolve():
         raise ValueError(f"{path}: shard filename/path is not canonical.")
     expected_variant = attempt_index % len(variant_hashes)
@@ -576,6 +583,8 @@ def _summarize_shard(
         raise ValueError(f"{path}: recovery shards must be successful continuations.")
     if not np.isfinite(trigger_probability) or trigger_step < 0:
         raise ValueError(f"{path}: invalid detector trigger metadata.")
+    if trigger_step >= int(protocol["max_episode_steps"]):
+        raise ValueError(f"{path}: trigger step exceeds the episode horizon.")
 
     states = np.asarray(arrays["states"], dtype=np.float32)
     raw = np.asarray(arrays["raw_observations"], dtype=np.float32)
@@ -592,10 +601,25 @@ def _summarize_shard(
         raise ValueError(f"{path}: invalid actions shape {actions.shape}.")
     if rewards.shape != (length,) or risks.shape != (length,):
         raise ValueError(f"{path}: continuation arrays have inconsistent lengths.")
-    if not all(np.isfinite(array).all() for array in (states, raw, actions, rewards, risks)):
+    if not all(
+        np.isfinite(array).all() for array in (states, raw, actions, rewards, risks)
+    ):
         raise ValueError(f"{path}: shard contains non-finite arrays.")
     if np.any(actions < -1.0) or np.any(actions > 1.0):
         raise ValueError(f"{path}: expert targets lie outside [-1,1].")
+    if np.any(risks < 0.0) or np.any(risks > 1.0):
+        raise ValueError(f"{path}: failure probabilities lie outside [0,1].")
+    if trigger_probability < float(protocol["detector_threshold"]):
+        raise ValueError(f"{path}: trigger probability is below the frozen threshold.")
+    if not np.isclose(
+        trigger_probability,
+        float(risks[0]),
+        rtol=0.0,
+        atol=1e-7,
+    ):
+        raise ValueError(f"{path}: first continuation risk is not the trigger risk.")
+    if trigger_step + length > int(protocol["max_episode_steps"]):
+        raise ValueError(f"{path}: continuation extends beyond the episode horizon.")
     task_count = len(protocol["task_vocabulary"])
     expected_one_hot = np.zeros(task_count, dtype=np.float32)
     expected_one_hot[task_id] = 1.0
@@ -638,23 +662,56 @@ def _validate_model_task_provenance(
     benchmark_name: str,
     task_vocabulary: Sequence[str],
 ) -> None:
-    """Reject contradictory checkpoint metadata while allowing legacy absence."""
+    """Fail closed on the task identity of every collection checkpoint."""
 
     provenance = getattr(model, "provenance", None)
     if not isinstance(provenance, Mapping):
-        return
+        raise ValueError(f"{label} checkpoint lacks multi-task provenance.")
     stored_benchmark = provenance.get("benchmark")
-    if stored_benchmark is not None and str(stored_benchmark).upper() != benchmark_name:
+    if str(stored_benchmark).upper() != benchmark_name:
         raise ValueError(f"{label} checkpoint benchmark provenance is incompatible.")
     stored_vocabulary = provenance.get("task_vocabulary")
-    if stored_vocabulary is not None and list(stored_vocabulary) != list(
-        task_vocabulary
+    if not isinstance(stored_vocabulary, Sequence) or isinstance(
+        stored_vocabulary, (str, bytes)
     ):
+        raise ValueError(f"{label} checkpoint lacks an ordered task vocabulary.")
+    if list(stored_vocabulary) != list(task_vocabulary):
         raise ValueError(f"{label} checkpoint task vocabulary is incompatible.")
     stored_hash = provenance.get("task_vocabulary_sha256")
     expected_hash = _task_vocabulary_sha256(task_vocabulary)
-    if stored_hash is not None and str(stored_hash) != expected_hash:
+    if str(stored_hash) != expected_hash:
         raise ValueError(f"{label} checkpoint task vocabulary hash is incompatible.")
+
+
+def _pending_shard_path(
+    pending: Mapping[str, Any] | None,
+    *,
+    output_dir: Path,
+    protocol_fingerprint: str,
+) -> Path | None:
+    """Return the sole journal-authorized orphan shard, if one is expected."""
+
+    if pending is None:
+        return None
+    if pending.get("schema_version") != PENDING_ATTEMPT_SCHEMA_VERSION:
+        raise ValueError("Pending recovery transaction has an unsupported schema.")
+    if pending.get("protocol_fingerprint_sha256") != protocol_fingerprint:
+        raise ValueError("Pending recovery transaction has a protocol mismatch.")
+    if not bool(pending.get("saved", False)):
+        if pending.get("file") is not None or pending.get("content_sha256") is not None:
+            raise ValueError("Unsaved pending transaction unexpectedly names a shard.")
+        return None
+    relative = pending.get("file")
+    if not isinstance(relative, str):
+        raise ValueError("Saved pending transaction is missing its shard path.")
+    path = (output_dir / relative).resolve()
+    try:
+        path.relative_to(output_dir.resolve())
+    except ValueError as exc:
+        raise ValueError(
+            "Pending recovery shard escapes the output directory."
+        ) from exc
+    return path
 
 
 def _validate_resume(
@@ -664,10 +721,13 @@ def _validate_resume(
     protocol: Mapping[str, Any],
     protocol_fingerprint: str,
     hashes_by_name: Mapping[str, Sequence[str]],
+    pending_shard_path: Path | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, dict[str, int]]]:
     stored_protocol = manifest.get("protocol")
     if not isinstance(stored_protocol, Mapping):
-        raise ValueError("Resume manifest has no strict protocol block (stale v1 data).")
+        raise ValueError(
+            "Resume manifest has no strict protocol block (stale v1 data)."
+        )
     stored_target = int(stored_protocol.get("target_per_task", -1))
     requested_target = int(protocol["target_per_task"])
     if requested_target < stored_target:
@@ -691,7 +751,9 @@ def _validate_resume(
 
     task_vocabulary = list(protocol["task_vocabulary"])
     raw_progress = manifest.get("collection_progress")
-    if not isinstance(raw_progress, Mapping) or set(raw_progress) != set(task_vocabulary):
+    if not isinstance(raw_progress, Mapping) or set(raw_progress) != set(
+        task_vocabulary
+    ):
         raise ValueError("Resume manifest has incomplete or stale per-task progress.")
     progress: dict[str, dict[str, int]] = {}
     for task_id, task_name in enumerate(task_vocabulary):
@@ -703,9 +765,7 @@ def _validate_resume(
             "next_attempt_index": int(value.get("next_attempt_index", -1)),
             "attempts": int(value.get("attempts", -1)),
             "detector_triggers": int(value.get("detector_triggers", -1)),
-            "successful_continuations": int(
-                value.get("successful_continuations", -1)
-            ),
+            "successful_continuations": int(value.get("successful_continuations", -1)),
         }
         if record["task_id"] != task_id:
             raise ValueError(f"Stale task ID in progress for {task_name}.")
@@ -732,12 +792,21 @@ def _validate_resume(
         try:
             path.relative_to(output_dir.resolve())
         except ValueError as exc:
-            raise ValueError("Manifest shard path escapes the output directory.") from exc
+            raise ValueError(
+                "Manifest shard path escapes the output directory."
+            ) from exc
         if path in expected_paths:
             raise ValueError(f"Duplicate manifest shard path {path}.")
         expected_paths.add(path)
-    discovered_paths = {path.resolve() for path in output_dir.rglob("recovery_*.npz")}
-    stale = sorted(str(path) for path in discovered_paths - expected_paths)
+    discovered_paths = {path.resolve() for path in output_dir.rglob("*.npz")}
+    allowed_orphans = (
+        {pending_shard_path.resolve()}
+        if pending_shard_path is not None and pending_shard_path.is_file()
+        else set()
+    )
+    stale = sorted(
+        str(path) for path in discovered_paths - expected_paths - allowed_orphans
+    )
     missing = sorted(str(path) for path in expected_paths - discovered_paths)
     if stale or missing:
         raise ValueError(
@@ -745,9 +814,7 @@ def _validate_resume(
             f"stale={stale}, missing={missing}."
         )
 
-    stored_by_path = {
-        str(entry["file"]): dict(entry) for entry in raw_entries
-    }
+    stored_by_path = {str(entry["file"]): dict(entry) for entry in raw_entries}
     verified_entries: list[dict[str, Any]] = []
     for task_id, task_name in enumerate(task_vocabulary):
         task_files = sorted(
@@ -760,7 +827,9 @@ def _validate_resume(
         )
         expected_successes = progress[task_name]["successful_continuations"]
         if len(task_files) != expected_successes:
-            raise ValueError(f"Manifest shard count disagrees with {task_name} progress.")
+            raise ValueError(
+                f"Manifest shard count disagrees with {task_name} progress."
+            )
         attempt_indices: list[int] = []
         for shard_index, stored_entry in enumerate(task_files):
             path = (output_dir / str(stored_entry["file"])).resolve()
@@ -781,10 +850,165 @@ def _validate_resume(
             attempt_indices.append(int(summary["attempt_index"]))
             verified_entries.append(summary)
         if attempt_indices != sorted(set(attempt_indices)):
-            raise ValueError(f"Non-monotonic successful attempt indices for {task_name}.")
-        if attempt_indices and attempt_indices[-1] >= progress[task_name]["next_attempt_index"]:
+            raise ValueError(
+                f"Non-monotonic successful attempt indices for {task_name}."
+            )
+        if (
+            attempt_indices
+            and attempt_indices[-1] >= progress[task_name]["next_attempt_index"]
+        ):
             raise ValueError(f"Shard attempt lies beyond the {task_name} cursor.")
     return verified_entries, progress
+
+
+def _reconcile_pending_attempt(
+    *,
+    pending: Mapping[str, Any],
+    pending_path: Path,
+    pending_shard_path: Path | None,
+    output_dir: Path,
+    protocol: Mapping[str, Any],
+    protocol_fingerprint: str,
+    hashes_by_name: Mapping[str, Sequence[str]],
+    entries: list[dict[str, Any]],
+    progress: dict[str, dict[str, int]],
+) -> None:
+    """Finish or safely retry the single atomic collection transaction.
+
+    The journal is written before a shard and removed only after the manifest
+    commit.  It therefore authenticates the only orphan shard accepted during
+    resume and closes the shard/manifest crash window without silently
+    accepting unrelated files.
+    """
+
+    task_vocabulary = list(protocol["task_vocabulary"])
+    try:
+        task_id = int(pending["task_id"])
+        task_name = str(pending["task_name"])
+        task_variant = int(pending["task_variant"])
+        episode_seed = int(pending["episode_seed"])
+        attempt_index = int(pending["attempt_index"])
+        shard_index = int(pending["shard_index"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("Pending recovery transaction metadata is invalid.") from exc
+    if not 0 <= task_id < len(task_vocabulary):
+        raise ValueError("Pending recovery transaction has an invalid task ID.")
+    if task_vocabulary[task_id] != task_name:
+        raise ValueError("Pending recovery transaction task identity is inconsistent.")
+    if attempt_index < 0 or shard_index < 0:
+        raise ValueError("Pending recovery transaction has negative indices.")
+    if attempt_index >= int(protocol["max_attempts_per_task"]):
+        raise ValueError("Pending recovery transaction exceeds the attempt budget.")
+    if task_variant != attempt_index % OFFICIAL_GOALS_PER_TASK:
+        raise ValueError("Pending recovery transaction has an invalid task variant.")
+    if episode_seed != _episode_seed(
+        int(protocol["rollout_seed"]), task_id, attempt_index
+    ):
+        raise ValueError("Pending recovery transaction has an invalid episode seed.")
+    state = progress[task_name]
+    raw_previous = pending.get("previous_progress")
+    if not isinstance(raw_previous, Mapping):
+        raise ValueError("Pending recovery transaction lacks its previous cursor.")
+    previous = {
+        "task_id": int(raw_previous.get("task_id", -1)),
+        "next_attempt_index": int(raw_previous.get("next_attempt_index", -1)),
+        "attempts": int(raw_previous.get("attempts", -1)),
+        "detector_triggers": int(raw_previous.get("detector_triggers", -1)),
+        "successful_continuations": int(
+            raw_previous.get("successful_continuations", -1)
+        ),
+    }
+    if (
+        previous["task_id"] != task_id
+        or previous["next_attempt_index"] != attempt_index
+        or previous["attempts"] != attempt_index
+        or previous["successful_continuations"] != shard_index
+        or min(previous.values()) < 0
+    ):
+        raise ValueError("Pending recovery transaction previous cursor is invalid.")
+    cursor = int(state["next_attempt_index"])
+    committed = cursor == attempt_index + 1
+    uncommitted = cursor == attempt_index
+    if not (committed or uncommitted):
+        raise ValueError("Pending recovery transaction is not adjacent to the cursor.")
+
+    triggered = bool(pending.get("triggered", False))
+    saved = bool(pending.get("saved", False))
+    if saved and not triggered:
+        raise ValueError(
+            "A saved recovery transaction must have triggered the detector."
+        )
+    expected_committed = {
+        **previous,
+        "next_attempt_index": attempt_index + 1,
+        "attempts": attempt_index + 1,
+        "detector_triggers": previous["detector_triggers"] + int(triggered),
+        "successful_continuations": previous["successful_continuations"] + int(saved),
+    }
+    if uncommitted and state != previous:
+        raise ValueError("Pending recovery transaction does not match the open cursor.")
+    if committed and state != expected_committed:
+        raise ValueError(
+            "Pending recovery transaction does not match committed progress."
+        )
+    if saved:
+        if pending_shard_path is None:
+            raise ValueError("Saved recovery transaction has no canonical shard path.")
+        if not pending_shard_path.is_file():
+            if committed:
+                raise ValueError("Committed recovery transaction is missing its shard.")
+            # The process stopped after journaling but before the atomic shard
+            # replace. Re-running this deterministic attempt is the only safe
+            # action because no payload was committed.
+            pending_path.unlink()
+            return
+        expected_file = (
+            output_dir / f"task_{task_id:02d}" / f"recovery_{shard_index:04d}.npz"
+        ).resolve()
+        if pending_shard_path != expected_file:
+            raise ValueError("Pending recovery shard path is not canonical.")
+        summary = _summarize_shard(
+            pending_shard_path,
+            output_dir=output_dir,
+            protocol=protocol,
+            protocol_fingerprint=protocol_fingerprint,
+            expected_task_id=task_id,
+            expected_task_name=task_name,
+            expected_shard_index=shard_index,
+            variant_hashes=hashes_by_name[task_name],
+        )
+        if int(summary["attempt_index"]) != attempt_index:
+            raise ValueError("Pending recovery shard attempt index is inconsistent.")
+        if summary["content_sha256"] != pending.get("content_sha256"):
+            raise ValueError("Pending recovery shard content hash is inconsistent.")
+        if uncommitted:
+            if shard_index != int(state["successful_continuations"]):
+                raise ValueError("Pending recovery shard is not the next task shard.")
+            entries.append(summary)
+            state["successful_continuations"] += 1
+            state["detector_triggers"] += 1
+            state["attempts"] += 1
+            state["next_attempt_index"] += 1
+        else:
+            matches = [
+                entry
+                for entry in entries
+                if int(entry["task_id"]) == task_id
+                and int(entry["shard_index"]) == shard_index
+            ]
+            if matches != [summary]:
+                raise ValueError("Committed pending shard disagrees with the manifest.")
+    else:
+        if pending_shard_path is not None:
+            raise ValueError("Unsaved recovery transaction names a shard.")
+        if uncommitted:
+            state["attempts"] += 1
+            state["next_attempt_index"] += 1
+            if triggered:
+                state["detector_triggers"] += 1
+
+    # The caller persists the reconstructed manifest before removing this
+    # journal. Keeping it until then makes a second interruption idempotent.
 
 
 def collect(
@@ -839,7 +1063,9 @@ def collect(
     )
     expected_state_dim = RAW_OBSERVATION_DIM + len(task_vocabulary)
     if act.state_dim != detector.state_dim or act.state_dim != expected_state_dim:
-        raise ValueError("ACT, detector, and benchmark observation dimensions disagree.")
+        raise ValueError(
+            "ACT, detector, and benchmark observation dimensions disagree."
+        )
     if int(act.action_dim) != ACTION_DIM:
         raise ValueError("ACT action dimension must be 4.")
     _validate_model_task_provenance(
@@ -869,31 +1095,65 @@ def collect(
     output_dir = Path(args.output_dir).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "manifest.json"
+    pending_path = output_dir / PENDING_ATTEMPT_FILENAME
 
     if args.overwrite:
-        for path in output_dir.rglob("recovery_*.npz"):
+        for path in output_dir.rglob("*.npz"):
             path.unlink()
         if manifest_path.exists():
             manifest_path.unlink()
-    discovered = sorted(output_dir.rglob("recovery_*.npz"))
+        if pending_path.exists():
+            pending_path.unlink()
+    discovered = sorted(output_dir.rglob("*.npz"))
     if manifest_path.exists() and not args.resume:
         raise FileExistsError(
             f"{output_dir} already contains recovery data; use --resume or --overwrite."
         )
     if discovered and not manifest_path.exists():
-        raise ValueError("Recovery shards exist without a manifest; refusing stale data.")
+        raise ValueError(
+            "Recovery shards exist without a manifest; refusing stale data."
+        )
     if args.resume and not manifest_path.exists():
         raise FileNotFoundError("--resume requires an existing manifest.json.")
+    if pending_path.exists() and not args.resume:
+        raise FileExistsError(
+            f"{output_dir} contains a pending transaction; use --resume or --overwrite."
+        )
 
     if args.resume:
         previous_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        pending: Mapping[str, Any] | None = None
+        pending_shard: Path | None = None
+        if pending_path.exists():
+            pending_value = json.loads(pending_path.read_text(encoding="utf-8"))
+            if not isinstance(pending_value, Mapping):
+                raise ValueError("Pending recovery transaction must be a JSON object.")
+            pending = pending_value
+            pending_shard = _pending_shard_path(
+                pending,
+                output_dir=output_dir,
+                protocol_fingerprint=protocol_fingerprint,
+            )
         entries, progress = _validate_resume(
             manifest=previous_manifest,
             output_dir=output_dir,
             protocol=protocol,
             protocol_fingerprint=protocol_fingerprint,
             hashes_by_name=hashes_by_name,
+            pending_shard_path=pending_shard,
         )
+        if pending is not None:
+            _reconcile_pending_attempt(
+                pending=pending,
+                pending_path=pending_path,
+                pending_shard_path=pending_shard,
+                output_dir=output_dir,
+                protocol=protocol,
+                protocol_fingerprint=protocol_fingerprint,
+                hashes_by_name=hashes_by_name,
+                entries=entries,
+                progress=progress,
+            )
         reconstructed_manifest = _build_manifest(
             protocol=protocol,
             protocol_fingerprint=protocol_fingerprint,
@@ -902,10 +1162,13 @@ def collect(
             entries=entries,
             progress=progress,
         )
-        if previous_manifest != reconstructed_manifest:
+        if pending is None and previous_manifest != reconstructed_manifest:
             raise ValueError(
                 "Resume manifest contains stale or tampered derived statistics."
             )
+        if pending is not None:
+            atomic_write_json(manifest_path, reconstructed_manifest)
+            pending_path.unlink(missing_ok=True)
     else:
         entries = []
         progress = _initial_progress(task_vocabulary)
@@ -968,13 +1231,11 @@ def collect(
                         action_std=action_std,
                         observation_std=observation_std,
                     )
-                    state["attempts"] += 1
-                    state["next_attempt_index"] += 1
-                    if bool(result["triggered"]):
-                        state["detector_triggers"] += 1
                     payload = result["payload"]
+                    shard_index = int(state["successful_continuations"])
+                    destination: Path | None = None
+                    shard_arrays: dict[str, np.ndarray] | None = None
                     if payload is not None:
-                        shard_index = int(state["successful_continuations"])
                         task_dir = output_dir / f"task_{task_id:02d}"
                         task_dir.mkdir(parents=True, exist_ok=True)
                         destination = task_dir / f"recovery_{shard_index:04d}.npz"
@@ -997,15 +1258,38 @@ def collect(
                                 result["trigger_probability"], dtype=np.float32
                             ),
                             "episode_seed": np.asarray(episode_seed, dtype=np.int64),
-                            "attempt_index": np.asarray(
-                                attempt_index, dtype=np.int64
-                            ),
+                            "attempt_index": np.asarray(attempt_index, dtype=np.int64),
                             "shard_index": np.asarray(shard_index, dtype=np.int32),
                             "protocol_fingerprint_sha256": np.asarray(
                                 protocol_fingerprint
                             ),
                             "schema_version": np.asarray(SCHEMA_VERSION),
                         }
+                    pending_record = {
+                        "schema_version": PENDING_ATTEMPT_SCHEMA_VERSION,
+                        "protocol_fingerprint_sha256": protocol_fingerprint,
+                        "task_id": task_id,
+                        "task_name": task_name,
+                        "task_variant": task_variant,
+                        "episode_seed": episode_seed,
+                        "attempt_index": attempt_index,
+                        "shard_index": shard_index,
+                        "previous_progress": dict(state),
+                        "triggered": bool(result["triggered"]),
+                        "saved": shard_arrays is not None,
+                        "file": (
+                            destination.relative_to(output_dir).as_posix()
+                            if destination is not None
+                            else None
+                        ),
+                        "content_sha256": (
+                            _array_content_sha256(shard_arrays)
+                            if shard_arrays is not None
+                            else None
+                        ),
+                    }
+                    atomic_write_json(pending_path, pending_record)
+                    if shard_arrays is not None and destination is not None:
                         atomic_save_npz(destination, **shard_arrays)
                         summary = _summarize_shard(
                             destination,
@@ -1020,7 +1304,12 @@ def collect(
                         entries.append(summary)
                         state["successful_continuations"] += 1
                         progress_bar.update(1)
+                    state["attempts"] += 1
+                    state["next_attempt_index"] += 1
+                    if bool(result["triggered"]):
+                        state["detector_triggers"] += 1
                     manifest = write_manifest()
+                    pending_path.unlink()
                     if attempt_hook is not None:
                         attempt_hook(
                             {
@@ -1083,9 +1372,7 @@ def main() -> None:
                 "benchmark": result["benchmark"],
                 "successful_continuations": result["successful_continuations"],
                 "rows": result["rows"],
-                "protocol_fingerprint_sha256": result[
-                    "protocol_fingerprint_sha256"
-                ],
+                "protocol_fingerprint_sha256": result["protocol_fingerprint_sha256"],
             },
             indent=2,
         )

@@ -11,6 +11,7 @@ rollout buffer, or Stable-Baselines3 dependency.
 from __future__ import annotations
 
 import copy
+import math
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -71,7 +72,10 @@ class ImitationRecoveryPolicy(nn.Module):
         dimensions = tuple(int(value) for value in hidden_dims)
         if not dimensions or any(value <= 0 for value in dimensions):
             raise ValueError("hidden_dims must contain positive dimensions.")
-        if float(normalization_epsilon) <= 0:
+        if (
+            not math.isfinite(float(normalization_epsilon))
+            or float(normalization_epsilon) <= 0
+        ):
             raise ValueError("normalization_epsilon must be positive.")
 
         self.state_dim = int(state_dim)
@@ -115,6 +119,8 @@ class ImitationRecoveryPolicy(nn.Module):
             raise ValueError("Action bounds have the wrong dimension.")
         if not torch.isfinite(mean).all() or not torch.isfinite(std).all():
             raise ValueError("Observation normalization must be finite.")
+        if not torch.isfinite(low).all() or not torch.isfinite(high).all():
+            raise ValueError("Action bounds must be finite.")
         if torch.any(std <= 0):
             raise ValueError("Observation standard deviations must be positive.")
         if torch.any(low >= high):
@@ -134,14 +140,16 @@ class ImitationRecoveryPolicy(nn.Module):
             "hidden_dims": list(self.hidden_dims),
             "activation": self.activation_name,
             "normalization_epsilon": self.normalization_epsilon,
-            "observation_normalization": "identity"
-            if torch.equal(
-                self.observation_mean, torch.zeros_like(self.observation_mean)
-            )
-            and torch.equal(
-                self.observation_std, torch.ones_like(self.observation_std)
-            )
-            else "affine",
+            "observation_normalization": (
+                "identity"
+                if torch.equal(
+                    self.observation_mean, torch.zeros_like(self.observation_mean)
+                )
+                and torch.equal(
+                    self.observation_std, torch.ones_like(self.observation_std)
+                )
+                else "affine"
+            ),
             "action_clipping": True,
         }
 
@@ -161,11 +169,11 @@ class ImitationRecoveryPolicy(nn.Module):
                 f"Expected observation shape ({self.state_dim},) or "
                 f"(N, {self.state_dim}), got {tuple(value.shape)}."
             )
+        if not torch.isfinite(value).all():
+            raise ValueError("Recovery observations must be finite.")
         return value
 
-    def mean_action(
-        self, observation: Tensor | np.ndarray | Sequence[float]
-    ) -> Tensor:
+    def mean_action(self, observation: Tensor | np.ndarray | Sequence[float]) -> Tensor:
         """Return the source actor's raw deterministic Gaussian mean."""
 
         value = self._tensor(observation)
@@ -174,9 +182,7 @@ class ImitationRecoveryPolicy(nn.Module):
         )
         return self.action_net(self.policy_net(normalized))
 
-    def forward(
-        self, observation: Tensor | np.ndarray | Sequence[float]
-    ) -> Tensor:
+    def forward(self, observation: Tensor | np.ndarray | Sequence[float]) -> Tensor:
         mean = self.mean_action(observation)
         return torch.maximum(torch.minimum(mean, self.action_high), self.action_low)
 
@@ -262,13 +268,13 @@ class ImitationRecoveryPolicy(nn.Module):
             action_dim=int(config["action_dim"]),
             hidden_dims=tuple(int(value) for value in config["hidden_dims"]),
             activation=str(config["activation"]),
-            normalization_epsilon=float(
-                config.get("normalization_epsilon", 1e-8)
-            ),
+            normalization_epsilon=float(config.get("normalization_epsilon", 1e-8)),
             # Exact arrays are restored from the state dict.
-            provenance=checkpoint.get("provenance")
-            if isinstance(checkpoint.get("provenance"), Mapping)
-            else None,
+            provenance=(
+                checkpoint.get("provenance")
+                if isinstance(checkpoint.get("provenance"), Mapping)
+                else None
+            ),
         )
         model.load_state_dict(dict(state_dict), strict=True)
         model.to(resolved_device)

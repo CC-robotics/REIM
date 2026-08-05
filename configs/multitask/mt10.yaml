@@ -22,6 +22,7 @@ data:
   failure_rollouts_per_task: 50
   validation_rollouts_per_task: 20
   recovery_rollouts_per_task: 50
+  recovery_max_attempts_multiplier: 20
   max_attempts_per_success: 5
 
 failure_labels:

@@ -79,6 +79,15 @@ def test_imitation_recovery_is_deterministic_and_clips_actions() -> None:
     )
     with pytest.raises(ValueError, match="deterministic"):
         policy.predict(state, deterministic=False)
+    with pytest.raises(ValueError, match="finite"):
+        policy.act(np.asarray([0.0, np.nan, 0.0], dtype=np.float32))
+
+
+def test_imitation_recovery_rejects_nonfinite_configuration() -> None:
+    with pytest.raises(ValueError, match="normalization_epsilon"):
+        ImitationRecoveryPolicy(3, 2, normalization_epsilon=float("nan"))
+    with pytest.raises(ValueError, match="Action bounds"):
+        ImitationRecoveryPolicy(3, 2, action_low=[-1.0, np.nan])
 
 
 def test_repository_imitation_artifact_provenance_and_sb3_equivalence() -> None:
@@ -130,9 +139,7 @@ def test_repository_imitation_artifact_provenance_and_sb3_equivalence() -> None:
     ) as archive:
         validation = np.asarray(archive["demo_states"], dtype=np.float32)
     indices_train = np.linspace(0, len(train) - 1, 257, dtype=np.int64)
-    indices_validation = np.linspace(
-        0, len(validation) - 1, 257, dtype=np.int64
-    )
+    indices_validation = np.linspace(0, len(validation) - 1, 257, dtype=np.int64)
     states = np.concatenate(
         (train[indices_train], validation[indices_validation]), axis=0
     )
