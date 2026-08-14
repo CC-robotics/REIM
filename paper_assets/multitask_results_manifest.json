@@ -1,0 +1,167 @@
+{
+  "schema_version": "reim-multitask-paper-results-v1",
+  "gate_requirements": {
+    "benchmarks": [
+      "MT10",
+      "MT50"
+    ],
+    "official_clean": true,
+    "robustness_noise_levels": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "five_bank_audit": true
+  },
+  "statistics": {
+    "primary_estimand": "task_macro_success",
+    "confidence": 0.95,
+    "absolute_interval": "within_task_episode_percentile_bootstrap",
+    "paired_delta_interval": "paired_episode_bootstrap_within_fixed_tasks",
+    "bootstrap_samples": 5000,
+    "bootstrap_seed": 20260806
+  },
+  "inputs": {
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\audits\\mt10_bank_separation.json": {
+      "sha256": "a4f14d596c0245c84c71212e552ec320f3126804d236772a2452b13a5ece7b35",
+      "bytes": 10806
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_clean_summary.json": {
+      "sha256": "adb57ad68c3ab86bc41d836bce50e035ba745c07cfe7cffadb29f1768755f2b1",
+      "bytes": 48170
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_clean_episodes.csv": {
+      "sha256": "b17a5008055ae66e58b894a2b1edf332077f960893a0863452f0c4a4d21acada",
+      "bytes": 474034
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_00_summary.json": {
+      "sha256": "2bf702b8d5c6687a9409c7b8827afd6c51396142de6ec2e465788a855b05f04f",
+      "bytes": 48428
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_00_episodes.csv": {
+      "sha256": "99b75e147b412f5a7f78e8476f1655eaa0e318b48fe0d27a9aae2c98190efab3",
+      "bytes": 484034
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_10_summary.json": {
+      "sha256": "d08aacd1f8475b5dd61b37ba594fc9f8aa3530db948a393ff9646892785f2bac",
+      "bytes": 49358
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_10_episodes.csv": {
+      "sha256": "909f1a32e33186af7ccab59b7461faa4750626a4406de1628ac46e347c6e071a",
+      "bytes": 486019
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_20_summary.json": {
+      "sha256": "2500bebbd2cfb553bb194d49037612fc4fb5f67c812d6593d6decd8bbbb99831",
+      "bytes": 49345
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_20_episodes.csv": {
+      "sha256": "fabd8e3b04834ffdb82d8f36dcb1f33c0029a30ed31f3a6327a1c964da40e68c",
+      "bytes": 485796
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_30_summary.json": {
+      "sha256": "02c4bdb85eaac024c111b874c1926f6f6fb8eab79216e8e5771e2bc3600d6bb0",
+      "bytes": 49137
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_30_episodes.csv": {
+      "sha256": "8fabb71a00844dcdd014cef4bb5a9eb89a9adbe4f208c222ff7ed0da6d4c45bc",
+      "bytes": 485731
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_40_summary.json": {
+      "sha256": "b42a530e7c4780ca86c552058f819f2d5047faec52d89f554fb47d4826d13e7c",
+      "bytes": 49317
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_40_episodes.csv": {
+      "sha256": "d184276ee7fff29c88942716146c7e36ca930efc402d708eff3571cb16159ae2",
+      "bytes": 485642
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\audits\\mt50_bank_separation.json": {
+      "sha256": "163c97cde3fe14984b0e6d355546f1815fc75b41a2839979a3107abef65cc9c0",
+      "bytes": 10827
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_summary.json": {
+      "sha256": "9c866fd2e918a60d48af98e289e646d9f69dc7dab927cca0d70cf04f594d5088",
+      "bytes": 199465
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_episodes.csv": {
+      "sha256": "f3946e0612cf9178edb5ad44ead33511835db9c020ed667c9cba242a7ff8810a",
+      "bytes": 2397198
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_00_summary.json": {
+      "sha256": "e323fe64f0a8538b0d95147cd05d952fbf196c54112eabf63556a85b1f4432a3",
+      "bytes": 199723
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_00_episodes.csv": {
+      "sha256": "df8f1624a4d96e71e589171437c67ad7827c266d301de0eb9d62e7634be36ff3",
+      "bytes": 2447198
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_10_summary.json": {
+      "sha256": "541905c8782cb96d0de01b8052dd2be9d018993a847c8cfcafaf7828f832c336",
+      "bytes": 201952
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_10_episodes.csv": {
+      "sha256": "58cd8f0aa3bff102ec7bbf285084f0e496014972a723f5b16b165c8607c3261a",
+      "bytes": 2455656
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_20_summary.json": {
+      "sha256": "c3dba6f85a8c0210c7bc123f6dfac657d72404b45e6cbe4c35c307727da5b8ff",
+      "bytes": 202229
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_20_episodes.csv": {
+      "sha256": "392d8c249da79a8cef4612bf9d8d18d3f7d42986e47824ed97a5585231088fbf",
+      "bytes": 2455236
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_30_summary.json": {
+      "sha256": "3ced41c372484da9a45c8444505b834c099241058161ac9619d7711ce0dc5019",
+      "bytes": 201855
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_30_episodes.csv": {
+      "sha256": "1e5545bc90861f8d9e28fba7187314c58698783a90d86243a17fc4fb63c30953",
+      "bytes": 2454829
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_40_summary.json": {
+      "sha256": "3e3ba84ca90bd11c06476d43e6a2c33f5aef890c500791e3b363bc87490ca26a",
+      "bytes": 201968
+    },
+    "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_40_episodes.csv": {
+      "sha256": "58c61a2a312b24381d225b1d555e247db68753840558b843c537040996a29edb",
+      "bytes": 2454451
+    }
+  },
+  "generated_at_utc": "2026-08-14T10:03:05.964060+00:00",
+  "publication_gate": {
+    "eligible": true,
+    "reason": "MT10 and MT50 official-clean rollouts, five robustness conditions, and both five-bank audits passed",
+    "official_clean_scope": "known-task_goal-observable",
+    "robustness_scope": "non_official_reim_extension"
+  },
+  "input_manifest_sha256": "2168d1ade6ed082b9c32f7cffeb5c0aafe7f7ddb0b89a9625129ae697833719f",
+  "outputs": {
+    "gate": {
+      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\multitask_results.tex",
+      "sha256": "b93e289c19f8a7cc30dac35dbfdb739064907a06ac2a033595de2b1cd27e817d",
+      "bytes": 2431
+    },
+    "clean_csv": {
+      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\multitask_clean_statistics.csv",
+      "sha256": "2f518a687a004208075178d08460047e22c14a2bd2970267dc82d316f8b7d192",
+      "bytes": 1370
+    },
+    "robustness_csv": {
+      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\multitask_robustness_statistics.csv",
+      "sha256": "771c5146902a4f310fd5d326c127c398906f6dab377f36f707e12bf86b54bcb7",
+      "bytes": 5878
+    },
+    "figure_png": {
+      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\Figure_multitask_robustness.png",
+      "sha256": "4c1e6ae476327de255c1db0fe54acf55cc96b36e4e8c8a3a24eeab0d1d8ee84a",
+      "bytes": 157760
+    },
+    "figure_pdf": {
+      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\Figure_multitask_robustness.pdf",
+      "sha256": "6be9f5c4d55e74e5e6e896f628c5e809ca4b1895b185fc9672b3a2f48305b749",
+      "bytes": 22782
+    }
+  }
+}
