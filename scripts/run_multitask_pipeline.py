@@ -16,6 +16,7 @@ import math
 import shlex
 import subprocess
 import sys
+import time
 from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -124,10 +125,47 @@ class PipelineContext:
     resume: bool
     device: str | None
     log_dir: Path
+    profile: str = "full"
 
     @property
     def slug(self) -> str:
         return self.benchmark.lower()
+
+    @property
+    def backend(self) -> str:
+        """Smoke profile runs the explicit toy CI backend; nothing implicit."""
+
+        return "toy" if self.profile == "smoke" else "metaworld"
+
+    @property
+    def datasets_root(self) -> Path:
+        if self.profile == "smoke":
+            return self.root / "datasets" / "smoke" / "multitask"
+        return self.root / "datasets" / self.slug
+
+    @property
+    def checkpoints_root(self) -> Path:
+        if self.profile == "smoke":
+            return self.root / "checkpoints" / "smoke" / "multitask"
+        return self.root / "checkpoints" / self.slug
+
+    @property
+    def tables_dir(self) -> Path:
+        if self.profile == "smoke":
+            return self.root / "results" / "smoke" / "multitask" / "tables"
+        return self.root / "results" / "tables"
+
+    @property
+    def figures_dir(self) -> Path:
+        if self.profile == "smoke":
+            return self.root / "results" / "smoke" / "multitask" / "figures"
+        return self.root / "results" / "figures"
+
+    @property
+    def audits_dir(self) -> Path:
+        if self.profile == "smoke":
+            return self.root / "results" / "smoke" / "multitask" / "audits"
+        return self.root / "results" / "audits"
 
 
 def _read_yaml(path: Path) -> dict[str, Any]:
@@ -573,33 +611,43 @@ def load_context(
     resume: bool = False,
     device: str | None = None,
     log_dir: Path | None = None,
+    profile: str = "full",
 ) -> PipelineContext:
     """Load and validate all configuration required for one benchmark."""
 
     benchmark = benchmark.upper()
     if benchmark not in BENCHMARKS:
         raise PipelineConfigurationError(f"Unsupported benchmark: {benchmark}")
+    profile = str(profile).strip().lower()
+    if profile not in ("full", "smoke"):
+        raise PipelineConfigurationError("profile must be 'full' or 'smoke'")
+    if profile == "smoke" and benchmark != "MT10":
+        raise PipelineConfigurationError(
+            "The smoke profile runs the toy MT10 benchmark only; "
+            "MT50 smoke runs are not a supported CI contract."
+        )
     root = root.expanduser().resolve()
     slug = benchmark.lower()
+    config_stem = "smoke" if profile == "smoke" else slug
     config_path = (
         config_path.expanduser().resolve()
         if config_path is not None
-        else root / "configs" / "multitask" / f"{slug}.yaml"
+        else root / "configs" / "multitask" / f"{config_stem}.yaml"
     )
     act_config_path = (
         act_config_path.expanduser().resolve()
         if act_config_path is not None
-        else root / "configs" / "multitask" / f"{slug}_act.yaml"
+        else root / "configs" / "multitask" / f"{config_stem}_act.yaml"
     )
     mlp_config_path = (
         mlp_config_path.expanduser().resolve()
         if mlp_config_path is not None
-        else root / "configs" / "multitask" / f"{slug}_mlp.yaml"
+        else root / "configs" / "multitask" / f"{config_stem}_mlp.yaml"
     )
     detector_config_path = (
         detector_config_path.expanduser().resolve()
         if detector_config_path is not None
-        else root / "configs" / "multitask" / f"{slug}_detector.yaml"
+        else root / "configs" / "multitask" / f"{config_stem}_detector.yaml"
     )
     config = _read_yaml(config_path)
     act_config = _read_yaml(act_config_path)
@@ -689,7 +737,9 @@ def load_context(
             "failure_labels.calibration_quantile must lie strictly between 0 and 1"
         )
     expected_detector_data = (
-        root / "datasets" / slug / "failures_calibrated"
+        root / "datasets" / "smoke" / "multitask" / "failures_calibrated"
+        if profile == "smoke"
+        else root / "datasets" / slug / "failures_calibrated"
     ).resolve()
     configured_detector_data = _path_from_root(
         root, str(detector_config.get("data_dir", ""))
@@ -703,7 +753,11 @@ def load_context(
     resolved_log_dir = (
         log_dir.expanduser().resolve()
         if log_dir is not None
-        else root / "results" / "logs" / "multitask" / slug
+        else (
+            root / "results" / "smoke" / "multitask" / "logs"
+            if profile == "smoke"
+            else root / "results" / "logs" / "multitask" / slug
+        )
     )
     return PipelineContext(
         benchmark=benchmark,
@@ -720,6 +774,7 @@ def load_context(
         resume=bool(resume),
         device=device,
         log_dir=resolved_log_dir,
+        profile=profile,
     )
 
 
@@ -770,20 +825,15 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
     model_seed = _integer(config, "model_seed", minimum=0)
     max_steps = _integer(config, "max_episode_steps", minimum=1)
     demos_dir = _path_from_root(context.root, str(context.act_config["data_dir"]))
-    raw_failures_dir = context.root / "datasets" / context.slug / "failures"
+    raw_failures_dir = context.datasets_root / "failures"
     calibrated_failures_dir = _path_from_root(
         context.root, str(context.detector_config["data_dir"])
     )
-    validation_failures_dir = (
-        context.root / "datasets" / context.slug / "failures_validation"
-    )
+    validation_failures_dir = context.datasets_root / "failures_validation"
     calibrated_validation_failures_dir = (
-        context.root
-        / "datasets"
-        / context.slug
-        / "failures_validation_calibrated"
+        context.datasets_root / "failures_validation_calibrated"
     )
-    recovery_dir = context.root / "datasets" / context.slug / "recovery"
+    recovery_dir = context.datasets_root / "recovery"
     act_checkpoint = _path_from_root(
         context.root, str(context.act_config["checkpoint"])
     )
@@ -794,23 +844,11 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         context.root, str(context.detector_config["checkpoint"])
     )
     recovery_checkpoint = (
-        context.root
-        / "checkpoints"
-        / context.slug
-        / f"seed_{model_seed}"
-        / "recovery.pt"
+        context.checkpoints_root / f"seed_{model_seed}" / "recovery.pt"
     )
-    tuned_threshold_json = (
-        context.root
-        / "results"
-        / "tables"
-        / f"{context.slug}_detector_threshold.json"
-    )
+    tuned_threshold_json = context.tables_dir / f"{context.slug}_detector_threshold.json"
     tuned_threshold_csv = (
-        context.root
-        / "results"
-        / "tables"
-        / f"{context.slug}_detector_threshold_grid.csv"
+        context.tables_dir / f"{context.slug}_detector_threshold_grid.csv"
     )
     action_scale = _number(disturbance, "action_std_scale")
     observation_scale = _number(disturbance, "observation_std_scale")
@@ -821,6 +859,9 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
     script = lambda value: _command_path(context.root, context.root / value)
     artifact = lambda value: _command_path(context.root, value)
     release_threshold = _number(recovery, "release_threshold")
+    backend_argv: tuple[str, ...] = (
+        ("--backend", "toy") if context.backend == "toy" else ()
+    )
     threshold_placeholder = (
         f"<validated-threshold:{artifact(tuned_threshold_json)}>"
     )
@@ -861,6 +902,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--max-attempts",
             str(_integer(data, "max_attempts_per_success", minimum=1)),
         ]
+        argv.extend(backend_argv)
         if context.resume:
             argv.append("--resume")
         return [_stage_command(context, stage, stage, argv)]
@@ -940,6 +982,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--log-file",
             artifact(context.log_dir / "generate_failures_internal.log"),
         ]
+        argv.extend(backend_argv)
         if context.resume:
             argv.append("--resume")
         return [_stage_command(context, stage, stage, argv)]
@@ -1021,6 +1064,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--log-file",
             artifact(context.log_dir / "generate_failure_validation_internal.log"),
         ]
+        argv.extend(backend_argv)
         if context.resume:
             argv.append("--resume")
         return [_stage_command(context, stage, stage, argv)]
@@ -1118,6 +1162,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--log-file",
             artifact(context.log_dir / "collect_recovery_internal.log"),
         ]
+        argv.extend(backend_argv)
         _append_resume_if_present(
             argv,
             requested=context.resume,
@@ -1129,9 +1174,9 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         training = config.get("recovery_training", {})
         if not isinstance(training, Mapping):
             raise PipelineConfigurationError("recovery_training must be a mapping")
-        history = context.root / "results" / "tables" / f"{context.slug}_recovery_training.csv"
-        curve = context.root / "results" / "figures" / f"{context.slug}_recovery_training.png"
-        summary = context.root / "results" / "tables" / f"{context.slug}_recovery_training.json"
+        history = context.tables_dir / f"{context.slug}_recovery_training.csv"
+        curve = context.figures_dir / f"{context.slug}_recovery_training.png"
+        summary = context.tables_dir / f"{context.slug}_recovery_training.json"
         hidden_dims = training.get("hidden_dims", (512, 512, 256))
         if not isinstance(hidden_dims, (list, tuple)) or not hidden_dims:
             raise PipelineConfigurationError("recovery_training.hidden_dims must be a list")
@@ -1178,6 +1223,8 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             str(float(training.get("min_delta", 1e-6))),
             "--num-workers",
             str(int(training.get("num_workers", 0))),
+            "--expected-target-per-task",
+            str(_integer(data, "recovery_rollouts_per_task", minimum=1)),
         ]
         recovery_latest = recovery_checkpoint.with_name(
             recovery_checkpoint.stem + "_latest" + recovery_checkpoint.suffix
@@ -1191,15 +1238,8 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         return [_stage_command(context, stage, stage, argv)]
 
     if stage == "audit_banks":
-        clean_csv = (
-            context.root / "results" / "tables" / f"{context.slug}_clean_episodes.csv"
-        )
-        audit_json = (
-            context.root
-            / "results"
-            / "audits"
-            / f"{context.slug}_bank_separation.json"
-        )
+        clean_csv = context.tables_dir / f"{context.slug}_clean_episodes.csv"
+        audit_json = context.audits_dir / f"{context.slug}_bank_separation.json"
         argv = [
             context.python,
             script("scripts/audit_multitask_banks.py"),
@@ -1219,7 +1259,10 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             artifact(clean_csv),
             "--output-json",
             artifact(audit_json),
+            "--expected-episodes-per-task",
+            str(_integer(evaluation, "episodes_per_task", minimum=1)),
         ]
+        argv.extend(backend_argv)
         return [_stage_command(context, stage, stage, argv)]
 
     clean_methods = _validate_methods(
@@ -1247,8 +1290,8 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
         label: str,
         output_stem: str,
     ) -> StageCommand:
-        output_csv = context.root / "results" / "tables" / f"{output_stem}_episodes.csv"
-        output_summary = context.root / "results" / "tables" / f"{output_stem}_summary.json"
+        output_csv = context.tables_dir / f"{output_stem}_episodes.csv"
+        output_summary = context.tables_dir / f"{output_stem}_summary.json"
         argv = [
             context.python,
             script("evaluation/evaluate_multitask.py"),
@@ -1301,6 +1344,7 @@ def build_stage_commands(context: PipelineContext, stage: str) -> list[StageComm
             "--log-file",
             artifact(context.log_dir / f"{label}_internal.log"),
         ]
+        argv.extend(backend_argv)
         if context.resume:
             argv.append("--resume")
         return _stage_command(
@@ -1349,28 +1393,15 @@ def _plan_payload(
     calibrated_training = _path_from_root(
         context.root, str(context.detector_config["data_dir"])
     )
-    tuned_json = (
-        context.root
-        / "results"
-        / "tables"
-        / f"{context.slug}_detector_threshold.json"
-    )
-    tuned_csv = (
-        context.root
-        / "results"
-        / "tables"
-        / f"{context.slug}_detector_threshold_grid.csv"
-    )
-    bank_audit_json = (
-        context.root
-        / "results"
-        / "audits"
-        / f"{context.slug}_bank_separation.json"
-    )
+    tuned_json = context.tables_dir / f"{context.slug}_detector_threshold.json"
+    tuned_csv = context.tables_dir / f"{context.slug}_detector_threshold_grid.csv"
+    bank_audit_json = context.audits_dir / f"{context.slug}_bank_separation.json"
     recovery = _mapping(context.config, "recovery")
     return {
         "schema_version": PIPELINE_SCHEMA_VERSION,
         "benchmark": context.benchmark,
+        "profile": context.profile,
+        "backend": context.backend,
         "stage": stage,
         "resume_requested": context.resume,
         "configs": {
@@ -1394,24 +1425,18 @@ def _plan_payload(
         "artifacts": {
             "failure_training_raw": _command_path(
                 context.root,
-                context.root / "datasets" / context.slug / "failures",
+                context.datasets_root / "failures",
             ),
             "failure_training_calibrated": _command_path(
                 context.root, calibrated_training
             ),
             "failure_validation_raw": _command_path(
                 context.root,
-                context.root
-                / "datasets"
-                / context.slug
-                / "failures_validation",
+                context.datasets_root / "failures_validation",
             ),
             "failure_validation_calibrated": _command_path(
                 context.root,
-                context.root
-                / "datasets"
-                / context.slug
-                / "failures_validation_calibrated",
+                context.datasets_root / "failures_validation_calibrated",
             ),
             "detector_threshold_tuning": {
                 "json": _command_path(context.root, tuned_json),
@@ -1474,7 +1499,17 @@ def _write_plan(context: PipelineContext, stage: str, commands: Sequence[StageCo
     with temporary.open("w", encoding="utf-8") as handle:
         json.dump(_plan_payload(context, stage, commands), handle, indent=2, sort_keys=True)
         handle.write("\n")
-    temporary.replace(destination)
+    delay = 0.05
+    for attempt in range(8):
+        try:
+            temporary.replace(destination)
+            break
+        except PermissionError:
+            # Tolerate transient Windows locks from scanners/sync clients.
+            if attempt == 7:
+                raise
+            time.sleep(delay)
+            delay *= 2
 
 
 def execute_commands(commands: Sequence[StageCommand], *, cwd: Path) -> None:
@@ -1499,6 +1534,8 @@ def execute_commands(commands: Sequence[StageCommand], *, cwd: Path) -> None:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 bufsize=1,
             )
             assert process.stdout is not None
@@ -1526,6 +1563,15 @@ def _add_common_arguments(parser: argparse.ArgumentParser) -> None:
         help="Resume collectors/evaluations and existing latest trainer checkpoints.",
     )
     parser.add_argument("--python", default=sys.executable, help="Python executable for child stages.")
+    parser.add_argument(
+        "--smoke",
+        action="store_true",
+        help=(
+            "Isolated CI profile: explicit toy MT10 backend, tiny smoke "
+            "configs, and outputs only under datasets/smoke, "
+            "checkpoints/smoke, and results/smoke. Never benchmark evidence."
+        ),
+    )
     parser.add_argument("--device", help="Override the configured device for all applicable stages.")
     parser.add_argument("--config", type=Path, help="Benchmark YAML (single benchmark only).")
     parser.add_argument("--act-config", type=Path, help="ACT YAML (single benchmark only).")
@@ -1555,6 +1601,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _contexts_from_args(args: argparse.Namespace) -> list[PipelineContext]:
+    if getattr(args, "smoke", False) and args.benchmark != "MT10":
+        raise PipelineConfigurationError(
+            "--smoke selects the isolated toy MT10 profile; use benchmark MT10"
+        )
+    profile = "smoke" if getattr(args, "smoke", False) else "full"
     benchmarks = BENCHMARKS if args.benchmark == "both" else (args.benchmark,)
     if len(benchmarks) > 1 and any(
         value is not None
@@ -1579,6 +1630,7 @@ def _contexts_from_args(args: argparse.Namespace) -> list[PipelineContext]:
                 resume=args.resume,
                 device=args.device,
                 log_dir=log_dir,
+                profile=profile,
             )
         )
     return contexts
@@ -1592,17 +1644,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         mode = "EXECUTE" if args.execute else "DRY-RUN"
         print(
             f"REIM multi-task pipeline | mode={mode} | stage={args.stage} | "
+            f"profile={contexts[0].profile} | backend={contexts[0].backend} | "
             f"benchmarks={','.join(context.benchmark for context in contexts)}"
         )
         for index, command in enumerate(commands, start=1):
             print(f"[{index}/{len(commands)}] {command.label}: {command.shell_line()}")
         for context in contexts:
-            tuned_json = (
-                context.root
-                / "results"
-                / "tables"
-                / f"{context.slug}_detector_threshold.json"
-            )
+            tuned_json = context.tables_dir / f"{context.slug}_detector_threshold.json"
             print(
                 f"{context.benchmark} tuned detector artifact: "
                 f"{_command_path(context.root, tuned_json)} "

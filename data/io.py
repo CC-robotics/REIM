@@ -6,10 +6,32 @@ import hashlib
 import json
 import os
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+
+
+def _replace_with_retry(source: str, destination: Path) -> None:
+    """Atomic rename that tolerates transient Windows file locks.
+
+    Windows Defender, search indexing, and sync clients can briefly hold a
+    lock on a freshly written file, making ``os.replace`` fail with
+    ``PermissionError`` even though the operation is safe to retry.
+    """
+
+    attempts = 8
+    delay = 0.05
+    for attempt in range(attempts):
+        try:
+            os.replace(source, destination)
+            return
+        except PermissionError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(delay)
+            delay *= 2
 
 
 def json_compatible(value: Any) -> Any:
@@ -53,7 +75,7 @@ def atomic_write_json(path: str | Path, payload: Any) -> Path:
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary_name, destination)
+        _replace_with_retry(temporary_name, destination)
     except BaseException:
         try:
             os.unlink(temporary_name)
@@ -85,9 +107,11 @@ def atomic_save_npz(path: str | Path, **arrays: Any) -> Path:
                 )
             normalized[key] = array
         np.savez_compressed(temporary_name, **normalized)
-        with open(temporary_name, "rb") as handle:
+        # Flush to durable storage with a writable handle: Windows cannot
+        # fsync a read-only file descriptor, POSIX accepts both.
+        with open(temporary_name, "r+b") as handle:
             os.fsync(handle.fileno())
-        os.replace(temporary_name, destination)
+        _replace_with_retry(temporary_name, destination)
     except BaseException:
         try:
             os.unlink(temporary_name)

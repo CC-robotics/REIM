@@ -35,7 +35,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from data.io import file_sha256, json_compatible
+from data.io import _replace_with_retry, file_sha256, json_compatible
 from evaluation import evaluate_multitask as evaluator
 from evaluation.multitask_metrics import (
     aggregate_multitask_metrics,
@@ -626,7 +626,7 @@ def _atomic_write_bytes(path: Path, payload: bytes) -> None:
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary_name, path)
+        _replace_with_retry(temporary_name, path)
     except BaseException:
         try:
             os.unlink(temporary_name)

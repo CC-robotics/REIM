@@ -31,7 +31,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from data.io import atomic_write_json, file_sha256
+from data.io import _replace_with_retry, atomic_write_json, file_sha256
 from models.failure_detector import FailureDetector
 from trainers.data import (
     FailureData,
@@ -983,7 +983,7 @@ def _atomic_write_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
             writer.writerows(rows)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary_name, path)
+        _replace_with_retry(temporary_name, path)
     except BaseException:
         try:
             os.unlink(temporary_name)
