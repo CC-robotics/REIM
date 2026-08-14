@@ -1,6 +1,6 @@
 seed: 7
 device: auto
-data_dir: datasets/smoke/multitask/failures
+data_dir: datasets/smoke/multitask/failures_calibrated
 checkpoint: checkpoints/smoke/multitask/failure_detector.pt
 latest_checkpoint: checkpoints/smoke/multitask/failure_detector_latest.pt
 curve_path: results/smoke/multitask/detector_training.png

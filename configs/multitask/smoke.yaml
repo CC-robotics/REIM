@@ -1,0 +1,79 @@
+# Isolated CI smoke protocol for the explicit toy MT10 backend.
+# Mirrors configs/multitask/mt10.yaml with minimal per-task counts. Every
+# output lands under datasets/smoke, checkpoints/smoke, or results/smoke and
+# is an engineering artifact, never benchmark evidence.
+benchmark: MT10
+model_seed: 42
+observation_schema: raw39_plus_official_task_one_hot
+task_count: 10
+state_dim: 49
+action_dim: 4
+max_episode_steps: 500
+
+banks:
+  demonstrations: 10261010
+  failure_training: 10262010
+  recovery_training: 10263010
+  validation: 10264010
+  final_evaluation: 10265010
+
+data:
+  demonstrations_per_task: 2
+  failure_rollouts_per_task: 4
+  validation_rollouts_per_task: 2
+  recovery_rollouts_per_task: 2
+  recovery_max_attempts_multiplier: 30
+  max_attempts_per_success: 5
+
+failure_labels:
+  sequence_length: 10
+  prediction_horizon: 10
+  calibration_mode: task_conditional_quantile
+  calibration_quantile: 0.90
+  # Kept only in the immutable raw collection as a diagnostic event trace.
+  expert_action_disagreement_l1: 0.35
+  terminal_positive_horizon: 25
+
+disturbance:
+  levels: [0.0, 0.1, 0.2, 0.3, 0.4]
+  action_std_scale: 0.40
+  observation_std_scale: 0.025
+  object_position_noise: false
+  training_level: 0.2
+
+recovery:
+  # The toy smoke detector is trained for a single epoch, so the collection
+  # gate is lowered to guarantee early-coverage triggers in CI. This value is
+  # still only the preregistered collection threshold; the deployment gate is
+  # tuned on the validation bank and bound fail-closed exactly as in the full
+  # protocol.
+  collection_threshold: 0.10
+  deployment_threshold: 0.30
+  release_threshold: 0.05
+  release_patience: 5
+  min_recovery_steps: 5
+  intervention_cooldown: 10
+  max_consecutive_steps_within_episode: 250
+
+evaluation:
+  episodes_per_task: 2
+  clean_methods: [mlp_bc, act, heuristic_recovery, reim]
+  disturbed_methods: [mlp_bc, act, heuristic_recovery, reim]
+  appendix_reset_baseline: [act_retry]
+  terminate_on_success: true
+  total_episode_horizon: 500
+  paired_common_random_numbers: true
+  primary_metric: task_macro_success
+
+recovery_training:
+  epochs: 3
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  validation_fraction: 0.2
+  hidden_dims: [64, 64]
+  state_noise_std: 0.005
+  grad_clip: 1.0
+  patience: 2
+  min_delta: 0.000001
+  num_workers: 0

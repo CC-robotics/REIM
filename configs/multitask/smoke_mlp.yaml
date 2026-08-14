@@ -1,0 +1,25 @@
+benchmark: MT10
+seed: 7
+device: auto
+data_dir: datasets/smoke/multitask/demonstrations
+checkpoint: checkpoints/smoke/multitask/mlp_bc.pt
+latest_checkpoint: checkpoints/smoke/multitask/mlp_bc_latest.pt
+curve_path: results/smoke/multitask/mlp_training.png
+history_path: results/smoke/multitask/mlp_training.csv
+summary_path: results/smoke/multitask/mlp_training.json
+log_path: results/smoke/multitask/logs/mlp_training.log
+
+model:
+  policy_type: MLP_BC
+  hidden_dims: [64, 64]
+
+training:
+  epochs: 2
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.0
+  validation_fraction: 0.2
+  num_workers: 0
+  patience: 1
+  checkpoint_every: 1
+  grad_clip_norm: 5.0
