@@ -99,9 +99,16 @@ def _atomic_torch_save(payload: dict[str, Any], path: Path) -> None:
 
 
 def _validate_training_manifest(
-    manifest: Mapping[str, Any], benchmark: str
+    manifest: Mapping[str, Any],
+    benchmark: str,
+    *,
+    expected_target_per_task: int = OFFICIAL_TARGET_PER_TASK,
 ) -> tuple[list[str], Mapping[str, Any]]:
-    """Fail closed unless this is a complete publication-scale recovery bank."""
+    """Fail closed unless this is a complete, per-task balanced recovery bank.
+
+    The publication protocol fixes 50 continuations per task; the explicit CI
+    smoke profile passes its smaller preregistered target explicitly.
+    """
 
     benchmark_name = str(benchmark).upper()
     if benchmark_name not in SUPPORTED_BENCHMARKS:
@@ -143,9 +150,9 @@ def _validate_training_manifest(
         raise ValueError("Recovery manifest state_dim is invalid")
     if int(manifest.get("action_dim", -1)) != ACTION_DIM:
         raise ValueError("Recovery manifest action_dim is invalid")
-    if int(manifest.get("target_per_task", -1)) != OFFICIAL_TARGET_PER_TASK:
+    if int(manifest.get("target_per_task", -1)) != expected_target_per_task:
         raise ValueError(
-            f"Recovery training requires exactly {OFFICIAL_TARGET_PER_TASK} "
+            f"Recovery training requires exactly {expected_target_per_task} "
             "successful continuations per task"
         )
     if int(manifest.get("max_episode_steps", -1)) != OFFICIAL_MAX_EPISODE_STEPS:
@@ -181,14 +188,14 @@ def _validate_training_manifest(
         )
     max_attempts = int(protocol.get("max_attempts_per_task", -1))
     multiplier = int(protocol.get("max_attempts_multiplier", -1))
-    if max_attempts != OFFICIAL_TARGET_PER_TASK * multiplier or multiplier <= 0:
+    if max_attempts != expected_target_per_task * multiplier or multiplier <= 0:
         raise ValueError("Recovery collection attempt budget is inconsistent")
     threshold = float(protocol.get("detector_threshold", math.nan))
     if not math.isfinite(threshold) or not 0.0 <= threshold <= 1.0:
         raise ValueError("Recovery collection threshold is invalid")
 
     entries = manifest.get("files")
-    expected_files = expected_tasks * OFFICIAL_TARGET_PER_TASK
+    expected_files = expected_tasks * expected_target_per_task
     if not isinstance(entries, list) or len(entries) != expected_files:
         raise ValueError(
             f"Recovery manifest must list exactly {expected_files} continuation shards"
@@ -212,10 +219,13 @@ def _validate_training_manifest(
         shard_indices = sorted(
             int(entry.get("shard_index", -1)) for entry in task_entries
         )
-        if len(task_entries) != OFFICIAL_TARGET_PER_TASK or shard_indices != list(
-            range(OFFICIAL_TARGET_PER_TASK)
+        if len(task_entries) != expected_target_per_task or shard_indices != list(
+            range(expected_target_per_task)
         ):
-            raise ValueError(f"{task_name}: recovery coverage is not exactly 50 shards")
+            raise ValueError(
+                f"{task_name}: recovery coverage is not exactly "
+                f"{expected_target_per_task} shards"
+            )
         record = per_task[task_name]
         cursor = progress[task_name]
         if not isinstance(record, Mapping) or not isinstance(cursor, Mapping):
@@ -228,8 +238,8 @@ def _validate_training_manifest(
             int(record.get("task_id", -1)) != task_id
             or int(cursor.get("task_id", -1)) != task_id
             or int(record.get("successful_continuations", -1))
-            != OFFICIAL_TARGET_PER_TASK
-            or successes != OFFICIAL_TARGET_PER_TASK
+            != expected_target_per_task
+            or successes != expected_target_per_task
             or int(record.get("rows", -1)) != rows
             or int(record.get("attempts", -1)) != attempts
             or int(record.get("detector_triggers", -1)) != triggers
@@ -660,7 +670,13 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(manifest, Mapping):
         raise ValueError("Recovery dataset manifest must be a JSON object")
     manifest_sha256 = file_sha256(manifest_path)
-    task_vocabulary, protocol = _validate_training_manifest(manifest, args.benchmark)
+    task_vocabulary, protocol = _validate_training_manifest(
+        manifest,
+        args.benchmark,
+        expected_target_per_task=int(
+            getattr(args, "expected_target_per_task", OFFICIAL_TARGET_PER_TASK)
+        ),
+    )
     expected_tasks = SUPPORTED_BENCHMARKS[args.benchmark.upper()]
     vocabulary_sha256 = _canonical_sha256(task_vocabulary)
 
@@ -715,7 +731,9 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "data_schema_version": RECOVERY_DATA_SCHEMA_VERSION,
         "dataset_type": RECOVERY_DATASET_TYPE,
         "dataset_complete": True,
-        "target_per_task": OFFICIAL_TARGET_PER_TASK,
+        "target_per_task": int(
+            getattr(args, "expected_target_per_task", OFFICIAL_TARGET_PER_TASK)
+        ),
         "task_bank_sha256": manifest["task_bank_sha256"],
         "collection_protocol_fingerprint_sha256": manifest[
             "protocol_fingerprint_sha256"
@@ -1098,6 +1116,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--patience", type=int, default=12)
     parser.add_argument("--min-delta", type=float, default=1e-6)
     parser.add_argument("--num-workers", type=int, default=0)
+    parser.add_argument(
+        "--expected-target-per-task",
+        type=int,
+        default=OFFICIAL_TARGET_PER_TASK,
+        help=(
+            "Continuations per task the recovery bank must contain. Defaults "
+            "to the publication protocol's 50; the explicit CI smoke profile "
+            "passes its smaller preregistered target."
+        ),
+    )
     parser.add_argument(
         "--resume",
         nargs="?",

@@ -90,6 +90,26 @@ def _load_metaworld_components() -> MetaWorldComponents:
     )
 
 
+def _load_toy_components() -> MetaWorldComponents:
+    """Explicit deterministic CI backend; never a silent fallback."""
+
+    from env import toy_multitask
+
+    return MetaWorldComponents(
+        module=toy_multitask,
+        policy_map=dict(toy_multitask.ENV_POLICY_MAP),
+        version=toy_multitask.TOY_VERSION,
+    )
+
+
+def _components_for_backend(backend: str) -> MetaWorldComponents:
+    if backend == "toy":
+        return _load_toy_components()
+    if backend == "metaworld":
+        return _load_metaworld_components()
+    raise ValueError(f"Unsupported backend {backend!r}; use 'metaworld' or 'toy'.")
+
+
 def task_vocabulary_sha256(task_vocabulary: Sequence[str]) -> str:
     """Hash an ordered vocabulary using a stable, unambiguous encoding."""
 
@@ -535,7 +555,9 @@ def collect(
     benchmark_name, episodes_per_task, seed, max_attempts, max_steps = (
         _validate_arguments(args)
     )
-    components = components or _load_metaworld_components()
+    components = components or _components_for_backend(
+        str(getattr(args, "backend", "metaworld"))
+    )
     benchmark_type = getattr(components.module, benchmark_name, None)
     if benchmark_type is None:
         raise RuntimeError(f"Installed Meta-World does not provide {benchmark_name}.")
@@ -812,6 +834,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--backend",
+        choices=("metaworld", "toy"),
+        default="metaworld",
+        help=(
+            "'toy' selects the explicit deterministic CI benchmark "
+            "(env/toy_multitask.py). It is never selected implicitly and its "
+            "outputs are engineering artifacts, not benchmark evidence."
+        ),
+    )
     parser.add_argument(
         "--max-attempts",
         type=int,

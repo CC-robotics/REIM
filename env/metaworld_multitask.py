@@ -157,6 +157,11 @@ class REIMMetaWorldMultiTaskEnv(_GymEnv):
     ----------
     benchmark:
         ``"MT10"`` or ``"MT50"``.
+    backend:
+        ``"metaworld"`` (default) runs the official benchmark. ``"toy"``
+        explicitly selects the deterministic CI module ``env.toy_multitask``
+        with identical one-hot/variant semantics; it is never a silent
+        fallback and its outputs are engineering artifacts, not evidence.
     task_id:
         Integer in official benchmark order, or an exact ``*-v3`` task name.
     variant_id:
@@ -181,6 +186,7 @@ class REIMMetaWorldMultiTaskEnv(_GymEnv):
         self,
         benchmark: str = "MT10",
         *,
+        backend: str = "metaworld",
         task_id: int | str = 0,
         variant_id: int | None = None,
         seed: int = 0,
@@ -198,7 +204,12 @@ class REIMMetaWorldMultiTaskEnv(_GymEnv):
         if benchmark_name not in SUPPORTED_BENCHMARKS:
             raise ValueError("benchmark must be 'MT10' or 'MT50'.")
 
+        backend_value = str(backend).strip().lower()
+        if backend_value not in {"metaworld", "toy"}:
+            raise ValueError("backend must be 'metaworld' or explicit 'toy'.")
+
         self.benchmark_name = benchmark_name
+        self.backend = backend_value
         self.benchmark_seed = int(seed)
         self.render_mode = render_mode
         self.max_episode_steps = OFFICIAL_MAX_EPISODE_STEPS
@@ -209,7 +220,16 @@ class REIMMetaWorldMultiTaskEnv(_GymEnv):
             observation_noise_std, name="observation_noise_std"
         )
 
-        self._metaworld = _load_metaworld()
+        if self.backend == "toy":
+            from env import toy_multitask
+
+            self._metaworld = toy_multitask
+            self._backend_version = toy_multitask.TOY_VERSION
+            self._policy_map: Mapping[str, type[Any]] = toy_multitask.ENV_POLICY_MAP
+        else:
+            self._metaworld = _load_metaworld()
+            self._backend_version = SUPPORTED_METAWORLD_VERSION
+            self._policy_map = ENV_POLICY_MAP
         self._bundle = _official_bundle(
             self._metaworld, self.benchmark_name, self.benchmark_seed
         )
@@ -333,7 +353,8 @@ class REIMMetaWorldMultiTaskEnv(_GymEnv):
         task = self.current_task
         return {
             "benchmark": self.benchmark_name,
-            "metaworld_version": SUPPORTED_METAWORLD_VERSION,
+            "backend": self.backend,
+            "metaworld_version": self._backend_version,
             "benchmark_seed": self.benchmark_seed,
             "task_id": self.task_id,
             "task_name": self.task_name,
@@ -411,7 +432,7 @@ class REIMMetaWorldMultiTaskEnv(_GymEnv):
         self._task_id = task_id
         self._variant_id = variant_id
         self._current_task = official_task
-        policy_cls = ENV_POLICY_MAP.get(self.task_name)
+        policy_cls = self._policy_map.get(self.task_name)
         self._expert_policy = None if policy_cls is None else policy_cls()
         self._last_clean_state = self._clean_state(self._raw_observation)
         self._last_observed_state = self._last_clean_state.copy()

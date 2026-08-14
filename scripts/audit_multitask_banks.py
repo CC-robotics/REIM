@@ -234,6 +234,26 @@ def _task_payload_sha256(task: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def _toy_benchmark_loader(name: str, seed: int) -> tuple[Any, str]:
+    """Explicit deterministic CI backend; never a silent fallback."""
+
+    from env import toy_multitask
+
+    try:
+        benchmark_type = getattr(toy_multitask, name)
+    except AttributeError as exc:
+        raise BankAuditError(f"toy backend does not expose {name}") from exc
+    return benchmark_type(seed=seed), toy_multitask.TOY_VERSION
+
+
+def _loader_for_backend(backend: str) -> BenchmarkLoader:
+    if backend == "toy":
+        return _toy_benchmark_loader
+    if backend == "metaworld":
+        return _default_benchmark_loader
+    raise BankAuditError(f"Unsupported backend {backend!r}; use 'metaworld' or 'toy'")
+
+
 def _snapshot(
     benchmark_name: str,
     benchmark_seed: int,
@@ -815,6 +835,7 @@ def _audit_final_evaluation(
     benchmark_name: str,
     *,
     benchmark_loader: BenchmarkLoader,
+    expected_episodes_per_task: int = OFFICIAL_VARIANTS_PER_TASK,
 ) -> StageEvidence:
     sidecar_resolved, sidecar = _load_json(
         sidecar_path, "final evaluation run sidecar"
@@ -845,7 +866,7 @@ def _audit_final_evaluation(
         "task_vocabulary_sha256": _canonical_sha256(list(snapshot.task_vocabulary)),
         "task_bank_sha256": snapshot.failure_evaluation_bank_sha256,
         "task_ids": list(range(len(snapshot.task_vocabulary))),
-        "episodes_per_task": OFFICIAL_VARIANTS_PER_TASK,
+        "episodes_per_task": expected_episodes_per_task,
         "max_episode_steps": OFFICIAL_MAX_EPISODE_STEPS,
         "noise_level": 0.0,
         "object_position_noise": False,
@@ -888,7 +909,7 @@ def _audit_final_evaluation(
         raise BankAuditError(f"cannot parse final evaluation CSV {csv_resolved}") from exc
     expected_count = (
         len(snapshot.task_vocabulary)
-        * OFFICIAL_VARIANTS_PER_TASK
+        * expected_episodes_per_task
         * len(methods)
     )
     if len(rows) != expected_count:
@@ -954,7 +975,7 @@ def _audit_final_evaluation(
     expected_cells = {
         (task_id, variant)
         for task_id in range(len(snapshot.task_vocabulary))
-        for variant in range(OFFICIAL_VARIANTS_PER_TASK)
+        for variant in range(expected_episodes_per_task)
     }
     if set(cells) != expected_cells or any(value != method_labels for value in cells.values()):
         raise BankAuditError("evaluation CSV task/variant/method grid is incomplete")
@@ -1019,7 +1040,9 @@ def audit(
     benchmark_name = str(args.benchmark).upper()
     if benchmark_name not in SUPPORTED_BENCHMARKS:
         raise BankAuditError("--benchmark must be MT10 or MT50")
-    loader = benchmark_loader or _default_benchmark_loader
+    loader = benchmark_loader or _loader_for_backend(
+        str(getattr(args, "backend", "metaworld"))
+    )
     evidence = [
         _audit_demonstrations(
             Path(args.demonstrations), benchmark_name, benchmark_loader=loader
@@ -1044,6 +1067,9 @@ def audit(
             Path(args.final_evaluation_csv),
             benchmark_name,
             benchmark_loader=loader,
+            expected_episodes_per_task=int(
+                getattr(args, "expected_episodes_per_task", OFFICIAL_VARIANTS_PER_TASK)
+            ),
         ),
     ]
     if tuple(item.label for item in evidence) != STAGE_LABELS:
@@ -1126,6 +1152,15 @@ def audit(
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--benchmark", required=True, choices=("MT10", "MT50"))
+    parser.add_argument(
+        "--backend",
+        choices=("metaworld", "toy"),
+        default="metaworld",
+        help=(
+            "'toy' selects the explicit deterministic CI benchmark "
+            "(env/toy_multitask.py) when reconstructing task payloads."
+        ),
+    )
     parser.add_argument("--demonstrations", required=True, help="manifest.json")
     parser.add_argument("--failure-train", required=True, help="manifest.json")
     parser.add_argument("--failure-validation", required=True, help="manifest.json")
@@ -1143,6 +1178,16 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Optional persistent audit report. Written atomically only after all "
             "five banks pass."
+        ),
+    )
+    parser.add_argument(
+        "--expected-episodes-per-task",
+        type=int,
+        default=OFFICIAL_VARIANTS_PER_TASK,
+        help=(
+            "Final-evaluation episodes per task. Defaults to the publication "
+            "protocol's 50; the explicit CI smoke profile passes its smaller "
+            "preregistered count."
         ),
     )
     return parser

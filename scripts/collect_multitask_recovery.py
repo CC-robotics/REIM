@@ -100,6 +100,24 @@ def _load_metaworld_components() -> MetaWorldComponents:
     return MetaWorldComponents(metaworld, dict(ENV_POLICY_MAP), version)
 
 
+def _load_toy_components() -> MetaWorldComponents:
+    """Explicit deterministic CI backend; never a silent fallback."""
+
+    from env import toy_multitask
+
+    return MetaWorldComponents(
+        toy_multitask, dict(toy_multitask.ENV_POLICY_MAP), toy_multitask.TOY_VERSION
+    )
+
+
+def _components_for_backend(backend: str) -> MetaWorldComponents:
+    if backend == "toy":
+        return _load_toy_components()
+    if backend == "metaworld":
+        return _load_metaworld_components()
+    raise ValueError(f"Unsupported backend {backend!r}; use 'metaworld' or 'toy'.")
+
+
 def _canonical_sha256(payload: Any) -> str:
     encoded = json.dumps(
         payload,
@@ -627,7 +645,7 @@ def _summarize_shard(
     if not np.array_equal(states[:, RAW_OBSERVATION_DIM:], expected_task_block):
         raise ValueError(f"{path}: invalid task one-hot block.")
 
-    relative = str(path.resolve().relative_to(output_dir.resolve()))
+    relative = path.resolve().relative_to(output_dir.resolve()).as_posix()
     return {
         "file": relative,
         "task_id": task_id,
@@ -1027,7 +1045,9 @@ def collect(
         args.log_file
         or f"results/logs/{benchmark_name.lower()}_recovery_collection.log",
     )
-    components = components or _load_metaworld_components()
+    components = components or _components_for_backend(
+        str(getattr(args, "backend", "metaworld"))
+    )
     benchmark_type = getattr(components.module, benchmark_name, None)
     if benchmark_type is None:
         raise RuntimeError(f"Installed Meta-World does not provide {benchmark_name}.")
@@ -1357,6 +1377,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--action-std-scale", type=float, default=0.40)
     parser.add_argument("--observation-std-scale", type=float, default=0.025)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--backend",
+        choices=("metaworld", "toy"),
+        default="metaworld",
+        help=(
+            "'toy' selects the explicit deterministic CI benchmark "
+            "(env/toy_multitask.py). It is never selected implicitly and its "
+            "outputs are engineering artifacts, not benchmark evidence."
+        ),
+    )
     parser.add_argument("--device", default="auto")
     parser.add_argument("--log-file")
     parser.add_argument("--resume", action="store_true")

@@ -87,6 +87,20 @@ def _benchmark(name: str, seed: int):
     return getattr(metaworld, name)(seed=seed)
 
 
+def _backend_components(backend: str) -> tuple[Any, str]:
+    """Resolve the explicit benchmark backend; 'toy' is never implicit."""
+
+    if backend == "toy":
+        from env import toy_multitask
+
+        return toy_multitask, toy_multitask.TOY_VERSION
+    if backend == "metaworld":
+        import metaworld
+
+        return metaworld, importlib.metadata.version("metaworld")
+    raise ValueError(f"Unsupported backend {backend!r}; use 'metaworld' or 'toy'.")
+
+
 def _condition(raw: np.ndarray, task_id: int, task_count: int) -> np.ndarray:
     one_hot = np.zeros(task_count, dtype=np.float32)
     one_hot[task_id] = 1.0
@@ -1061,7 +1075,10 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     # Validate seed values before either NumPy or Meta-World consumes them.
     _require_integer("--benchmark-seed", args.benchmark_seed, minimum=0)
     _require_integer("--seed", args.seed, minimum=0)
-    benchmark = _benchmark(args.benchmark, args.benchmark_seed)
+    backend_module, backend_version = _backend_components(
+        str(getattr(args, "backend", "metaworld"))
+    )
+    benchmark = getattr(backend_module, args.benchmark)(seed=args.benchmark_seed)
     task_vocabulary = list(benchmark.train_classes.keys())
     task_count = len(task_vocabulary)
     expected = 10 if args.benchmark == "MT10" else 50
@@ -1149,7 +1166,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             checkpoint_kind="mlp_bc",
         )
 
-    metaworld_version = importlib.metadata.version("metaworld")
+    metaworld_version = backend_version
     protocol = _build_run_protocol(
         args=args,
         condition=condition,
@@ -1476,6 +1493,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--bootstrap-samples", type=int, default=5000)
     parser.add_argument("--task-ids", type=int, nargs="*")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--backend",
+        choices=("metaworld", "toy"),
+        default="metaworld",
+        help=(
+            "'toy' selects the explicit deterministic CI benchmark "
+            "(env/toy_multitask.py). It is never selected implicitly and its "
+            "outputs are engineering artifacts, not benchmark evidence."
+        ),
+    )
     parser.add_argument("--device", default="auto")
     parser.add_argument("--log-file")
     parser.add_argument("--resume", action="store_true")
