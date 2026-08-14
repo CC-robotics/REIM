@@ -347,7 +347,7 @@ def test_tampered_summary_or_audit_never_creates_outputs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     tables, audits, assets = _complete_study(tmp_path, monkeypatch)
-    summary_path = tables / "mt50_disturbed_noise_020_summary.json"
+    summary_path = tables / "mt50_disturbed_noise_20_summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     summary["aggregates"]["reim"]["summary"]["success_rate_task_macro"] = 0.123
     summary_path.write_text(json.dumps(summary), encoding="utf-8")

@@ -817,7 +817,9 @@ def _condition_paths(tables_dir: Path, slug: str, stem: str) -> tuple[Path, Path
 
 
 def _noise_tag(level: float) -> str:
-    return f"{int(round(level * 100)):03d}"
+    # Must match scripts/run_multitask_pipeline.py:_noise_tag, which names the
+    # evaluation artifacts this validator consumes (e.g. disturbed_noise_20).
+    return f"{int(round(level * 100)):02d}"
 
 
 def validate_suite(
