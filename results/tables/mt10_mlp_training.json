@@ -1,19 +1,19 @@
 {
   "action_dim": 4,
   "benchmark": "MT10",
-  "best_validation_mae": 0.04679465334193004,
-  "best_validation_mse": 0.011668096914941709,
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/mt10/seed_42/mlp_bc.pt",
-  "curve": "/home/diy/bonus_track/REIM/results/figures/mt10_mlp_training.png",
-  "data_manifest_sha256": "5f63d823bfea318b2063bbdcf5db84e2236d4cc216d1adfce3d49d8dce04a312",
-  "device": "cpu",
+  "best_validation_mae": 0.04667617594886084,
+  "best_validation_mse": 0.011708278109554538,
+  "checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\mlp_bc.pt",
+  "curve": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\figures\\mt10_mlp_training.png",
+  "data_manifest_sha256": "a0173b92bed04f620ef40710621e31b7db339dd4a1cb9e7856d33f732fefee88",
+  "device": "cuda",
   "epochs_completed": 120,
   "hidden_dims": [
     256,
     256
   ],
-  "history": "/home/diy/bonus_track/REIM/results/tables/mt10_mlp_training.csv",
-  "latest_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/mt10/seed_42/mlp_bc_latest.pt",
+  "history": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_mlp_training.csv",
+  "latest_checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\mlp_bc_latest.pt",
   "loss": "mean_squared_error",
   "normalization_scope": "raw39_only_task_onehot_unchanged",
   "parameters": 79620,
@@ -42,7 +42,7 @@
     "window-open-v3": 5
   },
   "policy_type": "MLP_BC",
-  "samples": 37945,
+  "samples": 37944,
   "seed": 42,
   "split_sha256": "aac791b31592405a48cb9cfa9f3fa032b9f1c50f3a0fd0f465e84ebbdb7ab1f8",
   "state_dim": 49,
@@ -63,6 +63,6 @@
   "train_trajectories": 450,
   "training_schema": "reim-multitask-mlp-training-v1",
   "trajectories": 500,
-  "validation_samples": 3706,
+  "validation_samples": 3705,
   "validation_trajectories": 50
 }
