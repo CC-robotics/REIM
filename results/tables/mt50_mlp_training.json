@@ -1,19 +1,19 @@
 {
   "action_dim": 4,
   "benchmark": "MT50",
-  "best_validation_mae": 0.0655078246291564,
-  "best_validation_mse": 0.01832967138117428,
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/mt50/seed_42/mlp_bc.pt",
-  "curve": "/home/diy/bonus_track/REIM/results/figures/mt50_mlp_training.png",
-  "data_manifest_sha256": "204796b370457ad9fb788c9329ae55b50d10604e4621288456da0c65cfd599f7",
-  "device": "cpu",
+  "best_validation_mae": 0.06511968945466112,
+  "best_validation_mse": 0.01841770695925522,
+  "checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\mlp_bc.pt",
+  "curve": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\figures\\mt50_mlp_training.png",
+  "data_manifest_sha256": "13b400d27d340e4edb75ba369b65b5bbc01611a9229f49bfef3ec6d9d2c62945",
+  "device": "cuda",
   "epochs_completed": 120,
   "hidden_dims": [
     256,
     256
   ],
-  "history": "/home/diy/bonus_track/REIM/results/tables/mt50_mlp_training.csv",
-  "latest_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/mt50/seed_42/mlp_bc_latest.pt",
+  "history": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_mlp_training.csv",
+  "latest_checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\mlp_bc_latest.pt",
   "loss": "mean_squared_error",
   "normalization_scope": "raw39_only_task_onehot_unchanged",
   "parameters": 89860,
@@ -122,7 +122,7 @@
     "window-open-v3": 5
   },
   "policy_type": "MLP_BC",
-  "samples": 192175,
+  "samples": 192165,
   "seed": 42,
   "split_sha256": "f25482b5fcfe31fa4f1bc691950f9187e082903080f83117db2ba596529d1fa7",
   "state_dim": 89,
@@ -179,10 +179,10 @@
     "window-close-v3"
   ],
   "task_vocabulary_sha256": "d2cf28d3fa903c33d8863c57714eab276f8f67612053041b9f51197fcfeec475",
-  "train_samples": 173166,
+  "train_samples": 173164,
   "train_trajectories": 2250,
   "training_schema": "reim-multitask-mlp-training-v1",
   "trajectories": 2500,
-  "validation_samples": 19009,
+  "validation_samples": 19001,
   "validation_trajectories": 250
 }
