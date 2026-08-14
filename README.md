@@ -324,6 +324,28 @@ evidence. `paper_assets/Table_multitask_clean.tex` is currently protected by
 `\REIMMultiTaskResultsfalse`; it renders no numbers until complete MT10 and
 MT50 clean and disturbed episode records pass an independent publication gate.
 
+### Isolated multitask smoke run (CI)
+
+The multi-task track has an explicit toy CI backend, mirroring the PickPlace
+toy smoke convention. `env/toy_multitask.py` reproduces the Meta-World
+interface surface (seeded MT10/MT50 banks with 50 variants per class, 39D raw
+observations, task one-hot, 4D actions, scripted experts) with deterministic
+point dynamics, so the complete 18-stage pipeline can be verified without
+MuJoCo. Nothing ever falls back to it silently: every stage requires
+`--backend toy`, and the runner selects it through a dedicated profile:
+
+```bash
+./run_multitask.sh all MT10 --smoke          # inspect the smoke plan
+./run_multitask.sh all MT10 --smoke --execute
+```
+
+The smoke profile drives the tiny `configs/multitask/smoke*.yaml` configs and
+writes only under `datasets/smoke/multitask`, `checkpoints/smoke/multitask`,
+and `results/smoke/multitask`; production MT1/MT10 trees are never touched.
+Smoke artifacts verify wiring, provenance, determinism, and file isolation —
+including the fail-closed tuned-threshold binding and the five-bank
+separation audit — and are never benchmark evidence.
+
 ## PickPlace evaluation
 
 Evaluate the full four-method table on 1,000 episodes per method:
