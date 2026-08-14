@@ -83,6 +83,31 @@ def _default_components() -> FailureGenerationComponents:
     )
 
 
+def _toy_components() -> FailureGenerationComponents:
+    """Explicit deterministic CI backend; never a silent fallback."""
+
+    from env import toy_multitask
+
+    return FailureGenerationComponents(
+        benchmark_factory=lambda name, seed: getattr(
+            toy_multitask, name.upper()
+        )(seed=seed),
+        policy_loader=lambda path, device: ACTPolicy.from_checkpoint(
+            path, map_location=device
+        ),
+        expert_policy_map=toy_multitask.ENV_POLICY_MAP,
+        metaworld_version=toy_multitask.TOY_VERSION,
+    )
+
+
+def _components_for_backend(backend: str) -> FailureGenerationComponents:
+    if backend == "toy":
+        return _toy_components()
+    if backend == "metaworld":
+        return _default_components()
+    raise ValueError(f"Unsupported backend {backend!r}; use 'metaworld' or 'toy'.")
+
+
 def _condition(raw: np.ndarray, task_id: int, task_count: int) -> np.ndarray:
     one_hot = np.zeros(task_count, dtype=np.float32)
     one_hot[task_id] = 1.0
@@ -630,11 +655,46 @@ def _validate_manifest_file_inventory(
     files = manifest.get("files")
     if not isinstance(files, list):
         raise ValueError("Manifest files inventory must be a list")
+    complete = bool(manifest.get("complete", True))
     expected_count = len(task_vocabulary) * stored_rollouts_per_task
-    if len(files) != expected_count:
-        raise ValueError(
-            f"Manifest file inventory has {len(files)} entries, expected {expected_count}"
-        )
+    if complete:
+        if len(files) != expected_count:
+            raise ValueError(
+                f"Manifest file inventory has {len(files)} entries, expected {expected_count}"
+            )
+        slots: list[tuple[int, int]] = [
+            (task_id, rollout_index)
+            for task_id in range(len(task_vocabulary))
+            for rollout_index in range(stored_rollouts_per_task)
+        ]
+    else:
+        if len(files) > expected_count:
+            raise ValueError(
+                f"Manifest file inventory has {len(files)} entries, "
+                f"expected at most {expected_count}"
+            )
+        partial_slots: list[tuple[int, int]] = []
+        for index, entry in enumerate(files):
+            if not isinstance(entry, Mapping):
+                raise ValueError(f"Manifest files[{index}] is not an object")
+            relative = _safe_manifest_relative_path(entry.get("file"))
+            match = _SHARD_PATTERN.fullmatch(relative.as_posix())
+            if match is None:  # pragma: no cover - guarded above
+                raise ValueError(f"Manifest file entry {relative} is not a shard path")
+            task_id = int(match.group(1))
+            rollout_index = int(match.group(2))
+            if task_id >= len(task_vocabulary):
+                raise ValueError(
+                    f"Manifest file entry {relative} exceeds the task vocabulary"
+                )
+            if rollout_index >= stored_rollouts_per_task:
+                raise ValueError(
+                    f"Manifest file entry {relative} exceeds rollouts_per_task"
+                )
+            partial_slots.append((task_id, rollout_index))
+        if len(set(partial_slots)) != len(partial_slots):
+            raise ValueError("Manifest file inventory contains duplicate slots")
+        slots = sorted(partial_slots)
 
     manifest_by_path: dict[str, Mapping[str, Any]] = {}
     for index, entry in enumerate(files):
@@ -662,57 +722,58 @@ def _validate_manifest_file_inventory(
 
     summaries: dict[tuple[int, int], dict[str, Any]] = {}
     expected_relative_order: list[str] = []
-    for task_id, task_name in enumerate(task_vocabulary):
+    for task_id, rollout_index in slots:
+        task_name = task_vocabulary[task_id]
         task_variants = tasks_by_name[task_name]
-        for rollout_index in range(stored_rollouts_per_task):
-            path = _episode_path(output_dir, task_id, rollout_index)
-            relative = path.relative_to(output_dir).as_posix()
-            expected_relative_order.append(relative)
-            entry = manifest_by_path.get(relative)
-            if entry is None:
-                raise ValueError(f"Manifest is missing expected shard {relative}")
-            stored_sha256 = str(entry.get("sha256", ""))
-            actual_sha256 = file_sha256(path)
-            if stored_sha256 != actual_sha256:
-                raise ValueError(
-                    f"Shard SHA256 mismatch for {relative}: "
-                    f"stored={stored_sha256!r}, actual={actual_sha256!r}"
-                )
-            task_variant = rollout_index % len(task_variants)
-            summary = _read_shard_summary(
-                path,
-                output_dir=output_dir,
-                task_count=len(task_vocabulary),
-                expected_task_id=task_id,
-                expected_task_name=task_name,
-                expected_rollout_index=rollout_index,
-                expected_task_variant=task_variant,
-                expected_task_payload_sha256=_task_payload_sha256(
-                    task_variants[task_variant]
-                ),
-                expected_episode_seed=seed + task_id * 100_000 + rollout_index,
+        path = _episode_path(output_dir, task_id, rollout_index)
+        relative = path.relative_to(output_dir).as_posix()
+        expected_relative_order.append(relative)
+        entry = manifest_by_path.get(relative)
+        if entry is None:
+            raise ValueError(f"Manifest is missing expected shard {relative}")
+        stored_sha256 = str(entry.get("sha256", ""))
+        actual_sha256 = file_sha256(path)
+        if stored_sha256 != actual_sha256:
+            raise ValueError(
+                f"Shard SHA256 mismatch for {relative}: "
+                f"stored={stored_sha256!r}, actual={actual_sha256!r}"
             )
-            for key in (
-                "file",
-                "task_id",
-                "task_name",
-                "rollout_index",
-                "length",
-                "success",
-                "positive_labels",
-                "sha256",
-            ):
-                if entry.get(key) != summary[key]:
-                    raise ValueError(
-                        f"Manifest entry {relative} has invalid {key}: "
-                        f"stored={entry.get(key)!r}, actual={summary[key]!r}"
-                    )
-            summaries[(task_id, rollout_index)] = summary
+        task_variant = rollout_index % len(task_variants)
+        summary = _read_shard_summary(
+            path,
+            output_dir=output_dir,
+            task_count=len(task_vocabulary),
+            expected_task_id=task_id,
+            expected_task_name=task_name,
+            expected_rollout_index=rollout_index,
+            expected_task_variant=task_variant,
+            expected_task_payload_sha256=_task_payload_sha256(
+                task_variants[task_variant]
+            ),
+            expected_episode_seed=seed + task_id * 100_000 + rollout_index,
+        )
+        for key in (
+            "file",
+            "task_id",
+            "task_name",
+            "rollout_index",
+            "length",
+            "success",
+            "positive_labels",
+            "sha256",
+        ):
+            if entry.get(key) != summary[key]:
+                raise ValueError(
+                    f"Manifest entry {relative} has invalid {key}: "
+                    f"stored={entry.get(key)!r}, actual={summary[key]!r}"
+                )
+        summaries[(task_id, rollout_index)] = summary
 
     stored_order = [str(entry["file"]) for entry in files]
     if stored_order != expected_relative_order:
         raise ValueError("Manifest files inventory is not in canonical task/rollout order")
-    if manifest.get("episodes") != expected_count:
+    expected_episode_count = expected_count if complete else len(files)
+    if manifest.get("episodes") != expected_episode_count:
         raise ValueError("Manifest episode count disagrees with its file inventory")
     rows = sum(item["length"] for item in summaries.values())
     positives = sum(item["positive_labels"] for item in summaries.values())
@@ -734,6 +795,7 @@ def _build_manifest(
     checkpoint_path: Path,
     rollouts_per_task: int,
     entries: Mapping[tuple[int, int], Mapping[str, Any]],
+    complete: bool = True,
 ) -> dict[str, Any]:
     ordered_entries = [entries[key] for key in sorted(entries)]
     task_vocabulary = list(protocol["task_vocabulary"])
@@ -751,7 +813,9 @@ def _build_manifest(
             "episodes": len(selected),
             "success_rate": float(
                 np.mean([bool(entry["success"]) for entry in selected])
-            ),
+            )
+            if selected
+            else 0.0,
             "rows": rows,
             "positive_rate": sum(
                 int(entry["positive_labels"]) for entry in selected
@@ -770,7 +834,7 @@ def _build_manifest(
         "act_checkpoint": str(checkpoint_path),
         "per_task": per_task,
         "files": ordered_entries,
-        "complete": True,
+        "complete": bool(complete),
     }
     return manifest
 
@@ -790,7 +854,9 @@ def generate(
         args.log_file
         or f"results/logs/{benchmark_name.lower()}_failures.log",
     )
-    components = components or _default_components()
+    components = components or _components_for_backend(
+        str(getattr(args, "backend", "metaworld"))
+    )
     benchmark = components.benchmark_factory(
         benchmark_name, int(args.benchmark_seed)
     )
@@ -881,6 +947,21 @@ def generate(
             stored_rollouts_per_task=stored_rollouts,
             seed=int(args.seed),
         )
+
+    def _write_progress_manifest(*, complete: bool) -> dict[str, Any]:
+        progress_manifest = _build_manifest(
+            protocol=protocol,
+            checkpoint_path=checkpoint_path,
+            rollouts_per_task=int(args.rollouts_per_task),
+            entries=entries,
+            complete=complete,
+        )
+        atomic_write_json(manifest_path, progress_manifest)
+        return progress_manifest
+
+    # Establish provenance before the first expensive rollout so an
+    # interrupted run can be resumed instead of restarted from scratch.
+    _write_progress_manifest(complete=False)
 
     action_std = float(protocol["noise_parameters"]["action_noise_std"])
     observation_std = float(
@@ -1024,6 +1105,7 @@ def generate(
                     expected_task_payload_sha256=task_sha256,
                     expected_episode_seed=episode_seed,
                 )
+                _write_progress_manifest(complete=False)
         finally:
             env.close()
 
@@ -1040,13 +1122,7 @@ def generate(
     if set(entries) != expected_keys:
         raise RuntimeError("Failure shard task/rollout slots are incomplete")
 
-    manifest = _build_manifest(
-        protocol=protocol,
-        checkpoint_path=checkpoint_path,
-        rollouts_per_task=int(args.rollouts_per_task),
-        entries=entries,
-    )
-    atomic_write_json(manifest_path, manifest)
+    manifest = _write_progress_manifest(complete=True)
     logger.info(
         "%s failure dataset: episodes=%d rows=%d positive=%.2f%% "
         "ACT-success=%.2f%% fingerprint=%s",
@@ -1076,6 +1152,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prediction-horizon", type=int, default=10)
     parser.add_argument("--terminal-positive-horizon", type=int, default=25)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--backend",
+        choices=("metaworld", "toy"),
+        default="metaworld",
+        help=(
+            "'toy' selects the explicit deterministic CI benchmark "
+            "(env/toy_multitask.py). It is never selected implicitly and its "
+            "outputs are engineering artifacts, not benchmark evidence."
+        ),
+    )
     parser.add_argument("--device", default="auto")
     parser.add_argument("--log-file")
     parser.add_argument("--resume", action="store_true")
