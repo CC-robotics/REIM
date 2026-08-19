@@ -234,6 +234,7 @@ def _row_from_specification(specification: dict[str, object]) -> dict[str, objec
         "max_failure_probability": 0.0,
         "trigger_step": -1,
         "attempt_count": 1,
+        "recovery_steps_total": 0,
     }
 
 

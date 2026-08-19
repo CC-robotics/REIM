@@ -78,6 +78,7 @@ CSV_FIELDS = (
     "max_failure_probability",
     "trigger_step",
     "attempt_count",
+    "recovery_steps_total",
 )
 
 
@@ -917,6 +918,7 @@ def _rollout(
     cooldown_until = 0
     intervention_count = 0
     recovery_success = 0
+    recovery_steps_total = 0
     trigger_step = -1
     max_probability = 0.0
     success = False
@@ -961,6 +963,7 @@ def _rollout(
         if recovery_active:
             intended = np.asarray(recovery.act(state), dtype=np.float32).reshape(4)
             recovery_steps += 1
+            recovery_steps_total += 1
         elif method == "mlp_bc":
             assert mlp is not None
             intended = np.asarray(mlp.act(state), dtype=np.float32).reshape(4)
@@ -989,6 +992,7 @@ def _rollout(
         "steps": executed_steps,
         "max_failure_probability": max_probability,
         "trigger_step": trigger_step,
+        "recovery_steps_total": recovery_steps_total,
     }
 
 
@@ -1051,6 +1055,8 @@ def _retry_rollout(
         "intervention_count": 1,
         "recovery_success": int(retry["success"]),
         "attempt_count": 2,
+        "recovery_steps_total": primary["recovery_steps_total"]
+        + retry["recovery_steps_total"],
     }
 
 
