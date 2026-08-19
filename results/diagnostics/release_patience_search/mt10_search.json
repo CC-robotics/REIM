@@ -1,0 +1,378 @@
+{
+  "protocol": {
+    "backend": "metaworld",
+    "backend_version": "3.1.1",
+    "benchmark": "MT10",
+    "benchmark_seed": 20264010,
+    "checkpoint_sha256": {
+      "act": "e4493b456460c6641c1f2b28217effcfbda8487e2766cbd24d6be0a31fa59334",
+      "detector": "54da6920f97952ca3f3a72b507f1281408e9660cb8ce9e91e56950c5a04a2450",
+      "recovery": "90069f6c680ab025244c2689760137485b3dd25b9b54e3eb929f0d98d20f7c46"
+    },
+    "fixed_recovery_params": {
+      "intervention_cooldown": 10,
+      "min_recovery_steps": 5,
+      "recovery_budget": 250
+    },
+    "grid": {
+      "episode_seed_base": 42,
+      "episodes_per_task": 20,
+      "noise_levels": [
+        0.2,
+        0.4
+      ],
+      "release_patiences": [
+        1,
+        5,
+        10
+      ],
+      "release_thresholds": [
+        0.05,
+        0.15,
+        0.3
+      ]
+    },
+    "schema_version": "reim-release-patience-search-v1",
+    "trigger_threshold": 0.65
+  },
+  "results": {
+    "robustness_noise_20": {
+      "grid": {
+        "0.05/1": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.12,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 315.54,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.505,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.507694,
+          "release_patience": 1,
+          "release_rate": 0.754286,
+          "release_threshold": 0.05,
+          "task_macro_success": 0.505
+        },
+        "0.05/10": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.08,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 309.435,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.53,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.550943,
+          "release_patience": 10,
+          "release_rate": 0.685714,
+          "release_threshold": 0.05,
+          "task_macro_success": 0.53
+        },
+        "0.05/5": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.09,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 313.76,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.515,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.5406,
+          "release_patience": 5,
+          "release_rate": 0.697143,
+          "release_threshold": 0.05,
+          "task_macro_success": 0.515
+        },
+        "0.15/1": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.415,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 328.815,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.475,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.428156,
+          "release_patience": 1,
+          "release_rate": 0.84,
+          "release_threshold": 0.15,
+          "task_macro_success": 0.475
+        },
+        "0.15/10": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.17,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 318.705,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.495,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.49836,
+          "release_patience": 10,
+          "release_rate": 0.805714,
+          "release_threshold": 0.15,
+          "task_macro_success": 0.495
+        },
+        "0.15/5": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.215,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 320.375,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.5,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.473244,
+          "release_patience": 5,
+          "release_rate": 0.822857,
+          "release_threshold": 0.15,
+          "task_macro_success": 0.5
+        },
+        "0.3/1": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.975,
+          "interventions_per_episode_median": 2.0,
+          "mean_steps": 351.28,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.47,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.344778,
+          "release_patience": 1,
+          "release_rate": 0.902857,
+          "release_threshold": 0.3,
+          "task_macro_success": 0.47
+        },
+        "0.3/10": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.33,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 326.69,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.475,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.449621,
+          "release_patience": 10,
+          "release_rate": 0.834286,
+          "release_threshold": 0.3,
+          "task_macro_success": 0.475
+        },
+        "0.3/5": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "intervened_episode_rate": 0.875,
+          "interventions_per_episode_mean": 1.5,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 340.1,
+          "median_trigger_step": 34.0,
+          "micro_success": 0.46,
+          "noise_level": 0.2,
+          "recovery_occupancy_mean": 0.402904,
+          "release_patience": 5,
+          "release_rate": 0.874286,
+          "release_threshold": 0.3,
+          "task_macro_success": 0.46
+        }
+      },
+      "noise_level": 0.2,
+      "references": {
+        "act": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "mean_steps": 492.015,
+          "method": "act",
+          "micro_success": 0.03,
+          "noise_level": 0.2,
+          "task_macro_success": 0.03
+        },
+        "heuristic_recovery": {
+          "condition": "robustness_noise_20",
+          "episodes": 200,
+          "mean_steps": 359.5,
+          "method": "heuristic_recovery",
+          "micro_success": 0.48,
+          "noise_level": 0.2,
+          "task_macro_success": 0.48
+        }
+      }
+    },
+    "robustness_noise_40": {
+      "grid": {
+        "0.05/1": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 1.385,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 285.485,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.575,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.6543,
+          "release_patience": 1,
+          "release_rate": 0.78836,
+          "release_threshold": 0.05,
+          "task_macro_success": 0.575
+        },
+        "0.05/10": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 1.25,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 267.45,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.62,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.701692,
+          "release_patience": 10,
+          "release_rate": 0.714286,
+          "release_threshold": 0.05,
+          "task_macro_success": 0.62
+        },
+        "0.05/5": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 1.29,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 275.705,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.605,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.685387,
+          "release_patience": 5,
+          "release_rate": 0.719577,
+          "release_threshold": 0.05,
+          "task_macro_success": 0.605
+        },
+        "0.15/1": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 2.22,
+          "interventions_per_episode_median": 2.0,
+          "mean_steps": 312.47,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.52,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.517309,
+          "release_patience": 1,
+          "release_rate": 0.920635,
+          "release_threshold": 0.15,
+          "task_macro_success": 0.52
+        },
+        "0.15/10": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 1.475,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 289.46,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.57,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.643593,
+          "release_patience": 10,
+          "release_rate": 0.835979,
+          "release_threshold": 0.15,
+          "task_macro_success": 0.57
+        },
+        "0.15/5": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 1.81,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 301.34,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.54,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.601198,
+          "release_patience": 5,
+          "release_rate": 0.878307,
+          "release_threshold": 0.15,
+          "task_macro_success": 0.54
+        },
+        "0.3/1": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 3.405,
+          "interventions_per_episode_median": 3.0,
+          "mean_steps": 339.71,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.49,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.376434,
+          "release_patience": 1,
+          "release_rate": 0.989418,
+          "release_threshold": 0.3,
+          "task_macro_success": 0.49
+        },
+        "0.3/10": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 1.9,
+          "interventions_per_episode_median": 1.0,
+          "mean_steps": 301.77,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.535,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.570589,
+          "release_patience": 10,
+          "release_rate": 0.915344,
+          "release_threshold": 0.3,
+          "task_macro_success": 0.535
+        },
+        "0.3/5": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "intervened_episode_rate": 0.945,
+          "interventions_per_episode_mean": 2.355,
+          "interventions_per_episode_median": 2.0,
+          "mean_steps": 318.435,
+          "median_trigger_step": 18.0,
+          "micro_success": 0.495,
+          "noise_level": 0.4,
+          "recovery_occupancy_mean": 0.490342,
+          "release_patience": 5,
+          "release_rate": 0.941799,
+          "release_threshold": 0.3,
+          "task_macro_success": 0.495
+        }
+      },
+      "noise_level": 0.4,
+      "references": {
+        "act": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "mean_steps": 490.35,
+          "method": "act",
+          "micro_success": 0.03,
+          "noise_level": 0.4,
+          "task_macro_success": 0.03
+        },
+        "heuristic_recovery": {
+          "condition": "robustness_noise_40",
+          "episodes": 200,
+          "mean_steps": 366.845,
+          "method": "heuristic_recovery",
+          "micro_success": 0.47,
+          "noise_level": 0.4,
+          "task_macro_success": 0.47
+        }
+      }
+    }
+  }
+}
