@@ -33,8 +33,8 @@
     "object_position_noise": false,
     "observation_std_scale": 0.025,
     "recovery_budget": 250,
-    "release_patience": 5,
-    "release_threshold": 0.15,
+    "release_patience": 10,
+    "release_threshold": 0.05,
     "task_bank_sha256": "3d7066f522638c4aa9096d00062ee7b614ea9b4ee1eb0d529dcb862ddebe8578",
     "task_ids": [
       0,
@@ -62,6 +62,6 @@
     ],
     "task_vocabulary_sha256": "527870db7868566e8a84c43dc2cb9d8b739ad75c5bdb916294747814c957686e"
   },
-  "run_fingerprint": "c3bcf5dcb78f8674e64d32ead42bb092b711d2303ac3b3d5371c79c393d73098",
+  "run_fingerprint": "e64330e1ef6f52cbd41f2f558bc55b4e7fcb10da422908955746e9c9a5f27864",
   "schema_version": "reim-multitask-evaluation-run-v1"
 }
