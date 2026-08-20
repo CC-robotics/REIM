@@ -879,3 +879,21 @@ def test_reim_hysteresis_releases_recovery_back_to_act(
     assert result["intervention_count"] == 1
     assert result["recovery_success"] == 1
     assert result["trigger_step"] == 0
+
+
+def test_evaluate_row_dict_covers_every_csv_field() -> None:
+    """Guard against CSV_FIELDS entries not wired into evaluate() row dict.
+
+    Regression for the recovery_steps_total gap: the field was added to
+    CSV_FIELDS and to _rollout/_retry_rollout returns, but the row dict in
+    evaluate() was not updated, so the written CSV silently dropped it and
+    resume validation failed with 'missing fields'.
+    """
+    import re
+
+    src = Path(evaluation.__file__).read_text(encoding="utf-8")
+    start = src.index("row = {")
+    end = src.index("rows.append(row)")
+    block = src[start:end]
+    for field in evaluation.CSV_FIELDS:
+        assert f'"{field}"' in block, f"evaluate() row dict missing CSV field {field!r}"

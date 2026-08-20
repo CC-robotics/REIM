@@ -1328,6 +1328,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                         ),
                         "trigger_step": int(result["trigger_step"]),
                         "attempt_count": int(result["attempt_count"]),
+                        "recovery_steps_total": int(result["recovery_steps_total"]),
                     }
                     rows.append(row)
                     completed.add((method, task_id, paired_id))
