@@ -46,8 +46,8 @@ disturbance:
 recovery:
   collection_threshold: 0.20
   deployment_threshold: 0.30
-  release_threshold: 0.15
-  release_patience: 5
+  release_threshold: 0.05
+  release_patience: 10
   min_recovery_steps: 5
   intervention_cooldown: 10
   max_consecutive_steps_within_episode: 250
