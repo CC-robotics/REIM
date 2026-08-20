@@ -38,10 +38,12 @@ current repository state** and is retained here for audit only. It is
 superseded by the current canonical artifact and must not be cited as the
 operating point of any published number.
 
-Additionally, `results/diagnostics/mt10_gate65_5_per_task.csv.run.json` is a
+Additionally, `results/diagnostics/mt10_gate65_5_per_task.csv.run.json` was a
 5-episode-per-task **diagnostic** run (explicitly labeled `diagnostic_gate_65`
-by its producer); it never participated in threshold selection and must not be
-mixed with publication-grade results.
+by its producer); it never participated in threshold selection and was removed
+from the tree in cleanup commit `3098cb70` together with the other
+pre-pipeline gate-scan diagnostics. It must not be mixed with
+publication-grade results.
 
 ## Selection rule (both benchmarks)
 
@@ -50,20 +52,28 @@ mixed with publication-grade results.
   `final_bank_accessed = false`).
 - Rule: lowest probability threshold whose task-macro precision satisfies the
   preregistered floor 0.60 (`precision_floor_satisfied`).
-- Deployment release threshold (0.15), patience (5), min recovery steps (5)
-  and cooldown (10) remain preregistered in `configs/multitask/mt10.yaml` /
-  `mt50.yaml`; they were **not** tuned on the validation bank. Per the
-  pre-submission review, a principled joint trigger × release × patience
-  selection on the gate-validation bank is scheduled as a separate P0 work
-  item; until it lands, the numbers above stand as the canonical operating
-  point and the hysteresis interval is reported as an engineering choice,
-  not a principled one.
+- Deployment release threshold (0.05), patience (10), min recovery steps (5)
+  and cooldown (10) are recorded in `configs/multitask/mt10.yaml` /
+  `mt50.yaml`. Per the pre-submission review, a release × patience grid
+  search on the gate-validation bank was run for both benchmarks
+  (`results/diagnostics/release_patience_search/`, schema
+  `reim-release-patience-search-v1`; MT10 validation bank seed 20264010,
+  MT50 seed 20264050). Based on those results the frozen operating point was
+  moved from release 0.15 / patience 5 to **release 0.05 / patience 10** on
+  2026-08-20: MT10's official final-bank re-run at n=500 confirmed the gain
+  (0.4-noise task-macro success 0.614 vs 0.554, clean unchanged at 0.970,
+  bank-separation audit passed), and the MT50 validation grid showed the
+  same direction (0.05/10 best at noise 0.1 and 0.4). The superseded 0.15/5
+  official evaluation is archived under
+  `results/tables/archive_release_015_05/` (MT10) and
+  `results/tables/archive_release_015_05_mt50/` (MT50) for comparison and
+  audit; neither may be cited as the operating point of any published number.
 
 ## Known calibration caveat
 
 The tuner's own report shows task-macro ECE ≈ 0.138 (MT10) — detector scores
 are not fully calibrated, so the numeric distance between trigger (0.65) and
-release (0.15) must not be interpreted as a probability difference of 50 pp;
+release (0.05) must not be interpreted as a probability difference of 50 pp;
 both are empirical operating points. Score calibration (temperature scaling
 or isotonic regression, fit on the validation bank only) is tracked as a P1
 work item.
