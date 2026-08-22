@@ -55,6 +55,7 @@ def _load_episodes(path: Path) -> dict[str, dict[str, dict[str, object]]]:
                 "trigger_step": int(row["trigger_step"]),
                 "steps": int(row["steps"]),
                 "recovery_success": int(row["recovery_success"]),
+                "recovery_steps_total": int(row.get("recovery_steps_total", 0) or 0),
             }
     return paired
 
@@ -84,9 +85,23 @@ def _burden(episodes: dict[str, dict[str, dict[str, object]]], method: str) -> d
     intervened = [r for r in rows if int(r["interventions"]) > 0]
     triggers = [int(r["trigger_step"]) for r in intervened if int(r["trigger_step"]) >= 0]
     counts = [int(r["interventions"]) for r in rows]
+    occupancies = [
+        int(r["recovery_steps_total"]) / max(1, int(r["steps"])) for r in rows
+    ]
+    inter_episodes = [
+        r for r in rows if int(r["interventions"]) > 0
+    ]
+    total_recovery_steps = sum(int(r["recovery_steps_total"]) for r in inter_episodes)
+    total_interventions = sum(int(r["interventions"]) for r in inter_episodes)
     return {
         "episodes": len(rows),
         "intervened_episode_rate": len(intervened) / max(1, len(rows)),
+        "recovery_occupancy_mean": statistics.fmean(occupancies) if occupancies else 0.0,
+        "mean_segment_length": (
+            total_recovery_steps / total_interventions
+            if total_interventions > 0
+            else None
+        ),
         "interventions_per_episode_mean": statistics.fmean(counts) if counts else 0.0,
         "interventions_per_episode_median": statistics.median(counts) if counts else 0.0,
         "max_interventions_in_episode": max(counts) if counts else 0,
@@ -106,9 +121,10 @@ def main() -> None:
         "schema_version": "reim-intervention-burden-v1",
         "source": "official evaluation CSVs (CRN-paired), no re-run",
         "known_gaps": [
-            "recovery-controlled steps / occupancy and per-segment lengths "
-            "require a new per-episode recovery_steps_total field; deferred to "
-            "the seed-study and terminal-backfill-ablation re-runs"
+            "per-episode segment counts and duration distributions are still "
+            "not recorded; the aggregate mean segment length is now computed "
+            "as total recovery steps / total interventions from the new "
+            "recovery_steps_total field"
         ],
         "benchmarks": {},
     }
@@ -141,6 +157,14 @@ def main() -> None:
                         "paired_episodes": n_pairs,
                         "intervened_episode_rate": round(
                             float(b["intervened_episode_rate"]), 4
+                        ),
+                        "recovery_occupancy_mean": round(
+                            float(b["recovery_occupancy_mean"]), 4
+                        ),
+                        "mean_segment_length": (
+                            round(float(b["mean_segment_length"]), 4)
+                            if b["mean_segment_length"] is not None
+                            else ""
                         ),
                         "interventions_per_episode_mean": round(
                             float(b["interventions_per_episode_mean"]), 4

@@ -2,7 +2,7 @@
   "schema_version": "reim-intervention-burden-v1",
   "source": "official evaluation CSVs (CRN-paired), no re-run",
   "known_gaps": [
-    "recovery-controlled steps / occupancy and per-segment lengths require a new per-episode recovery_steps_total field; deferred to the seed-study and terminal-backfill-ablation re-runs"
+    "per-episode segment counts and duration distributions are still not recorded; the aggregate mean segment length is now computed as total recovery steps / total interventions from the new recovery_steps_total field"
   ],
   "benchmarks": {
     "MT10": {
@@ -29,6 +29,8 @@
           "heuristic_recovery": {
             "episodes": 500,
             "intervened_episode_rate": 0.222,
+            "recovery_occupancy_mean": 0.1320510683734057,
+            "mean_segment_length": 120.11764705882354,
             "interventions_per_episode_mean": 0.238,
             "interventions_per_episode_median": 0.0,
             "max_interventions_in_episode": 2,
@@ -38,6 +40,8 @@
           "reim": {
             "episodes": 500,
             "intervened_episode_rate": 0.466,
+            "recovery_occupancy_mean": 0.1888637060858853,
+            "mean_segment_length": 33.37339055793991,
             "interventions_per_episode_mean": 0.466,
             "interventions_per_episode_median": 0.0,
             "max_interventions_in_episode": 1,
@@ -69,6 +73,8 @@
           "heuristic_recovery": {
             "episodes": 500,
             "intervened_episode_rate": 0.222,
+            "recovery_occupancy_mean": 0.1320510683734057,
+            "mean_segment_length": 120.11764705882354,
             "interventions_per_episode_mean": 0.238,
             "interventions_per_episode_median": 0.0,
             "max_interventions_in_episode": 2,
@@ -78,6 +84,8 @@
           "reim": {
             "episodes": 500,
             "intervened_episode_rate": 0.466,
+            "recovery_occupancy_mean": 0.1888637060858853,
+            "mean_segment_length": 33.37339055793991,
             "interventions_per_episode_mean": 0.466,
             "interventions_per_episode_median": 0.0,
             "max_interventions_in_episode": 1,
@@ -90,9 +98,9 @@
         "paired_episodes": 500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            189,
+            202,
             0,
-            311
+            298
           ],
           "heuristic_vs_act": [
             213,
@@ -100,15 +108,17 @@
             287
           ],
           "reim_vs_heuristic": [
-            61,
-            85,
-            354
+            64,
+            75,
+            361
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 500,
             "intervened_episode_rate": 0.816,
+            "recovery_occupancy_mean": 0.49618750744937046,
+            "mean_segment_length": 158.67279411764707,
             "interventions_per_episode_mean": 1.088,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -118,11 +128,13 @@
           "reim": {
             "episodes": 500,
             "intervened_episode_rate": 0.788,
-            "interventions_per_episode_mean": 0.988,
+            "recovery_occupancy_mean": 0.39390295969347017,
+            "mean_segment_length": 120.60086767895879,
+            "interventions_per_episode_mean": 0.922,
             "interventions_per_episode_median": 1.0,
-            "max_interventions_in_episode": 3,
+            "max_interventions_in_episode": 2,
             "trigger_step_median": 122.0,
-            "clean_release_rate": 0.6194331983805668
+            "clean_release_rate": 0.5227765726681128
           }
         }
       },
@@ -130,9 +142,9 @@
         "paired_episodes": 500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            217,
+            242,
             0,
-            283
+            258
           ],
           "heuristic_vs_act": [
             212,
@@ -140,15 +152,17 @@
             288
           ],
           "reim_vs_heuristic": [
-            72,
-            67,
-            361
+            77,
+            47,
+            376
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 500,
             "intervened_episode_rate": 0.808,
+            "recovery_occupancy_mean": 0.49310478013439907,
+            "mean_segment_length": 158.65735567970205,
             "interventions_per_episode_mean": 1.074,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -158,11 +172,13 @@
           "reim": {
             "episodes": 500,
             "intervened_episode_rate": 0.86,
-            "interventions_per_episode_mean": 1.226,
+            "recovery_occupancy_mean": 0.5481927807980986,
+            "mean_segment_length": 123.08812260536398,
+            "interventions_per_episode_mean": 1.044,
             "interventions_per_episode_median": 1.0,
-            "max_interventions_in_episode": 5,
+            "max_interventions_in_episode": 2,
             "trigger_step_median": 36.0,
-            "clean_release_rate": 0.6802610114192496
+            "clean_release_rate": 0.5478927203065134
           }
         }
       },
@@ -170,9 +186,9 @@
         "paired_episodes": 500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            229,
+            265,
             0,
-            271
+            235
           ],
           "heuristic_vs_act": [
             205,
@@ -180,15 +196,17 @@
             295
           ],
           "reim_vs_heuristic": [
-            84,
-            60,
-            356
+            100,
+            40,
+            360
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 500,
             "intervened_episode_rate": 0.802,
+            "recovery_occupancy_mean": 0.48241937848724104,
+            "mean_segment_length": 157.49525616698293,
             "interventions_per_episode_mean": 1.054,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -198,11 +216,13 @@
           "reim": {
             "episodes": 500,
             "intervened_episode_rate": 0.896,
-            "interventions_per_episode_mean": 1.486,
+            "recovery_occupancy_mean": 0.6153036588630965,
+            "mean_segment_length": 123.53641207815275,
+            "interventions_per_episode_mean": 1.126,
             "interventions_per_episode_median": 1.0,
-            "max_interventions_in_episode": 7,
+            "max_interventions_in_episode": 3,
             "trigger_step_median": 23.5,
-            "clean_release_rate": 0.730820995962315
+            "clean_release_rate": 0.5719360568383659
           }
         }
       },
@@ -210,9 +230,9 @@
         "paired_episodes": 500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            254,
+            284,
             0,
-            246
+            216
           ],
           "heuristic_vs_act": [
             202,
@@ -220,15 +240,17 @@
             298
           ],
           "reim_vs_heuristic": [
-            104,
-            52,
-            344
+            117,
+            35,
+            348
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 500,
             "intervened_episode_rate": 0.798,
+            "recovery_occupancy_mean": 0.4791293488707466,
+            "mean_segment_length": 159.0874524714829,
             "interventions_per_episode_mean": 1.052,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -238,11 +260,13 @@
           "reim": {
             "episodes": 500,
             "intervened_episode_rate": 0.928,
-            "interventions_per_episode_mean": 1.672,
+            "recovery_occupancy_mean": 0.6902841405223611,
+            "mean_segment_length": 128.9983579638752,
+            "interventions_per_episode_mean": 1.218,
             "interventions_per_episode_median": 1.0,
-            "max_interventions_in_episode": 8,
+            "max_interventions_in_episode": 5,
             "trigger_step_median": 17.0,
-            "clean_release_rate": 0.742822966507177
+            "clean_release_rate": 0.5566502463054187
           }
         }
       }
@@ -271,6 +295,8 @@
           "heuristic_recovery": {
             "episodes": 2500,
             "intervened_episode_rate": 0.1732,
+            "recovery_occupancy_mean": 0.10389255731670233,
+            "mean_segment_length": 135.73563218390805,
             "interventions_per_episode_mean": 0.2088,
             "interventions_per_episode_median": 0.0,
             "max_interventions_in_episode": 2,
@@ -280,11 +306,13 @@
           "reim": {
             "episodes": 2500,
             "intervened_episode_rate": 0.2844,
-            "interventions_per_episode_mean": 0.3304,
+            "recovery_occupancy_mean": 0.1657805486535443,
+            "mean_segment_length": 74.73412698412699,
+            "interventions_per_episode_mean": 0.3024,
             "interventions_per_episode_median": 0.0,
-            "max_interventions_in_episode": 6,
+            "max_interventions_in_episode": 2,
             "trigger_step_median": 33,
-            "clean_release_rate": 0.8765133171912833
+            "clean_release_rate": 0.8214285714285714
           }
         }
       },
@@ -311,6 +339,8 @@
           "heuristic_recovery": {
             "episodes": 2500,
             "intervened_episode_rate": 0.1732,
+            "recovery_occupancy_mean": 0.10389255731670233,
+            "mean_segment_length": 135.73563218390805,
             "interventions_per_episode_mean": 0.2088,
             "interventions_per_episode_median": 0.0,
             "max_interventions_in_episode": 2,
@@ -320,11 +350,13 @@
           "reim": {
             "episodes": 2500,
             "intervened_episode_rate": 0.2844,
-            "interventions_per_episode_mean": 0.3304,
+            "recovery_occupancy_mean": 0.1657805486535443,
+            "mean_segment_length": 74.73412698412699,
+            "interventions_per_episode_mean": 0.3024,
             "interventions_per_episode_median": 0.0,
-            "max_interventions_in_episode": 6,
+            "max_interventions_in_episode": 2,
             "trigger_step_median": 33,
-            "clean_release_rate": 0.8765133171912833
+            "clean_release_rate": 0.8214285714285714
           }
         }
       },
@@ -332,9 +364,9 @@
         "paired_episodes": 2500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            608,
-            4,
-            1888
+            806,
+            7,
+            1687
           ],
           "heuristic_vs_act": [
             851,
@@ -342,15 +374,17 @@
             1645
           ],
           "reim_vs_heuristic": [
-            244,
-            487,
-            1769
+            336,
+            384,
+            1780
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 2500,
             "intervened_episode_rate": 0.934,
+            "recovery_occupancy_mean": 0.6078151916074624,
+            "mean_segment_length": 176.33020802812774,
             "interventions_per_episode_mean": 1.3652,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -360,11 +394,13 @@
           "reim": {
             "episodes": 2500,
             "intervened_episode_rate": 0.864,
-            "interventions_per_episode_mean": 1.3352,
+            "recovery_occupancy_mean": 0.45243611895688046,
+            "mean_segment_length": 132.60536962118425,
+            "interventions_per_episode_mean": 1.0876,
             "interventions_per_episode_median": 1.0,
-            "max_interventions_in_episode": 5,
+            "max_interventions_in_episode": 3,
             "trigger_step_median": 115.0,
-            "clean_release_rate": 0.6881366087477532
+            "clean_release_rate": 0.43545421110702465
           }
         }
       },
@@ -372,9 +408,9 @@
         "paired_episodes": 2500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            714,
-            4,
-            1782
+            1008,
+            0,
+            1492
           ],
           "heuristic_vs_act": [
             837,
@@ -382,15 +418,17 @@
             1659
           ],
           "reim_vs_heuristic": [
-            293,
-            416,
-            1791
+            462,
+            287,
+            1751
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 2500,
             "intervened_episode_rate": 0.9368,
+            "recovery_occupancy_mean": 0.6066165616033051,
+            "mean_segment_length": 178.25509902453445,
             "interventions_per_episode_mean": 1.3532,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -400,11 +438,13 @@
           "reim": {
             "episodes": 2500,
             "intervened_episode_rate": 0.9308,
-            "interventions_per_episode_mean": 1.8284,
-            "interventions_per_episode_median": 2.0,
-            "max_interventions_in_episode": 7,
+            "recovery_occupancy_mean": 0.5428335854207474,
+            "mean_segment_length": 124.01958346285359,
+            "interventions_per_episode_mean": 1.2868,
+            "interventions_per_episode_median": 1.0,
+            "max_interventions_in_episode": 4,
             "trigger_step_median": 65,
-            "clean_release_rate": 0.7543207175672719
+            "clean_release_rate": 0.48585638793907365
           }
         }
       },
@@ -412,9 +452,9 @@
         "paired_episodes": 2500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            829,
-            7,
-            1664
+            1112,
+            3,
+            1385
           ],
           "heuristic_vs_act": [
             814,
@@ -422,15 +462,17 @@
             1683
           ],
           "reim_vs_heuristic": [
-            376,
-            365,
-            1759
+            551,
+            253,
+            1696
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 2500,
             "intervened_episode_rate": 0.9288,
+            "recovery_occupancy_mean": 0.6016947988223824,
+            "mean_segment_length": 177.63997644980864,
             "interventions_per_episode_mean": 1.3588,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -440,11 +482,13 @@
           "reim": {
             "episodes": 2500,
             "intervened_episode_rate": 0.97,
-            "interventions_per_episode_mean": 2.3308,
-            "interventions_per_episode_median": 2.0,
-            "max_interventions_in_episode": 8,
+            "recovery_occupancy_mean": 0.6126866198148544,
+            "mean_segment_length": 121.08285004142502,
+            "interventions_per_episode_mean": 1.4484,
+            "interventions_per_episode_median": 1.0,
+            "max_interventions_in_episode": 5,
             "trigger_step_median": 38,
-            "clean_release_rate": 0.8141410674446542
+            "clean_release_rate": 0.52002209334438
           }
         }
       },
@@ -452,9 +496,9 @@
         "paired_episodes": 2500,
         "rescued_harmed_unchanged": {
           "reim_vs_act": [
-            886,
-            3,
-            1611
+            1195,
+            0,
+            1305
           ],
           "heuristic_vs_act": [
             801,
@@ -462,15 +506,17 @@
             1697
           ],
           "reim_vs_heuristic": [
-            409,
-            325,
-            1766
+            620,
+            224,
+            1656
           ]
         },
         "burden": {
           "heuristic_recovery": {
             "episodes": 2500,
             "intervened_episode_rate": 0.9292,
+            "recovery_occupancy_mean": 0.5971283630008863,
+            "mean_segment_length": 179.36751630112627,
             "interventions_per_episode_mean": 1.3496,
             "interventions_per_episode_median": 1.0,
             "max_interventions_in_episode": 2,
@@ -480,11 +526,13 @@
           "reim": {
             "episodes": 2500,
             "intervened_episode_rate": 0.9856,
-            "interventions_per_episode_mean": 2.7656,
-            "interventions_per_episode_median": 3.0,
-            "max_interventions_in_episode": 9,
+            "recovery_occupancy_mean": 0.671092869539656,
+            "mean_segment_length": 119.30154639175258,
+            "interventions_per_episode_mean": 1.552,
+            "interventions_per_episode_median": 1.0,
+            "max_interventions_in_episode": 5,
             "trigger_step_median": 19.5,
-            "clean_release_rate": 0.8387330054960949
+            "clean_release_rate": 0.55
           }
         }
       }
