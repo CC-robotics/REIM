@@ -25,143 +25,143 @@
   },
   "inputs": {
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\audits\\mt10_bank_separation.json": {
-      "sha256": "a4f14d596c0245c84c71212e552ec320f3126804d236772a2452b13a5ece7b35",
+      "sha256": "26780f95c238ff853f81819a6a245bcc3831494cbd9c88b7f527771e98945aa3",
       "bytes": 10806
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_clean_summary.json": {
-      "sha256": "adb57ad68c3ab86bc41d836bce50e035ba745c07cfe7cffadb29f1768755f2b1",
-      "bytes": 48170
+      "sha256": "2aa957b9b3c1c6b693e10589c245d7c5df6fc916a9f96e9940ac8189e2b27212",
+      "bytes": 48171
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_clean_episodes.csv": {
-      "sha256": "b17a5008055ae66e58b894a2b1edf332077f960893a0863452f0c4a4d21acada",
-      "bytes": 474034
+      "sha256": "34a5a7d147842c09ace4cf22811198af3b2888a78f51cc882595849744412152",
+      "bytes": 478393
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_00_summary.json": {
-      "sha256": "2bf702b8d5c6687a9409c7b8827afd6c51396142de6ec2e465788a855b05f04f",
-      "bytes": 48428
+      "sha256": "f344ef4b7cd98204d3e3f83df62cdffa6e836839b4ad23add3035f632c4d7aa3",
+      "bytes": 48429
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_00_episodes.csv": {
-      "sha256": "99b75e147b412f5a7f78e8476f1655eaa0e318b48fe0d27a9aae2c98190efab3",
-      "bytes": 484034
+      "sha256": "c358894aa522cf0c9d3d10870f7847f7687ed6acfd19ad4384b802e4b64b7b5c",
+      "bytes": 488393
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_10_summary.json": {
-      "sha256": "d08aacd1f8475b5dd61b37ba594fc9f8aa3530db948a393ff9646892785f2bac",
-      "bytes": 49358
+      "sha256": "04f297a680ad9a7fe0e2f6aefafeabfa52b51806c218d41935d89b928da3ca45",
+      "bytes": 49402
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_10_episodes.csv": {
-      "sha256": "909f1a32e33186af7ccab59b7461faa4750626a4406de1628ac46e347c6e071a",
-      "bytes": 486019
+      "sha256": "53eed8404bdf8034af49c79d39fb71b275b368de8f7de66c8844490933cf7739",
+      "bytes": 491217
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_20_summary.json": {
-      "sha256": "2500bebbd2cfb553bb194d49037612fc4fb5f67c812d6593d6decd8bbbb99831",
-      "bytes": 49345
+      "sha256": "9f2e7b0baeefcd414bf793a105b7d425aa63409ada34a060bc25de45c6746e9b",
+      "bytes": 49373
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_20_episodes.csv": {
-      "sha256": "fabd8e3b04834ffdb82d8f36dcb1f33c0029a30ed31f3a6327a1c964da40e68c",
-      "bytes": 485796
+      "sha256": "337615370a9d9eca149842aef0be9e629263c5ad01e7a30674040956332b3241",
+      "bytes": 491025
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_30_summary.json": {
-      "sha256": "02c4bdb85eaac024c111b874c1926f6f6fb8eab79216e8e5771e2bc3600d6bb0",
-      "bytes": 49137
+      "sha256": "bbda462e4547cba20ab9a2d8e8e445ec34b04179e1d73b7f799fc9830c8621b6",
+      "bytes": 49120
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_30_episodes.csv": {
-      "sha256": "8fabb71a00844dcdd014cef4bb5a9eb89a9adbe4f208c222ff7ed0da6d4c45bc",
-      "bytes": 485731
+      "sha256": "ff32f9596dd79c61e8cc7576d7ec2dad731cd5cf60b8bc85fbd90a095e138dfb",
+      "bytes": 490976
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_40_summary.json": {
-      "sha256": "b42a530e7c4780ca86c552058f819f2d5047faec52d89f554fb47d4826d13e7c",
-      "bytes": 49317
+      "sha256": "96699170e7cc800a4ec44ed1b9fee1a93604cbfdb4562cc6371755463858fb86",
+      "bytes": 49289
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_40_episodes.csv": {
-      "sha256": "d184276ee7fff29c88942716146c7e36ca930efc402d708eff3571cb16159ae2",
-      "bytes": 485642
+      "sha256": "ef3e0f67eafabf1b3345ab98a1c9ddd52ac42ca0fc5699cb4264aec1118a893a",
+      "bytes": 490911
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\audits\\mt50_bank_separation.json": {
-      "sha256": "163c97cde3fe14984b0e6d355546f1815fc75b41a2839979a3107abef65cc9c0",
+      "sha256": "b6e5ad7dcaede0c1c06ecaa2480301a8985eb8762d2660d4433076d1230d50f0",
       "bytes": 10827
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_summary.json": {
-      "sha256": "9c866fd2e918a60d48af98e289e646d9f69dc7dab927cca0d70cf04f594d5088",
-      "bytes": 199465
+      "sha256": "248385ad80ad82bdfbb49fe8a39466a375e0e12bfaa6242327f1a178c30233d4",
+      "bytes": 199410
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_episodes.csv": {
-      "sha256": "f3946e0612cf9178edb5ad44ead33511835db9c020ed667c9cba242a7ff8810a",
-      "bytes": 2397198
+      "sha256": "af544840de9d4dc354dbb7c4e7c24a5b69af5803e28978783739c5c87877a582",
+      "bytes": 2418636
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_00_summary.json": {
-      "sha256": "e323fe64f0a8538b0d95147cd05d952fbf196c54112eabf63556a85b1f4432a3",
-      "bytes": 199723
+      "sha256": "558c4dc0994f490dede5793f3d95ee51e00a93ee662d2ae768ec75ced8cf63bc",
+      "bytes": 199668
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_00_episodes.csv": {
-      "sha256": "df8f1624a4d96e71e589171437c67ad7827c266d301de0eb9d62e7634be36ff3",
-      "bytes": 2447198
+      "sha256": "e3559ed41102b08c8fc49bfa93da736de3e8e790ab0624863fe1facf92422d7b",
+      "bytes": 2468636
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_10_summary.json": {
-      "sha256": "541905c8782cb96d0de01b8052dd2be9d018993a847c8cfcafaf7828f832c336",
-      "bytes": 201952
+      "sha256": "169ef17cead8575ad56a4e6c63083e6c5cbaadf64f0568391b1d62144b41acca",
+      "bytes": 202116
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_10_episodes.csv": {
-      "sha256": "58cd8f0aa3bff102ec7bbf285084f0e496014972a723f5b16b165c8607c3261a",
-      "bytes": 2455656
+      "sha256": "1dff601e3df65032f07b1b3658e7f7ed2bfe9830a35a61be43bdca4b650bfb8d",
+      "bytes": 2482802
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_20_summary.json": {
-      "sha256": "c3dba6f85a8c0210c7bc123f6dfac657d72404b45e6cbe4c35c307727da5b8ff",
-      "bytes": 202229
+      "sha256": "e57585ca65759f24435f8d7a2441bfc9eeaea1ecf3cdbe89da5f4ab741155518",
+      "bytes": 202198
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_20_episodes.csv": {
-      "sha256": "392d8c249da79a8cef4612bf9d8d18d3f7d42986e47824ed97a5585231088fbf",
-      "bytes": 2455236
+      "sha256": "84e5f64f67e64f2da250b3541ebb7b74fc304e5abb32f598615c2d1f063c6578",
+      "bytes": 2482545
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_30_summary.json": {
-      "sha256": "3ced41c372484da9a45c8444505b834c099241058161ac9619d7711ce0dc5019",
-      "bytes": 201855
+      "sha256": "feab6f64794cbf567a7b2519c2bd3c7d3d6073e1775e972e8bad2d0744096e02",
+      "bytes": 201922
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_30_episodes.csv": {
-      "sha256": "1e5545bc90861f8d9e28fba7187314c58698783a90d86243a17fc4fb63c30953",
-      "bytes": 2454829
+      "sha256": "ad4d40e61376763e9e5132f6b454bcd501765a5cc187652891f10aedf0b7859d",
+      "bytes": 2482220
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_40_summary.json": {
-      "sha256": "3e3ba84ca90bd11c06476d43e6a2c33f5aef890c500791e3b363bc87490ca26a",
-      "bytes": 201968
+      "sha256": "87e23f4d0fb802abacf11b39d86fa0b7a93f75fa9ea7d6f0886da30b20ace646",
+      "bytes": 201866
     },
     "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_40_episodes.csv": {
-      "sha256": "58c61a2a312b24381d225b1d555e247db68753840558b843c537040996a29edb",
-      "bytes": 2454451
+      "sha256": "75af81b41ee0faac536c1b14ebf5ffafb205bee4a8089e56d56754da2f76b18f",
+      "bytes": 2481878
     }
   },
-  "generated_at_utc": "2026-08-14T10:03:05.964060+00:00",
+  "generated_at_utc": "2026-08-22T12:54:01.743677+00:00",
   "publication_gate": {
     "eligible": true,
     "reason": "MT10 and MT50 official-clean rollouts, five robustness conditions, and both five-bank audits passed",
     "official_clean_scope": "known-task_goal-observable",
     "robustness_scope": "non_official_reim_extension"
   },
-  "input_manifest_sha256": "2168d1ade6ed082b9c32f7cffeb5c0aafe7f7ddb0b89a9625129ae697833719f",
+  "input_manifest_sha256": "d803829126c99866430cdc262c4aa97491a2ab7b345d85e63a2a307097212834",
   "outputs": {
     "gate": {
       "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\multitask_results.tex",
-      "sha256": "b93e289c19f8a7cc30dac35dbfdb739064907a06ac2a033595de2b1cd27e817d",
+      "sha256": "bef10953ffe55e00b58a1c4ed09f1d9a957d41138612752a5bee8ba55f9578f0",
       "bytes": 2431
     },
     "clean_csv": {
       "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\multitask_clean_statistics.csv",
-      "sha256": "2f518a687a004208075178d08460047e22c14a2bd2970267dc82d316f8b7d192",
-      "bytes": 1370
+      "sha256": "1376cef03be1fde4d17570be43d6225fb5a4d76f5017e2137e6b45be2feb3979",
+      "bytes": 1358
     },
     "robustness_csv": {
       "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\multitask_robustness_statistics.csv",
-      "sha256": "771c5146902a4f310fd5d326c127c398906f6dab377f36f707e12bf86b54bcb7",
-      "bytes": 5878
+      "sha256": "e5b9e9f4ba88a255dbc57f1088235dbc8678a2525c344231354dbf4fc69afc8f",
+      "bytes": 5832
     },
     "figure_png": {
       "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\Figure_multitask_robustness.png",
-      "sha256": "4c1e6ae476327de255c1db0fe54acf55cc96b36e4e8c8a3a24eeab0d1d8ee84a",
-      "bytes": 157760
+      "sha256": "8dded319a20af680a26e2b7eafd67e421dcf660f8caac302ef4bae5fa27c236e",
+      "bytes": 155865
     },
     "figure_pdf": {
       "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\paper_assets\\Figure_multitask_robustness.pdf",
-      "sha256": "6be9f5c4d55e74e5e6e896f628c5e809ca4b1895b185fc9672b3a2f48305b749",
-      "bytes": 22782
+      "sha256": "bc1c20e7aef7c8c9bcdcf095b7902c2f135ef3dac06a6e6ecf92acb9d7d4d571",
+      "bytes": 22787
     }
   }
 }
