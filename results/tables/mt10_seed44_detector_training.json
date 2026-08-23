@@ -1,0 +1,51 @@
+{
+  "accuracy": 0.7280491615456723,
+  "best_validation_loss": 0.8176948921815292,
+  "checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_44\\failure_detector.pt",
+  "confusion_matrix": [
+    [
+      27677,
+      8619
+    ],
+    [
+      4436,
+      7273
+    ]
+  ],
+  "confusion_matrix_figure": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\figures\\mt10_seed44_detector_confusion.png",
+  "deployment_threshold_metrics": {
+    "accuracy": 0.6092282053952713,
+    "confusion_matrix": [
+      [
+        19558,
+        16738
+      ],
+      [
+        2021,
+        9688
+      ]
+    ],
+    "f1": 0.508089681395044,
+    "fn": 2021,
+    "fp": 16738,
+    "positive_fraction": 0.24391209249036558,
+    "precision": 0.36660864300310303,
+    "recall": 0.8273977282432317,
+    "samples": 48005,
+    "threshold": 0.3,
+    "tn": 19558,
+    "tp": 9688
+  },
+  "epoch": 1,
+  "f1": 0.5270098909459803,
+  "fn": 4436,
+  "fp": 8619,
+  "positive_fraction": 0.24391209249036558,
+  "precision": 0.45765164862824065,
+  "recall": 0.6211461269109232,
+  "samples": 48005,
+  "threshold": 0.5,
+  "tn": 27677,
+  "tp": 7273,
+  "validation_loss": 0.8176948921815292
+}
