@@ -547,6 +547,8 @@ def _final_manifest(
     input_manifest_sha256: str,
 ) -> dict[str, Any]:
     manifest = dict(source)
+    manifest["prediction_horizon"] = int(calibration["prediction_horizon"])
+    manifest["terminal_positive_horizon"] = int(calibration["terminal_positive_horizon"])
     thresholds = {
         int(item["task_id"]): float(item["threshold"])
         for item in calibration["task_thresholds"]
