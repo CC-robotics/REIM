@@ -194,11 +194,11 @@
   },
   "final_bank_accessed": false,
   "outputs": {
-    "csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_horizon50_detector_threshold_grid.csv",
-    "json": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_horizon50_detector_threshold.json"
+    "csv": "results/tables/mt10_horizon50_detector_threshold_grid.csv",
+    "json": "results/tables/mt10_horizon50_detector_threshold.json"
   },
   "provenance": {
-    "detector_checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\horizon_50\\failure_detector.pt",
+    "detector_checkpoint": "checkpoints/mt10/horizon_50/failure_detector.pt",
     "detector_checkpoint_sha256": "63a3e581817dfb43424902a0cc859d116fe6a469d9035697ab5d72e183fce4d7",
     "detector_training_calibration_fingerprint_sha256": "1c5fca7a2127b45a26ce35b0fc1b776ad39c1c6028486c3a359fde20b8de7e2d",
     "detector_training_dataset_fingerprint_sha256": "30d44506d3578cfd46eeaf5392d7d07b1c06c68b84801c736d34ea604294b696",
@@ -211,7 +211,7 @@
     "validation_calibration_fingerprint_sha256": "b2bd2fa98d6f57b50d7868c561d9260284bbca344b6e2eb045d40adeb01c7b36",
     "validation_collection_seed": 20264010,
     "validation_dataset_fingerprint_sha256": "ecedddcd66bc255f556469516b38ba2c3977f09e8ae6415c68664669aead2076",
-    "validation_manifest": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\failures_validation_horizon50_calibrated\\manifest.json",
+    "validation_manifest": "datasets/mt10/failures_validation_horizon50_calibrated/manifest.json",
     "validation_manifest_sha256": "32ead9c2163e4bfa2762c926bc7a413dab4a6185692ddfd57ecdb9dcf79f921d",
     "validation_provenance_fingerprint_sha256": "85c3c36be0d96e3432fd728d4f33e23d961118db1a956a028f062b854a609b05"
   },

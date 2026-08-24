@@ -78,6 +78,7 @@ REFERENCE_FIELDS = (
     "episodes",
     "micro_success",
     "task_macro_success",
+    "recovery_occupancy_mean",
     "mean_steps",
 )
 
@@ -142,10 +143,16 @@ def _aggregate_reference(
     macro = statistics.mean(
         [statistics.mean(per_task[tid]) for tid in range(task_count) if tid in per_task]
     )
+    # Same-bank occupancy so heuristic references support matched-occupancy
+    # controls (advisor review): identical formula to _aggregate_reim.
+    occupancy = [
+        int(row["recovery_steps_total"]) / max(1, int(row["steps"])) for row in rows
+    ]
     return {
         "episodes": total,
         "micro_success": round(micro, 6),
         "task_macro_success": round(float(macro), 6),
+        "recovery_occupancy_mean": round(float(statistics.mean(occupancy)), 6),
         "mean_steps": round(
             float(statistics.mean(int(row["steps"]) for row in rows)), 3
         ),

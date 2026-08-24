@@ -13019,7 +13019,7 @@
     "benchmark": "MT50",
     "calibration_source": {
       "kind": "frozen_training_calibration_manifest",
-      "manifest_path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt50\\failures_calibrated\\manifest.json",
+      "manifest_path": "datasets/mt50/failures_calibrated/manifest.json",
       "manifest_sha256": "90080f38021ef00034e7f1c2d749781410f42994799e24bee624bb073ef5900c",
       "sha256": "5359998680c01dbbc011648a2883f5df27833353d9ad5b139ac3bfb10fc81bc7"
     },

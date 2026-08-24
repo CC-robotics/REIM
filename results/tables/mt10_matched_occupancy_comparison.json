@@ -1,0 +1,45 @@
+{
+  "protocol": {
+    "benchmark": "MT10",
+    "benchmark_seed": 20264010,
+    "episodes_per_task": 20,
+    "seed": 42,
+    "trigger_threshold": 0.65,
+    "note": "Directional comparison on the 200-episode search/validation library (seed 20264010), not the 500-episode official library (20265010). Heuristic reference re-run on the same library to obtain occupancy."
+  },
+  "comparisons": [
+    {
+      "noise_level": 0.1,
+      "heuristic": {
+        "success": 0.47,
+        "recovery_occupancy": 0.48194
+      },
+      "nearest_grid_point": {
+        "release_threshold": 0.05,
+        "release_patience": 10,
+        "micro_success": 0.46,
+        "recovery_occupancy": 0.382569,
+        "occupancy_delta": 0.099371
+      },
+      "matched_within_0.02": false,
+      "success_delta_reim_minus_heuristic": -0.01,
+      "caveat": "No grid point reaches the heuristic occupancy at this noise level (grid max 0.383 < 0.482); nearest point reported instead. The nearest point is the robustness-first operating point (0.05/10) itself."
+    },
+    {
+      "noise_level": 0.4,
+      "heuristic": {
+        "success": 0.47,
+        "recovery_occupancy": 0.475755
+      },
+      "nearest_grid_point": {
+        "release_threshold": 0.3,
+        "release_patience": 5,
+        "micro_success": 0.495,
+        "recovery_occupancy": 0.490342,
+        "occupancy_delta": 0.014587
+      },
+      "matched_within_0.02": true,
+      "success_delta_reim_minus_heuristic": 0.025
+    }
+  ]
+}

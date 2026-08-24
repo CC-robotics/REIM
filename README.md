@@ -557,11 +557,53 @@ Robustness extension (task-universal action/observation noise; non-official):
 REIM matches ACT on clean tasks and is far more robust under noise: the ACT
 policy collapses to single digits while REIM retains roughly half or more of
 its clean success. At noise 0.1 REIM is statistically level with the heuristic
-gate; from noise 0.2 upward it leads both baselines. The robustness gain comes
-with a measurable recovery-occupancy cost (e.g. MT10 noise 0.4: REIM occupies
-69.0% of steps versus 47.9% for the heuristic gate); per-condition occupancy,
-segment, and rescued/harmed counts are reported alongside success in
-`results/tables/intervention_burden_summary.json`.
+gate; from noise 0.2 upward it leads both baselines.
+
+Recovery occupancy (share of episode steps spent in recovery) is reported as a
+first-class metric alongside success, from
+`results/tables/intervention_burden_summary.json` (official bank, seed
+20265010):
+
+| Noise | MT10 REIM occ. | MT10 Heuristic occ. | MT50 REIM occ. | MT50 Heuristic occ. |
+|---|---:|---:|---:|---:|
+| clean | 18.9% | 13.2% | 16.6% | 10.4% |
+| 0.1 | 39.4% | 49.6% | 45.2% | 60.8% |
+| 0.2 | 54.8% | 49.3% | 54.3% | 60.7% |
+| 0.3 | 61.5% | 48.2% | 61.3% | 60.2% |
+| 0.4 | 69.0% | 47.9% | 67.1% | 59.7% |
+
+The robustness gain comes with a measurable occupancy cost; per-condition
+segment and rescued/harmed counts are reported alongside success in the same
+burden summary.
+
+Matched-occupancy control (directional, 200-episode search bank seed
+20264010, 20 episodes per task; heuristic reference re-run on the same bank,
+see `results/diagnostics/release_patience_search/mt10_references.csv`): at
+MT10 noise 0.4 the heuristic gate occupies 47.6% of steps, and the grid point
+release 0.3 / patience 5 matches it at 49.0% occupancy while scoring 49.5%
+versus 47.0% success (+2.5 points at equal budget). At noise 0.1 no grid
+point reaches the heuristic occupancy of 48.2% (grid maximum 38.3%); the
+nearest point is the robustness-first operating point itself (release 0.05 /
+patience 10: 38.3% occupancy, 46.0% versus 47.0% success, i.e. -1.0 point at
+roughly 10 points lower occupancy). Machine-readable record:
+`results/tables/mt10_matched_occupancy_comparison.json`; curve:
+`results/figures/mt10_success_occupancy.png`.
+
+Backfill detector-level audit (MT10, terminal-positive horizon ablation).
+Thresholds were re-tuned per horizon on the validation bank under a precision
+floor of 0.60: horizon 0 -> 0.72, 10 -> 0.71, 25 -> 0.65, 50 -> 0.62.
+Pre-event metrics from `results/tables/mt10_backfill_pre_event_summary.csv`:
+
+| Horizon | Threshold | Strict pre-event F1 | Event-traj. early-warning rate | Median lead (steps) |
+|---|---:|---:|---:|---:|
+| h0 | 0.72 | 0.428 | 30.0% | 1 |
+| h10 | 0.71 | 0.414 | 30.7% | 1 |
+| h25 | 0.65 | 0.410 | 29.7% | 2 |
+| h50 | 0.62 | 0.394 | 32.3% | 1 |
+
+Correction to the 2026-08-23 report: the 0.683 F1 / 74% early-warning figures
+quoted there were single-task PickPlace numbers, not MT10; the MT10
+detector-level values are the ones in the table above.
 
 ## Paper assets
 

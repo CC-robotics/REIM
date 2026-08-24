@@ -2619,7 +2619,7 @@
     "benchmark": "MT10",
     "calibration_source": {
       "kind": "frozen_training_calibration_manifest",
-      "manifest_path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\failures_horizon0_calibrated\\manifest.json",
+      "manifest_path": "datasets/mt10/failures_horizon0_calibrated/manifest.json",
       "manifest_sha256": "09e8a705e82dc300447f93b79e311a3c6a79b242342b4707791b94c68a4724e9",
       "sha256": "ceb616688fddb58de4de1404e141730575c9c120620a26d4e153de1e04201452"
     },
