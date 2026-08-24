@@ -1437,6 +1437,15 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _repo_rel(path: Any) -> str:
+    """Return a repo-relative forward-slash path so manifests stay machine-agnostic."""
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT.resolve()).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
 def _truthy(value: Any) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes"}
 
@@ -1682,7 +1691,7 @@ def generate_all(
     del benchmark_label
     output_records = {
         key: {
-            "path": value,
+            "path": _repo_rel(value),
             "sha256": _sha256(Path(value)),
             "bytes": Path(value).stat().st_size,
         }
@@ -1699,7 +1708,7 @@ def generate_all(
             else "Only full-profile Meta-World outputs are benchmark results."
         ),
         "inputs": {
-            str(path.resolve()): {"sha256": _sha256(path), "bytes": path.stat().st_size}
+            _repo_rel(path): {"sha256": _sha256(path), "bytes": path.stat().st_size}
             for path in sources
         },
         "outputs": output_records,

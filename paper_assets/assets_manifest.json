@@ -18,12 +18,12 @@
       "bytes": 2664
     },
     "results/tables/detector_metrics.json": {
-      "sha256": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
-      "bytes": 1105
+      "sha256": "e1751bd9a681303a431a9c8d28d90c8cdda4f33f500148d8f67cb64a0063ebf6",
+      "bytes": 1102
     },
     "results/traces/formal_crn/robustness_n20.json": {
-      "sha256": "b6f30b6c68ccdfafc7dfd8ed339c3508b117ed135c4d3404430b40e1515dcfc4",
-      "bytes": 307567
+      "sha256": "ed50c8aa7be228bd49ad17ae29f4a27c1ecf21a87f127314dd92c8d086fe50d5",
+      "bytes": 319410
     }
   },
   "outputs": {
@@ -34,13 +34,13 @@
     },
     "paper_figure_1": {
       "path": "paper_assets/Figure1_final_framework.png",
-      "sha256": "a9fc6be26e9f5e992364f11b85c2cc5bfac2e9894b152a349f9f7f948aaf56b2",
-      "bytes": 461624
+      "sha256": "e670e557197685b122d54393ea3bcb9fcdb2f9aff753954e0d02f4b14c5cf2b9",
+      "bytes": 464479
     },
     "legacy_figure_1": {
       "path": "paper_assets/Figure1_framework.png",
-      "sha256": "a9fc6be26e9f5e992364f11b85c2cc5bfac2e9894b152a349f9f7f948aaf56b2",
-      "bytes": 461624
+      "sha256": "e670e557197685b122d54393ea3bcb9fcdb2f9aff753954e0d02f4b14c5cf2b9",
+      "bytes": 464479
     },
     "success": {
       "path": "results/figures/success_comparison.png",
@@ -99,18 +99,20 @@
     },
     "paper_table_1": {
       "path": "paper_assets/Table1_baseline.tex",
-      "sha256": "6e9ea4d9b76e94748fb9b1f3d3fd7ac127f978957acbc9cfad37f685de81145b",
-      "bytes": 954
+      "sha256": "9d7ffbc46936035c57882c9c8a166dcac3c31bd5661e6f5255ee99040cc6288e",
+      "bytes": 1902
     },
     "paper_table_2": {
       "path": "paper_assets/Table2_ablation.tex",
-      "sha256": "11e64dfb2eb479c8b57d7c873eba6b9d93e874b14fd88ba42d197f711c6c85d5",
-      "bytes": 762
+      "sha256": "de2da86039f0cb93fab7fba47caa7ba7469fe196b826d6d519b7af409cb3326a",
+      "bytes": 687
     }
   },
   "figure_design": {
     "paper_type": "embodied robot method paper",
     "structure": "closed-loop feedback",
     "style": "flat vector, white background, functional three-color palette"
-  }
+  },
+  "reattested_at_utc": "2026-08-24T13:18:22.523884+00:00",
+  "reattestation_note": "Output hashes re-attested against the curated committed artifacts; no content was regenerated."
 }
