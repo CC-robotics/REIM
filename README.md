@@ -124,6 +124,18 @@ Core requirements are Python 3.10--3.13, PyTorch, Gymnasium, Meta-World, and
 MuJoCo. The setup also installs Stable-Baselines3 for archived experiments; it
 is not required to load the exported deployment actor.
 
+**Git LFS is required before cloning.** Binary research artifacts (`*.npz`
+datasets, `*.pt` checkpoints) are stored with Git LFS. Without it, clone
+yields pointer stub files instead of the real binaries, and every recorded
+SHA256 in the manifests will fail to verify:
+
+```bash
+git lfs install
+git clone https://github.com/CC-robotics/REIM.git
+cd REIM
+git lfs pull   # fetch the actual binary artifacts
+```
+
 ```bash
 cd REIM
 ./setup.sh

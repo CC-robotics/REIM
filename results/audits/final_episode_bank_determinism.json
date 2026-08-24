@@ -7,7 +7,7 @@
     20260976
   ],
   "env_name": "pick-place-v3",
-  "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_crn_task20260726_ep8000042_n1000_noise020.json",
+  "episode_bank": "datasets/evaluation/pickplace_crn_task20260726_ep8000042_n1000_noise020.json",
   "episode_bank_file_sha256": "af5745b9186a646d034e11188254b9a02d00f2f6614386a43dbbf2654455056f",
   "episode_bank_sha256": "8c503c07dc6dcdd904e948f14d270410c2fbd4d9796f8d9e08451dc34c7d4399",
   "episodes": [

@@ -978,25 +978,25 @@
   "benchmark_seed": 20265010,
   "checkpoints": {
     "act": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\act.pt",
+      "path": "checkpoints/mt10/seed_42/act.pt",
       "sha256": "e4493b456460c6641c1f2b28217effcfbda8487e2766cbd24d6be0a31fa59334"
     },
     "detector": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\failure_detector.pt",
+      "path": "checkpoints/mt10/seed_42/failure_detector.pt",
       "sha256": "54da6920f97952ca3f3a72b507f1281408e9660cb8ce9e91e56950c5a04a2450"
     },
     "mlp_bc": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\mlp_bc.pt",
+      "path": "checkpoints/mt10/seed_42/mlp_bc.pt",
       "sha256": "420b7b39f02c4238cf07f34e94293a3bb82a1e3f3db70ff763ac27bba1a92778"
     },
     "recovery": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\recovery.pt",
+      "path": "checkpoints/mt10/seed_42/recovery.pt",
       "sha256": "90069f6c680ab025244c2689760137485b3dd25b9b54e3eb929f0d98d20f7c46"
     }
   },
   "condition": "robustness_noise_00",
   "detector_threshold": 0.65,
-  "episode_csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_00_episodes.csv",
+  "episode_csv": "results/tables/mt10_disturbed_noise_00_episodes.csv",
   "episode_csv_sha256": "99b75e147b412f5a7f78e8476f1655eaa0e318b48fe0d27a9aae2c98190efab3",
   "episodes_per_task": 50,
   "intervention_cooldown": 10,
@@ -1377,7 +1377,7 @@
   "release_threshold": 0.15,
   "robustness_extension": false,
   "run_fingerprint": "aa2ed694fda226d5230eed8483a6aac3dca8e2799ab558286aa9bb63efd1d884",
-  "run_sidecar": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_disturbed_noise_00_episodes.csv.run.json",
+  "run_sidecar": "results/tables/mt10_disturbed_noise_00_episodes.csv.run.json",
   "run_sidecar_sha256": "73b2f81ffd7f94bc88d7bf6da1d32775684989fbdcae436e2611f92ad3bf8951",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,

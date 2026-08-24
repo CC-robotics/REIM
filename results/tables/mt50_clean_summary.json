@@ -4338,25 +4338,25 @@
   "benchmark_seed": 20265050,
   "checkpoints": {
     "act": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\act.pt",
+      "path": "checkpoints/mt50/seed_42/act.pt",
       "sha256": "dcd2047edeedb363c98373148fc930d13e623d2befaeea671402bdaf04a692f7"
     },
     "detector": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\failure_detector.pt",
+      "path": "checkpoints/mt50/seed_42/failure_detector.pt",
       "sha256": "21e39a31b798cbb0433868df7dfe8659c1cf3eb07597e1f87470f5859603c8ea"
     },
     "mlp_bc": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\mlp_bc.pt",
+      "path": "checkpoints/mt50/seed_42/mlp_bc.pt",
       "sha256": "b6e374a2228a0f0c7c3bd3be1e6d7bf95c36df4c08d3f5e28025d77c785f8f28"
     },
     "recovery": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\recovery.pt",
+      "path": "checkpoints/mt50/seed_42/recovery.pt",
       "sha256": "35b1235ef7cbeb1fd5b2165714c56de90cfe4d4e5ae028710bde4c277c4c8ba3"
     }
   },
   "condition": "official_clean",
   "detector_threshold": 0.64,
-  "episode_csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_episodes.csv",
+  "episode_csv": "results/tables/mt50_clean_episodes.csv",
   "episode_csv_sha256": "af544840de9d4dc354dbb7c4e7c24a5b69af5803e28978783739c5c87877a582",
   "episodes_per_task": 50,
   "intervention_cooldown": 10,
@@ -5688,7 +5688,7 @@
   "release_threshold": 0.05,
   "robustness_extension": false,
   "run_fingerprint": "c8080324aa9ff7656305961901c2434fbb0113d13b3e5124f13848f78416220c",
-  "run_sidecar": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_episodes.csv.run.json",
+  "run_sidecar": "results/tables/mt50_clean_episodes.csv.run.json",
   "run_sidecar_sha256": "1fde21b4a40b8b916c6625844096354b8feadc8331f159bd157063065f38ddc2",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,

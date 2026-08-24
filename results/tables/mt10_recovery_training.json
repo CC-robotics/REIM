@@ -5,7 +5,7 @@
   "best_epoch": 59,
   "best_validation_loss": 0.008919678649561204,
   "best_validation_loss_micro": 0.011959551404294892,
-  "checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\recovery.pt",
+  "checkpoint": "checkpoints/mt10/seed_42/recovery.pt",
   "checkpoint_sha256": "90069f6c680ab025244c2689760137485b3dd25b9b54e3eb929f0d98d20f7c46",
   "data_schema_version": "reim-multitask-trigger-aligned-recovery-v2",
   "dataset_manifest_sha256": "15e58fb19534d11ae4f03ba6528369cae9c61014d1eae1e529848b12f73f94d6",

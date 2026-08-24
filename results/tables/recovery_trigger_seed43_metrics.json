@@ -1,14 +1,14 @@
 {
   "additional_timesteps": 53248,
   "backend": "metaworld",
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed43.zip",
-  "config": "/home/diy/bonus_track/REIM/configs/ppo_trigger.yaml",
+  "checkpoint": "checkpoints/recovery_trigger_seed43.zip",
+  "config": "configs/ppo_trigger.yaml",
   "device": "cuda",
   "episodes": 50,
   "expert_pretraining": {
     "batch_size": 512,
     "best_validation_loss": 0.0060521443374454975,
-    "dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "dataset": "datasets/recovery_starts/train.npz",
     "enabled": true,
     "epochs": 40,
     "history": [
@@ -216,11 +216,11 @@
     "learning_rate": 0.001,
     "observation_noise_std": 0.005,
     "train_samples": 42386,
-    "validation_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "validation_dataset": "datasets/recovery_starts/validation.npz",
     "validation_samples": 8212
   },
   "failure_rate": 0.02,
-  "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed43_final.zip",
+  "final_training_checkpoint": "checkpoints/recovery_trigger_seed43_final.zip",
   "mean_episode_reward": 98.11169273556379,
   "mean_episode_steps": 44.48,
   "recovery_rate": 0.98,
@@ -236,7 +236,7 @@
     "reach_progress_scale": 2.0,
     "recovered_distance": 0.08,
     "recovery_reward": 0.0,
-    "recovery_start_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "recovery_start_dataset": "datasets/recovery_starts/train.npz",
     "relift_height": 0.03,
     "successful_starts_only": true,
     "task_success_reward": 25.0,
@@ -323,7 +323,7 @@
     }
   ],
   "trained_timesteps": 53248,
-  "validation_best_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo_trigger_seed43/best/best_model.zip",
+  "validation_best_checkpoint": "checkpoints/ppo_trigger_seed43/best/best_model.zip",
   "validation_reward": {
     "base_reward_scale": 1.0,
     "distance_progress_scale": 2.0,
@@ -335,7 +335,7 @@
     "reach_progress_scale": 2.0,
     "recovered_distance": 0.08,
     "recovery_reward": 0.0,
-    "recovery_start_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "recovery_start_dataset": "datasets/recovery_starts/validation.npz",
     "relift_height": 0.03,
     "successful_starts_only": true,
     "task_success_reward": 25.0,

@@ -1,7 +1,7 @@
 {
   "accuracy": 0.8930012621549073,
   "best_validation_loss": 0.1874358087262605,
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/failure_detector.pt",
+  "checkpoint": "checkpoints/failure_detector.pt",
   "confusion_matrix": [
     [
       18235,
@@ -12,7 +12,7 @@
       31999
     ]
   ],
-  "confusion_matrix_figure": "/home/diy/bonus_track/REIM/results/figures/confusion_matrix.png",
+  "confusion_matrix_figure": "results/figures/confusion_matrix.png",
   "deployment_threshold_metrics": {
     "accuracy": 0.8956500097772563,
     "confusion_matrix": [

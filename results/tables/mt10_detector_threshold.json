@@ -194,11 +194,11 @@
   },
   "final_bank_accessed": false,
   "outputs": {
-    "csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_detector_threshold_grid.csv",
-    "json": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_detector_threshold.json"
+    "csv": "results/tables/mt10_detector_threshold_grid.csv",
+    "json": "results/tables/mt10_detector_threshold.json"
   },
   "provenance": {
-    "detector_checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\failure_detector.pt",
+    "detector_checkpoint": "checkpoints/mt10/seed_42/failure_detector.pt",
     "detector_checkpoint_sha256": "54da6920f97952ca3f3a72b507f1281408e9660cb8ce9e91e56950c5a04a2450",
     "detector_training_calibration_fingerprint_sha256": "03f55be96552464ac785ad84555e9e002dece38635ee038a34c30d0c0f5fca45",
     "detector_training_dataset_fingerprint_sha256": "1251179acf4a05fbee07f69392fe17785ae4434c060283c62c462aad67700459",
@@ -211,7 +211,7 @@
     "validation_calibration_fingerprint_sha256": "b2b464b1bd46853863dd06aa4245381a40dc73ee7e1f9b83d9b66be223b195da",
     "validation_collection_seed": 20264010,
     "validation_dataset_fingerprint_sha256": "9863bfa6d2d0e1be9dfac2eb78289f5a6b2a06ce020bdae4a051665fc062a268",
-    "validation_manifest": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\failures_validation_calibrated\\manifest.json",
+    "validation_manifest": "datasets/mt10/failures_validation_calibrated/manifest.json",
     "validation_manifest_sha256": "02ad824e94b4a38cf13b837f06bb345ddd93d75341a0f6b5a8735cc2f0734288",
     "validation_provenance_fingerprint_sha256": "85c3c36be0d96e3432fd728d4f33e23d961118db1a956a028f062b854a609b05"
   },

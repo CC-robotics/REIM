@@ -4338,25 +4338,25 @@
   "benchmark_seed": 20265050,
   "checkpoints": {
     "act": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\act.pt",
+      "path": "checkpoints/mt50/seed_42/act.pt",
       "sha256": "dcd2047edeedb363c98373148fc930d13e623d2befaeea671402bdaf04a692f7"
     },
     "detector": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\failure_detector.pt",
+      "path": "checkpoints/mt50/seed_42/failure_detector.pt",
       "sha256": "21e39a31b798cbb0433868df7dfe8659c1cf3eb07597e1f87470f5859603c8ea"
     },
     "mlp_bc": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\mlp_bc.pt",
+      "path": "checkpoints/mt50/seed_42/mlp_bc.pt",
       "sha256": "b6e374a2228a0f0c7c3bd3be1e6d7bf95c36df4c08d3f5e28025d77c785f8f28"
     },
     "recovery": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt50\\seed_42\\recovery.pt",
+      "path": "checkpoints/mt50/seed_42/recovery.pt",
       "sha256": "35b1235ef7cbeb1fd5b2165714c56de90cfe4d4e5ae028710bde4c277c4c8ba3"
     }
   },
   "condition": "robustness_noise_30",
   "detector_threshold": 0.64,
-  "episode_csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_30_episodes.csv",
+  "episode_csv": "results/tables/mt50_disturbed_noise_30_episodes.csv",
   "episode_csv_sha256": "1e5545bc90861f8d9e28fba7187314c58698783a90d86243a17fc4fb63c30953",
   "episodes_per_task": 50,
   "intervention_cooldown": 10,
@@ -5701,7 +5701,7 @@
   "release_threshold": 0.15,
   "robustness_extension": true,
   "run_fingerprint": "0dd4d7e4698c59fa6738848bb0a0322b06ac34338d65bb99402f6d33231c1bd0",
-  "run_sidecar": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_disturbed_noise_30_episodes.csv.run.json",
+  "run_sidecar": "results/tables/mt50_disturbed_noise_30_episodes.csv.run.json",
   "run_sidecar_sha256": "182bd1c9239024b756b7aabe96d62daf668aac5639c54534a287f94233492b0f",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,

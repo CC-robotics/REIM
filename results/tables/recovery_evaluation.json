@@ -1,7 +1,7 @@
 {
   "backend": "metaworld",
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_policy.zip",
-  "config": "/home/diy/bonus_track/REIM/configs/ppo_phase1.yaml",
+  "checkpoint": "checkpoints/recovery_policy.zip",
+  "config": "configs/ppo_phase1.yaml",
   "device": "cpu",
   "episodes": 100,
   "failure_rate": 0.53,

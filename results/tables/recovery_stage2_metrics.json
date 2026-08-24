@@ -1,16 +1,16 @@
 {
   "additional_timesteps": 196608,
   "backend": "metaworld",
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_policy_stage2.zip",
-  "config": "/home/diy/bonus_track/REIM/configs/ppo_stage2.yaml",
+  "checkpoint": "checkpoints/recovery_policy_stage2.zip",
+  "config": "configs/ppo_stage2.yaml",
   "device": "cpu",
   "episodes": 20,
   "failure_rate": 0.35,
-  "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_policy_stage2_final.zip",
+  "final_training_checkpoint": "checkpoints/recovery_policy_stage2_final.zip",
   "mean_episode_reward": -0.6276902040913701,
   "mean_episode_steps": 25.2,
   "recovery_rate": 0.65,
-  "resume_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo_stage2/recovery_557904_steps.zip",
+  "resume_checkpoint": "checkpoints/ppo_stage2/recovery_557904_steps.zip",
   "reward": {
     "distance_progress_scale": 2.0,
     "failure_penalty": -10.0,
@@ -37,5 +37,5 @@
   "success_rate": 0.0,
   "target_timesteps": 750000,
   "trained_timesteps": 754512,
-  "validation_best_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo_stage2/best/best_model.zip"
+  "validation_best_checkpoint": "checkpoints/ppo_stage2/best/best_model.zip"
 }

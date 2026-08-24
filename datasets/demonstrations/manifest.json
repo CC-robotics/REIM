@@ -1,6 +1,6 @@
 {
   "backend": "metaworld",
-  "config": "/home/diy/bonus_track/REIM/configs/environment.yaml",
+  "config": "configs/environment.yaml",
   "dataset_type": "sequential_expert_demonstrations",
   "env_name": "pick-place-v3",
   "expert_algorithm": "Sawyer scripted",

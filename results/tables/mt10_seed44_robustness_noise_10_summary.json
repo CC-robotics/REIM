@@ -978,25 +978,25 @@
   "benchmark_seed": 20265010,
   "checkpoints": {
     "act": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\act.pt",
+      "path": "checkpoints/mt10/seed_42/act.pt",
       "sha256": "e4493b456460c6641c1f2b28217effcfbda8487e2766cbd24d6be0a31fa59334"
     },
     "detector": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_44\\failure_detector.pt",
+      "path": "checkpoints/mt10/seed_44/failure_detector.pt",
       "sha256": "389152bbd660e17c707d9cee260183e44606399842766452b8a9e5dbeff7a526"
     },
     "mlp_bc": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\mlp_bc.pt",
+      "path": "checkpoints/mt10/seed_42/mlp_bc.pt",
       "sha256": "420b7b39f02c4238cf07f34e94293a3bb82a1e3f3db70ff763ac27bba1a92778"
     },
     "recovery": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_44\\recovery.pt",
+      "path": "checkpoints/mt10/seed_44/recovery.pt",
       "sha256": "7e77878de17080239fe0ec71bcf3aab59f0dc475c28f3b7233dd6b349f2bf060"
     }
   },
   "condition": "robustness_noise_10",
   "detector_threshold": 0.65,
-  "episode_csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_seed44_robustness_noise_10_episodes.csv",
+  "episode_csv": "results/tables/mt10_seed44_robustness_noise_10_episodes.csv",
   "episode_csv_sha256": "5675676a12dc8ec75ae8f46cc3466ca0741b497331ce42e35154f83af972d01d",
   "episodes_per_task": 50,
   "intervention_cooldown": 10,
@@ -1381,7 +1381,7 @@
   "release_threshold": 0.05,
   "robustness_extension": true,
   "run_fingerprint": "3d8971e1a6f606bee9bc3c9327f2c02c1f0095d1ff9382b03eb615ed067c8ad0",
-  "run_sidecar": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_seed44_robustness_noise_10_episodes.csv.run.json",
+  "run_sidecar": "results/tables/mt10_seed44_robustness_noise_10_episodes.csv.run.json",
   "run_sidecar_sha256": "77fe0d4db86fc5fc5cc1400c3d105cbc53526b306e2c8ccfd254f3e0841ef003",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,

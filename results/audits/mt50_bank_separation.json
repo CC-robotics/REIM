@@ -199,7 +199,7 @@
       "materialized_task_payloads": 2469,
       "reserved_task_payloads": 2500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt50\\demonstrations\\manifest.json"
+        "datasets/mt50/demonstrations/manifest.json"
       ],
       "source_sha256": [
         "13b400d27d340e4edb75ba369b65b5bbc01611a9229f49bfef3ec6d9d2c62945"
@@ -215,7 +215,7 @@
       "materialized_task_payloads": 2500,
       "reserved_task_payloads": 2500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt50\\failures\\manifest.json"
+        "datasets/mt50/failures/manifest.json"
       ],
       "source_sha256": [
         "057b28a2fa15fbed4c9c519c09920527bff3eb4f87073c193a8de3c3e5a038f9"
@@ -231,7 +231,7 @@
       "materialized_task_payloads": 1000,
       "reserved_task_payloads": 2500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt50\\failures_validation\\manifest.json"
+        "datasets/mt50/failures_validation/manifest.json"
       ],
       "source_sha256": [
         "0ed4e864eea82e9b41107505288aaa0d20597ac5f93a017eb7642fd90f778b8d"
@@ -247,8 +247,8 @@
       "materialized_task_payloads": 2500,
       "reserved_task_payloads": 2500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_episodes.csv.run.json",
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt50_clean_episodes.csv"
+        "results/tables/mt50_clean_episodes.csv.run.json",
+        "results/tables/mt50_clean_episodes.csv"
       ],
       "source_sha256": [
         "1fde21b4a40b8b916c6625844096354b8feadc8331f159bd157063065f38ddc2",
@@ -265,7 +265,7 @@
       "materialized_task_payloads": 2451,
       "reserved_task_payloads": 2500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt50\\recovery\\manifest.json"
+        "datasets/mt50/recovery/manifest.json"
       ],
       "source_sha256": [
         "5c25b36875ab8ad9de5959e32431dfdb443273c2fcdaabc7ac75c7344b907266"

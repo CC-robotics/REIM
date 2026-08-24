@@ -199,7 +199,7 @@
       "materialized_task_payloads": 495,
       "reserved_task_payloads": 500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\demonstrations\\manifest.json"
+        "datasets/mt10/demonstrations/manifest.json"
       ],
       "source_sha256": [
         "a0173b92bed04f620ef40710621e31b7db339dd4a1cb9e7856d33f732fefee88"
@@ -215,7 +215,7 @@
       "materialized_task_payloads": 500,
       "reserved_task_payloads": 500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\failures\\manifest.json"
+        "datasets/mt10/failures/manifest.json"
       ],
       "source_sha256": [
         "ebefdb08fa60670e49f0206ffe8face02a0ffcc0717cce0f3a727d8a9f7addbe"
@@ -231,7 +231,7 @@
       "materialized_task_payloads": 200,
       "reserved_task_payloads": 500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\failures_validation\\manifest.json"
+        "datasets/mt10/failures_validation/manifest.json"
       ],
       "source_sha256": [
         "8d15a04898b1e26f972832af4cf2c4bc134e1ca41f175e9d980564918d800a23"
@@ -247,8 +247,8 @@
       "materialized_task_payloads": 500,
       "reserved_task_payloads": 500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_clean_episodes.csv.run.json",
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\mt10_clean_episodes.csv"
+        "results/tables/mt10_clean_episodes.csv.run.json",
+        "results/tables/mt10_clean_episodes.csv"
       ],
       "source_sha256": [
         "817d42fd88ccfdc11e1e66887c8e419ead77859c7f79ece714811d0719220baa",
@@ -265,7 +265,7 @@
       "materialized_task_payloads": 494,
       "reserved_task_payloads": 500,
       "source_paths": [
-        "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\datasets\\mt10\\recovery\\manifest.json"
+        "datasets/mt10/recovery/manifest.json"
       ],
       "source_sha256": [
         "15e58fb19534d11ae4f03ba6528369cae9c61014d1eae1e529848b12f73f94d6"

@@ -8,9 +8,11 @@ __pycache__/
 results/logs/
 results/smoke/
 
-# Generated multi-task corpora are provenance-hashed but too large for Git.
-datasets/mt10/
-datasets/mt50/
+# Generated multi-task corpora are too large for Git; the npz shards stay
+# local, but their manifests (SHA256 provenance) are versioned so that anyone
+# who regenerates or receives the data can verify integrity.
+datasets/mt10/**/*.npz
+datasets/mt50/**/*.npz
 datasets/smoke/
 
 # Local editor and operating-system files

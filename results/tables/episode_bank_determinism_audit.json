@@ -7,7 +7,7 @@
     6000292
   ],
   "env_name": "pick-place-v3",
-  "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_crn_seed6000042_n1000_noise020.json",
+  "episode_bank": "datasets/evaluation/pickplace_crn_seed6000042_n1000_noise020.json",
   "episode_bank_file_sha256": "2ffcf9c52af5256ad94cfcb342098deb46837f544da1f21355abeaa15cf40f7e",
   "episode_bank_sha256": "4584dcb582c80843b471bfa82b7710014bd88550606a5f03ea2024e43890639d",
   "episodes": [

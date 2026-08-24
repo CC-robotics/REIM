@@ -5,23 +5,23 @@
   "benchmark_eligible": true,
   "warning": "",
   "inputs": {
-    "/home/diy/bonus_track/REIM/results/tables/baseline.csv": {
+    "results/tables/baseline.csv": {
       "sha256": "6766fb8df2ad027a058ca602aa2161bba435cff9c964d20c2db5547810d51215",
       "bytes": 2704
     },
-    "/home/diy/bonus_track/REIM/results/tables/robustness.csv": {
+    "results/tables/robustness.csv": {
       "sha256": "6016bd3cf2d457b9f1001f897ceda2bc30e1acab891b570901962876ddd5cd00",
       "bytes": 5135
     },
-    "/home/diy/bonus_track/REIM/results/tables/ablation.csv": {
+    "results/tables/ablation.csv": {
       "sha256": "b8cd25f01b6005434239b54b602889cd22c8536c873f81485b8f84f7febe110d",
       "bytes": 2664
     },
-    "/home/diy/bonus_track/REIM/results/tables/detector_metrics.json": {
+    "results/tables/detector_metrics.json": {
       "sha256": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
       "bytes": 1105
     },
-    "/home/diy/bonus_track/REIM/results/traces/formal_crn/robustness_n20.json": {
+    "results/traces/formal_crn/robustness_n20.json": {
       "sha256": "b6f30b6c68ccdfafc7dfd8ed339c3508b117ed135c4d3404430b40e1515dcfc4",
       "bytes": 307567
     }

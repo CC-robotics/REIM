@@ -1,6 +1,6 @@
 {
   "backend": "metaworld",
-  "config": "/home/diy/bonus_track/REIM/configs/environment.yaml",
+  "config": "configs/environment.yaml",
   "dataset_type": "prospective_failure_prediction",
   "env_name": "pick-place-v3",
   "labeling": {
@@ -23,7 +23,7 @@
   },
   "policy": {
     "act_interface": "temporal_ensemble",
-    "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/bc_policy.pt",
+    "checkpoint": "checkpoints/bc_policy.pt",
     "checkpoint_sha256": "da3ea384f469a290472920cc0b15575b671ea8febead6af72cc2832e8fbaba33",
     "episode_reset_called": true,
     "type": "ACT"

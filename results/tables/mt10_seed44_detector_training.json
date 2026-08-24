@@ -1,7 +1,7 @@
 {
   "accuracy": 0.7280491615456723,
   "best_validation_loss": 0.8176948921815292,
-  "checkpoint": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_44\\failure_detector.pt",
+  "checkpoint": "checkpoints/mt10/seed_44/failure_detector.pt",
   "confusion_matrix": [
     [
       27677,
@@ -12,7 +12,7 @@
       7273
     ]
   ],
-  "confusion_matrix_figure": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\figures\\mt10_seed44_detector_confusion.png",
+  "confusion_matrix_figure": "results/figures/mt10_seed44_detector_confusion.png",
   "deployment_threshold_metrics": {
     "accuracy": 0.6092282053952713,
     "confusion_matrix": [

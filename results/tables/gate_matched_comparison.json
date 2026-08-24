@@ -4,19 +4,19 @@
   "inputs": {
     "heuristic_gate": {
       "method": "ACT + Heuristic Recovery",
-      "path": "/home/diy/bonus_track/REIM/results/tables/formal_crn/gate_matched_heuristic_episodes.csv",
+      "path": "results/tables/formal_crn/gate_matched_heuristic_episodes.csv",
       "rows": 200,
       "sha256": "b8f47c0ebf0f0de4558ccbbe41d2a74f2bacb857d82de65b070a52e912378474"
     },
     "reim_tau_0.175": {
       "method": "REIM (ACT + Detector + Recovery)",
-      "path": "/home/diy/bonus_track/REIM/results/tables/gate_calibration_tau0175_episodes.csv",
+      "path": "results/tables/gate_calibration_tau0175_episodes.csv",
       "rows": 200,
       "sha256": "1253dc77cf135f0a7bfaac4f4d549eefad557f49b9458d4af43f55f558ad6f57"
     },
     "reim_tau_0.20": {
       "method": "REIM (ACT + Detector + Recovery)",
-      "path": "/home/diy/bonus_track/REIM/results/tables/gate_calibration_tau020_episodes.csv",
+      "path": "results/tables/gate_calibration_tau020_episodes.csv",
       "rows": 200,
       "sha256": "f55240326f58743a4341204ce8cb8cbaa67f3d089dd50bc86a389080c816687f"
     }
@@ -161,7 +161,7 @@
     "backend": "metaworld",
     "bootstrap_samples": 10000,
     "bootstrap_seed": 8200042,
-    "episode_bank": "/home/diy/bonus_track/REIM/datasets/evaluation/pickplace_gate_task20260726_ep8200042_n200_noise020.json",
+    "episode_bank": "datasets/evaluation/pickplace_gate_task20260726_ep8200042_n200_noise020.json",
     "episode_bank_file_sha256": "63679756c58e9f92045f137509620db649c1f612a4711bf15cd73cb3adbf2fa8",
     "episode_bank_sha256": "bce931c8f7f4b2ca6d96ac63f5e3bd3c7b1a2d9a694728801ff6b1a12baf8802",
     "episode_seed_end": 8200241,

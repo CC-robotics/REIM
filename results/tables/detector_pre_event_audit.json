@@ -8,17 +8,17 @@
   },
   "current_event_window_recall": 0.9620025835722612,
   "inputs": {
-    "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/failure_detector.pt",
+    "checkpoint": "checkpoints/failure_detector.pt",
     "checkpoint_sha256": "62c93c5250a5cb50fcf31fee6d00f17da13f773d44e8a7adc7a5406b92c22d34",
-    "dataset_manifest": "/home/diy/bonus_track/REIM/datasets/failures/manifest.json",
+    "dataset_manifest": "datasets/failures/manifest.json",
     "dataset_manifest_sha256": "05425fd2cc9d126052f876be95d143667f9d4362a6b7098e2359c928bb99481e",
-    "detector_metrics": "/home/diy/bonus_track/REIM/results/tables/detector_metrics.json",
+    "detector_metrics": "results/tables/detector_metrics.json",
     "detector_metrics_sha256": "eec5f1dd2114575c4654a28fd8693efbd3624da17b48ed28a9a63e44f5102f09",
     "validation_files_combined_sha256": "54702b6c799e7ebaabbd7e860151d39c5ac0128f4c446f531846b5d877d3b3c5"
   },
   "interpretation": "The conventional prospective-label confusion matrix is dominated by samples observed at an event. Strict pre-event metrics exclude offset-zero windows and quantify future-event monitoring separately.",
   "outputs": {
-    "offset_csv": "/home/diy/bonus_track/REIM/results/tables/detector_pre_event_by_offset.csv"
+    "offset_csv": "results/tables/detector_pre_event_by_offset.csv"
   },
   "prospective_window_metrics_including_current_event": {
     "accuracy": 0.8956500097772563,

@@ -32,7 +32,7 @@ by SHA256 before any evaluation stage is allowed to run.
 
 This earlier artifact was produced by a different detector checkpoint trained
 on different hardware (CUDA/torch stack) under the same protocol seed. Its
-validation-bank manifest reference (`/home/diy/bonus_track/REIM/...`) does not
+validation-bank manifest reference (`...`) does not
 exist in this checkout's data banks, so it is **not reproducible from the
 current repository state** and is retained here for audit only. It is
 superseded by the current canonical artifact and must not be cited as the

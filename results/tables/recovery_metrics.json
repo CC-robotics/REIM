@@ -1,10 +1,10 @@
 {
   "backend": "metaworld",
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_policy.zip",
+  "checkpoint": "checkpoints/recovery_policy.zip",
   "device": "cpu",
   "episodes": 20,
   "failure_rate": 0.55,
-  "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_policy_final.zip",
+  "final_training_checkpoint": "checkpoints/recovery_policy_final.zip",
   "mean_episode_reward": -3.026627592742442,
   "mean_episode_steps": 31.25,
   "recovery_rate": 0.45,
@@ -31,5 +31,5 @@
   "success_rate": 0.05,
   "target_timesteps": 500000,
   "trained_timesteps": 507904,
-  "validation_best_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo/best/best_model.zip"
+  "validation_best_checkpoint": "checkpoints/ppo/best/best_model.zip"
 }

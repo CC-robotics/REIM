@@ -194,11 +194,11 @@
   },
   "final_bank_accessed": false,
   "outputs": {
-    "csv": "/home/diy/bonus_track/REIM/results/tables/mt10_detector_threshold.csv",
-    "json": "/home/diy/bonus_track/REIM/results/tables/mt10_detector_threshold.json"
+    "csv": "results/tables/mt10_detector_threshold.csv",
+    "json": "results/tables/mt10_detector_threshold.json"
   },
   "provenance": {
-    "detector_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/mt10/seed_42/failure_detector.pt",
+    "detector_checkpoint": "checkpoints/mt10/seed_42/failure_detector.pt",
     "detector_checkpoint_sha256": "d5c88c9f88dff5816c6ca1e1d749c9e54d4777ce38c8863631d72cca1f68ee58",
     "detector_training_calibration_fingerprint_sha256": "a2cd42441a3a243f55c74e981ce7717c09f3de81e664e1c39f8008b9e7cd8dcb",
     "detector_training_dataset_fingerprint_sha256": "7723b5ef032817adc7da60435e2789bc0101e7a8e83db8fe81f741c605c6f50e",
@@ -211,7 +211,7 @@
     "validation_calibration_fingerprint_sha256": "7bf458186acab67c0e1495de7e4708e00b897cc1aec3ba2d0f5fdd5118150c0b",
     "validation_collection_seed": 20264010,
     "validation_dataset_fingerprint_sha256": "d45a40b161408b5145f067faaf13038f3783eb7b2335c347c5c6c7daf274f349",
-    "validation_manifest": "/home/diy/bonus_track/REIM/datasets/mt10/failures_validation_calibrated/manifest.json",
+    "validation_manifest": "datasets/mt10/failures_validation_calibrated/manifest.json",
     "validation_manifest_sha256": "647f22c46e0fdb622191e676a2c9c616be91f6908daa10e55a38f1b74fa37657",
     "validation_provenance_fingerprint_sha256": "550f672084f0bca102d70c657d3b780446137923f901da3b87f1120e73054fad"
   },

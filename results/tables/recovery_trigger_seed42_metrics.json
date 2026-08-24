@@ -1,8 +1,8 @@
 {
   "additional_timesteps": 421888,
   "backend": "metaworld",
-  "checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed42_500k.zip",
-  "config": "/home/diy/bonus_track/REIM/configs/ppo_trigger.yaml",
+  "checkpoint": "checkpoints/recovery_trigger_seed42_500k.zip",
+  "config": "configs/ppo_trigger.yaml",
   "device": "cpu",
   "torch_num_threads": 4,
   "episodes": 50,
@@ -10,12 +10,12 @@
     "enabled": false
   },
   "failure_rate": 0.0,
-  "final_training_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/recovery_trigger_seed42_500k_final.zip",
+  "final_training_checkpoint": "checkpoints/recovery_trigger_seed42_500k_final.zip",
   "mean_episode_reward": 105.4010444932347,
   "mean_episode_steps": 40.52,
   "minimum_selection_timesteps": 10000,
   "recovery_rate": 1.0,
-  "resume_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo_trigger_seed42_full/recovery_78248_steps.zip",
+  "resume_checkpoint": "checkpoints/ppo_trigger_seed42_full/recovery_78248_steps.zip",
   "reward": {
     "base_reward_scale": 1.0,
     "distance_progress_scale": 2.0,
@@ -27,7 +27,7 @@
     "reach_progress_scale": 2.0,
     "recovered_distance": 0.08,
     "recovery_reward": 0.0,
-    "recovery_start_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/train.npz",
+    "recovery_start_dataset": "datasets/recovery_starts/train.npz",
     "relift_height": 0.03,
     "successful_starts_only": true,
     "task_success_reward": 25.0,
@@ -672,7 +672,7 @@
     }
   ],
   "trained_timesteps": 500136,
-  "validation_best_checkpoint": "/home/diy/bonus_track/REIM/checkpoints/ppo_trigger_seed42_full/best/best_model.zip",
+  "validation_best_checkpoint": "checkpoints/ppo_trigger_seed42_full/best/best_model.zip",
   "validation_reward": {
     "base_reward_scale": 1.0,
     "distance_progress_scale": 2.0,
@@ -684,7 +684,7 @@
     "reach_progress_scale": 2.0,
     "recovered_distance": 0.08,
     "recovery_reward": 0.0,
-    "recovery_start_dataset": "/home/diy/bonus_track/REIM/datasets/recovery_starts/validation.npz",
+    "recovery_start_dataset": "datasets/recovery_starts/validation.npz",
     "relift_height": 0.03,
     "successful_starts_only": true,
     "task_success_reward": 25.0,

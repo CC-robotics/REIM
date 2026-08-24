@@ -3723,7 +3723,7 @@
   "git": {
     "commit": "962c270bb029921d114306c90b018c87e80c348e",
     "dirty": true,
-    "root": "/home/diy/bonus_track/REIM"
+    "root": "."
   },
   "hardware": {
     "gpu": "NVIDIA GeForce RTX 5090 D",
