@@ -34,4 +34,4 @@
 2026-08-20 01:06:56 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=5 macro=0.3800 intervened=0.980 occ=0.447
 2026-08-20 01:06:56 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=10 (5 episodes/task)
 2026-08-20 01:12:13 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=10 macro=0.4160 intervened=0.980 occ=0.544
-2026-08-20 01:12:13 | INFO | search_release_patience | search complete -> C:\Users\Kyrie Zhang\Desktop\REIM\results\diagnostics\release_patience_search
+2026-08-20 01:12:13 | INFO | search_release_patience | search complete -> results/diagnostics/release_patience_search

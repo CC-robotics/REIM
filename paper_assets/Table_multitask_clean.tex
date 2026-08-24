@@ -8,46 +8,54 @@
   seeds. Success is averaged equally across tasks; brackets are 95\% within-task
   episode-bootstrap intervals. Differences use a paired, task-stratified
   bootstrap against MT-ACT. Worst quartile is the mean of the lowest
-  $\lceil T/4\rceil$ task rates, and intervention is the task-macro fraction of
-  episodes in which recovery acts. Nonzero disturbances are excluded and
-  reported only as a non-official REIM robustness extension.}
+  $\lceil T/4\rceil$ task rates, intervention is the task-macro fraction of
+  episodes in which recovery acts, and occupancy is the mean fraction of
+  episode steps executed by the recovery policy. Nonzero disturbances are
+  excluded and reported only as a non-official REIM robustness extension.}
   \label{tab:multitask-clean}
   \scriptsize
   \setlength{\tabcolsep}{4.0pt}
-  \begin{tabular}{llcccc}
+  \begin{tabular}{llccccc}
     \toprule
     Benchmark & Method & Task macro [95\% CI] $\uparrow$ &
-      $\Delta$ vs. MT-ACT [95\% CI] & Worst quartile $\uparrow$ & Interv. \\
+      $\Delta$ vs. MT-ACT [95\% CI] & Worst quartile $\uparrow$ & Interv. &
+      Occup. $\downarrow$ \\
     \midrule
     \multirow{4}{*}{\MTTenBenchmark{}}
       & MT-MLP BC & \MTTenMLPCleanSuccess{} \MTTenMLPCleanSuccessCI &
         \MTTenMLPDeltaVsACT{} \MTTenMLPDeltaVsACTCI &
-        \MTTenMLPWorstQuartile & \NotApplicable \\
+        \MTTenMLPWorstQuartile & \NotApplicable & \NotApplicable \\
       & MT-ACT & \MTTenACTCleanSuccess{} \MTTenACTCleanSuccessCI &
-        \NotApplicable & \MTTenACTWorstQuartile & \NotApplicable \\
+        \NotApplicable & \MTTenACTWorstQuartile & \NotApplicable &
+        \NotApplicable \\
       & Heuristic-gated recovery &
         \MTTenHeuristicCleanSuccess{} \MTTenHeuristicCleanSuccessCI &
         \MTTenHeuristicDeltaVsACT{} \MTTenHeuristicDeltaVsACTCI &
-        \MTTenHeuristicWorstQuartile & \MTTenHeuristicIntervention \\
+        \MTTenHeuristicWorstQuartile & \MTTenHeuristicIntervention &
+        \MTTenHeuristicOccupancy \\
       & \textbf{MT-REIM (ours)} &
         \textbf{\MTTenREIMCleanSuccess{} \MTTenREIMCleanSuccessCI} &
         \textbf{\MTTenREIMDeltaVsACT{} \MTTenREIMDeltaVsACTCI} &
-        \textbf{\MTTenREIMWorstQuartile} & \MTTenREIMIntervention \\
+        \textbf{\MTTenREIMWorstQuartile} & \MTTenREIMIntervention &
+        \MTTenREIMOccupancy \\
     \midrule
     \multirow{4}{*}{\MTFiftyBenchmark{}}
       & MT-MLP BC & \MTFiftyMLPCleanSuccess{} \MTFiftyMLPCleanSuccessCI &
         \MTFiftyMLPDeltaVsACT{} \MTFiftyMLPDeltaVsACTCI &
-        \MTFiftyMLPWorstQuartile & \NotApplicable \\
+        \MTFiftyMLPWorstQuartile & \NotApplicable & \NotApplicable \\
       & MT-ACT & \MTFiftyACTCleanSuccess{} \MTFiftyACTCleanSuccessCI &
-        \NotApplicable & \MTFiftyACTWorstQuartile & \NotApplicable \\
+        \NotApplicable & \MTFiftyACTWorstQuartile & \NotApplicable &
+        \NotApplicable \\
       & Heuristic-gated recovery &
         \MTFiftyHeuristicCleanSuccess{} \MTFiftyHeuristicCleanSuccessCI &
         \MTFiftyHeuristicDeltaVsACT{} \MTFiftyHeuristicDeltaVsACTCI &
-        \MTFiftyHeuristicWorstQuartile & \MTFiftyHeuristicIntervention \\
+        \MTFiftyHeuristicWorstQuartile & \MTFiftyHeuristicIntervention &
+        \MTFiftyHeuristicOccupancy \\
       & \textbf{MT-REIM (ours)} &
         \textbf{\MTFiftyREIMCleanSuccess{} \MTFiftyREIMCleanSuccessCI} &
         \textbf{\MTFiftyREIMDeltaVsACT{} \MTFiftyREIMDeltaVsACTCI} &
-        \textbf{\MTFiftyREIMWorstQuartile} & \MTFiftyREIMIntervention \\
+        \textbf{\MTFiftyREIMWorstQuartile} & \MTFiftyREIMIntervention &
+        \MTFiftyREIMOccupancy \\
     \bottomrule
   \end{tabular}
 \end{table*}

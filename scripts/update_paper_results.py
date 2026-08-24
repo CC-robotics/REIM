@@ -1550,7 +1550,10 @@ def main() -> int:
             baseline_index["ACT + Heuristic Recovery"],
             "Intervened Episodes",
         ),
-        "inputs": {str(path.resolve()): _sha256(path) for path in input_paths},
+        "inputs": {
+            str(path.resolve().relative_to(PROJECT_ROOT)).replace("\\", "/"): _sha256(path)
+            for path in input_paths
+        },
     }
     if args.check_only:
         print(json.dumps(report, indent=2))

@@ -151,12 +151,12 @@
       "bytes": 194046
     },
     "results/figures/recovery_operation_sequence_act_failure_trace.json": {
-      "sha256": "8ff218d86dbe1e844da35be3c5f6e9de94e26267316a13aee83bd3939bb2f9e0",
-      "bytes": 213329
+      "sha256": "fd292505a02e61919dc07d11e349813deb5ea13c9c90bb6920222e50c58b4f14",
+      "bytes": 222580
     },
     "results/figures/recovery_operation_sequence_reim_success_trace.json": {
-      "sha256": "ffc8cbaa9da927e9bcba421c07b03efe598300392a6725fdd8babf8cb2f31aca",
-      "bytes": 67871
+      "sha256": "7a7537700c3bd930a7cde02fd7e4eaa3b9ea86aacf71d24d0c0792bf10db86d5",
+      "bytes": 70774
     },
     "paper_assets/Figure5_operation_sequence.png": {
       "sha256": "7aa83104772ecbc7952f9ed7de48ca232dd5414bc11bc972a2e93c7b368156b7",

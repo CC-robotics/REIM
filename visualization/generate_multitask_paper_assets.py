@@ -292,11 +292,14 @@ def _assert_equivalent(actual: Any, expected: Any, context: str) -> None:
 
 def _resolve_recorded_path(value: Any, summary_path: Path, context: str) -> Path:
     recorded = Path(str(value)).expanduser()
-    if not recorded.is_absolute():
-        recorded = (summary_path.parent / recorded).resolve()
-    else:
-        recorded = recorded.resolve()
-    return _regular_file(recorded, context)
+    if recorded.is_absolute():
+        return _regular_file(recorded.resolve(), context)
+    # Normalized artifacts record repo-root-relative paths; fall back to the
+    # historical summary-directory-relative interpretation.
+    repo_relative = (PROJECT_ROOT / recorded).resolve()
+    if repo_relative.exists():
+        return _regular_file(repo_relative, context)
+    return _regular_file((summary_path.parent / recorded).resolve(), context)
 
 
 def _validate_sidecar(summary: Mapping[str, Any], summary_path: Path) -> None:
@@ -652,6 +655,11 @@ def _validate_condition(
                 recomputed["summary"]["intervention_episode_rate_task_macro"],
                 f"{method}.intervention_episode_rate_task_macro",
             ),
+            "occupancy": sum(
+                int(row["recovery_steps_total"]) / int(row["steps"])
+                for row in method_rows
+            )
+            / len(method_rows),
             "delta_vs_act": None,
             "delta_ci_lower": None,
             "delta_ci_upper": None,
@@ -971,6 +979,10 @@ def _render_gate_tex(suites: Sequence[SuiteEvidence], manifest_sha: str) -> str:
                     rf"\renewcommand{{\{prefix}Intervention}}"
                     rf"{{{_percent(float(values['intervention']))}}}"
                 )
+                lines.append(
+                    rf"\renewcommand{{\{prefix}Occupancy}}"
+                    rf"{{{_percent(float(values['occupancy']))}}}"
+                )
             if method != "act":
                 lines.extend(
                     [
@@ -1010,6 +1022,7 @@ def _summary_rows(
                         "success_ci_upper": values["success_ci_upper"],
                         "worst_quartile_success": values["worst_quartile"],
                         "task_macro_intervention": values["intervention"],
+                        "recovery_occupancy_mean": values["occupancy"],
                         "delta_vs_act": values["delta_vs_act"],
                         "delta_ci_lower": values["delta_ci_lower"],
                         "delta_ci_upper": values["delta_ci_upper"],
@@ -1143,7 +1156,8 @@ def _input_manifest(
         for item in suite.robustness:
             paths.extend((item.summary_path, item.episode_path))
         for path in paths:
-            inputs[str(path)] = {"sha256": _sha256(path), "bytes": path.stat().st_size}
+            key = str(path.resolve().relative_to(PROJECT_ROOT)).replace("\\", "/")
+            inputs[key] = {"sha256": _sha256(path), "bytes": path.stat().st_size}
     return {
         "schema_version": "reim-multitask-paper-inputs-v1",
         "gate_requirements": {
@@ -1165,7 +1179,26 @@ def _input_manifest(
 
 
 def _output_record(path: Path) -> dict[str, Any]:
-    return {"path": str(path), "sha256": _sha256(path), "bytes": path.stat().st_size}
+    rel = str(path.resolve().relative_to(PROJECT_ROOT)).replace("\\", "/")
+    return {"path": rel, "sha256": _sha256(path), "bytes": path.stat().st_size}
+
+
+def _restore_inherited_acl(path: Path) -> None:
+    """Undo the restrictive ACL that tempfile.mkdtemp(0o700) sets on Windows.
+
+    Files staged inside a TemporaryDirectory keep that ACL after os.replace,
+    which strips inherited read access (and broke sandboxed reviewers).
+    """
+    if os.name != "nt":
+        return
+    try:
+        subprocess.run(
+            ["icacls", str(path), "/reset"],
+            check=False,
+            capture_output=True,
+        )
+    except OSError:
+        pass
 
 
 def generate_assets(
@@ -1229,8 +1262,10 @@ def generate_assets(
             }
             for destination, source in staged.items():
                 os.replace(source, destination)
+                _restore_inherited_acl(destination)
             # The TeX switch is intentionally installed after every dependency.
             os.replace(tmp / "gate.tex", targets["gate"])
+            _restore_inherited_acl(targets["gate"])
 
         if compile_pdf:
             subprocess.run(
