@@ -1,0 +1,51 @@
+{
+  "accuracy": 0.743875187075876,
+  "best_validation_loss": 0.7981006164469349,
+  "checkpoint": "checkpoints/mt10/horizon_10/failure_detector.pt",
+  "confusion_matrix": [
+    [
+      27768,
+      9089
+    ],
+    [
+      3404,
+      8516
+    ]
+  ],
+  "confusion_matrix_figure": "results/figures/mt10_horizon10_detector_confusion.png",
+  "deployment_threshold_metrics": {
+    "accuracy": 0.6428849662750886,
+    "confusion_matrix": [
+      [
+        21057,
+        15800
+      ],
+      [
+        1619,
+        10301
+      ]
+    ],
+    "f1": 0.5418584466479051,
+    "fn": 1619,
+    "fp": 15800,
+    "positive_fraction": 0.24437747298931872,
+    "precision": 0.394659208459446,
+    "recall": 0.8641778523489932,
+    "samples": 48777,
+    "threshold": 0.3,
+    "tn": 21057,
+    "tp": 10301
+  },
+  "epoch": 2,
+  "f1": 0.5768670618120237,
+  "fn": 3404,
+  "fp": 9089,
+  "positive_fraction": 0.24437747298931872,
+  "precision": 0.4837262141437092,
+  "recall": 0.7144295302013423,
+  "samples": 48777,
+  "threshold": 0.5,
+  "tn": 27768,
+  "tp": 8516,
+  "validation_loss": 0.7981006164469349
+}

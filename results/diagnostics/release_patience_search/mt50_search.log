@@ -1,0 +1,37 @@
+2026-08-19 23:41:05 | INFO | search_release_patience | reference official_clean act (5 episodes/task)
+2026-08-19 23:42:31 | INFO | search_release_patience | reference official_clean act success 0.916
+2026-08-19 23:42:31 | INFO | search_release_patience | reference official_clean heuristic_recovery (5 episodes/task)
+2026-08-19 23:44:03 | INFO | search_release_patience | reference official_clean heuristic_recovery success 0.940
+2026-08-19 23:44:03 | INFO | search_release_patience | official_clean release=0.05 patience=5 (5 episodes/task)
+2026-08-19 23:47:01 | INFO | search_release_patience | official_clean release=0.05 patience=5 macro=0.9320 intervened=0.276 occ=0.160
+2026-08-19 23:47:01 | INFO | search_release_patience | official_clean release=0.05 patience=10 (5 episodes/task)
+2026-08-19 23:50:06 | INFO | search_release_patience | official_clean release=0.05 patience=10 macro=0.9320 intervened=0.276 occ=0.160
+2026-08-19 23:50:06 | INFO | search_release_patience | official_clean release=0.15 patience=5 (5 episodes/task)
+2026-08-19 23:52:52 | INFO | search_release_patience | official_clean release=0.15 patience=5 macro=0.9320 intervened=0.276 occ=0.129
+2026-08-19 23:52:52 | INFO | search_release_patience | official_clean release=0.15 patience=10 (5 episodes/task)
+2026-08-19 23:55:36 | INFO | search_release_patience | official_clean release=0.15 patience=10 macro=0.9320 intervened=0.276 occ=0.142
+2026-08-19 23:55:36 | INFO | search_release_patience | reference robustness_noise_10 act (5 episodes/task)
+2026-08-20 00:05:18 | INFO | search_release_patience | reference robustness_noise_10 act success 0.028
+2026-08-20 00:05:18 | INFO | search_release_patience | reference robustness_noise_10 heuristic_recovery (5 episodes/task)
+2026-08-20 00:09:44 | INFO | search_release_patience | reference robustness_noise_10 heuristic_recovery success 0.360
+2026-08-20 00:09:44 | INFO | search_release_patience | robustness_noise_10 release=0.05 patience=5 (5 episodes/task)
+2026-08-20 00:17:59 | INFO | search_release_patience | robustness_noise_10 release=0.05 patience=5 macro=0.3280 intervened=0.860 occ=0.445
+2026-08-20 00:17:59 | INFO | search_release_patience | robustness_noise_10 release=0.05 patience=10 (5 episodes/task)
+2026-08-20 00:26:23 | INFO | search_release_patience | robustness_noise_10 release=0.05 patience=10 macro=0.3280 intervened=0.860 occ=0.454
+2026-08-20 00:26:23 | INFO | search_release_patience | robustness_noise_10 release=0.15 patience=5 (5 episodes/task)
+2026-08-20 00:37:12 | INFO | search_release_patience | robustness_noise_10 release=0.15 patience=5 macro=0.2520 intervened=0.860 occ=0.331
+2026-08-20 00:37:12 | INFO | search_release_patience | robustness_noise_10 release=0.15 patience=10 (5 episodes/task)
+2026-08-20 00:44:42 | INFO | search_release_patience | robustness_noise_10 release=0.15 patience=10 macro=0.2560 intervened=0.860 occ=0.363
+2026-08-20 00:44:42 | INFO | search_release_patience | reference robustness_noise_40 act (5 episodes/task)
+2026-08-20 00:50:50 | INFO | search_release_patience | reference robustness_noise_40 act success 0.032
+2026-08-20 00:50:50 | INFO | search_release_patience | reference robustness_noise_40 heuristic_recovery (5 episodes/task)
+2026-08-20 00:53:46 | INFO | search_release_patience | reference robustness_noise_40 heuristic_recovery success 0.316
+2026-08-20 00:53:46 | INFO | search_release_patience | robustness_noise_40 release=0.05 patience=5 (5 episodes/task)
+2026-08-20 00:57:25 | INFO | search_release_patience | robustness_noise_40 release=0.05 patience=5 macro=0.4640 intervened=0.980 occ=0.614
+2026-08-20 00:57:25 | INFO | search_release_patience | robustness_noise_40 release=0.05 patience=10 (5 episodes/task)
+2026-08-20 01:01:00 | INFO | search_release_patience | robustness_noise_40 release=0.05 patience=10 macro=0.5160 intervened=0.980 occ=0.654
+2026-08-20 01:01:00 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=5 (5 episodes/task)
+2026-08-20 01:06:56 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=5 macro=0.3800 intervened=0.980 occ=0.447
+2026-08-20 01:06:56 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=10 (5 episodes/task)
+2026-08-20 01:12:13 | INFO | search_release_patience | robustness_noise_40 release=0.15 patience=10 macro=0.4160 intervened=0.980 occ=0.544
+2026-08-20 01:12:13 | INFO | search_release_patience | search complete -> C:\Users\Kyrie Zhang\Desktop\REIM\results\diagnostics\release_patience_search
