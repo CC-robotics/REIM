@@ -1,0 +1,58 @@
+{
+  "artifact": "multitask_detector_pre_event_audit",
+  "benchmark": "MT10",
+  "current_event_window_recall": 0.5351484489415523,
+  "inputs": {
+    "detector_checkpoint": "checkpoints/mt10/seed_42/failure_detector.pt",
+    "detector_checkpoint_sha256": "54da6920f97952ca3f3a72b507f1281408e9660cb8ce9e91e56950c5a04a2450",
+    "validation_data": "datasets/mt10/failures_validation_calibrated",
+    "validation_manifest_sha256": "411aef182ed07f3a899ad6c93324e092b8b0ab74421b00ccfdb1b5f09787a317"
+  },
+  "prediction_horizon": 10,
+  "prospective_window_metrics_including_current_event": {
+    "f1": 0.5458902566413371,
+    "fn": 13071,
+    "fp": 9100,
+    "precision": 0.5942209934896995,
+    "predicted_positive_rate": 0.23489855558232342,
+    "recall": 0.504830094328901,
+    "tn": 59974,
+    "tp": 13326
+  },
+  "schema_version": "reim-multitask-pre-event-audit-v1",
+  "strict_pre_event_window_metrics": {
+    "f1": 0.4104494992624796,
+    "fn": 6088,
+    "fp": 9100,
+    "precision": 0.3674845346493362,
+    "predicted_positive_rate": 0.17883379532374546,
+    "recall": 0.4647912087912088,
+    "tn": 59974,
+    "tp": 5287
+  },
+  "terminal_positive_horizon": 25,
+  "threshold": 0.65,
+  "trajectory_metrics": {
+    "event_trajectories": 192,
+    "event_trajectories_with_strict_pre_event_alert": 57,
+    "latest_pre_event_alert_lead_steps": {
+      "count": 57,
+      "maximum": 80,
+      "mean": 7.578947368421052,
+      "median": 2.0,
+      "minimum": 1
+    },
+    "non_event_trajectories": 8,
+    "non_event_trajectories_with_alert": 0,
+    "non_event_trajectory_alert_rate": 0.0,
+    "strict_pre_event_detection_rate": 0.296875
+  },
+  "validation_samples": {
+    "current_event_offset_zero": 15022,
+    "derived_label_mismatches": 0,
+    "negative_no_event_within_horizon": 69074,
+    "prospective_positive": 26397,
+    "strict_future_offset_one_to_horizon": 11375,
+    "total": 95471
+  }
+}

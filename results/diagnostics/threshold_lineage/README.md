@@ -77,3 +77,44 @@ release (0.05) must not be interpreted as a probability difference of 50 pp;
 both are empirical operating points. Score calibration (temperature scaling
 or isotonic regression, fit on the validation bank only) is tracked as a P1
 work item.
+
+## 2026-08-24: metadata re-attestation after path normalization
+
+All repository artifacts were migrated from machine-absolute paths
+(`/home/diy/...`, `C:\Users\...`) to repo-relative paths
+(`scripts/normalize_artifact_paths.py`).  This changed the bytes of every
+dataset manifest, which invalidated two classes of recorded hashes without
+any data change:
+
+1. **Manifest file-byte SHA256 anchors** (e.g. detector-checkpoint
+   `data_manifest_sha256`, paper-asset manifest input/output hashes).  The
+   content-level fingerprints (`dataset_fingerprint_sha256`,
+   `label_calibration_fingerprint_sha256`) were unaffected and still match
+   the checkpoints, proving the underlying arrays never changed.
+2. **Frozen-validation calibration fingerprints.**  The frozen-mode
+   `label_calibration` block embeds the volatile `manifest_path` of its
+   source training manifest, so the canonical MT10/MT50/smoke validation
+   banks were rebuilt in place with identical parameters.  Per-shard
+   `positive_labels` are bit-identical to the pre-rebuild manifests (labels
+   unchanged); only calibration-provenance metadata moved.
+
+Re-attested records: `assets_manifest.json` (inputs + outputs),
+`mt{10,50}_detector_threshold.json` provenance (validation calibration /
+dataset / manifest hashes), and the rebuilt validation manifests themselves.
+The threshold tuner now fails closed on data changes (fingerprint mismatch)
+but warns-and-continues on manifest byte changes when the dataset
+fingerprint matches; its top-level label-rule audit compares against
+`label_calibration` (the applied rule) rather than the preserved
+collection-time provenance block.
+
+## 2026-08-24: per-horizon thresholds for the backfill ablation
+
+Per the advisor's review, the backfill horizons no longer share the
+canonical 0.65 trigger.  Each horizon's detector was re-tuned on its own
+relabelled validation bank under the identical precision-floor (>= 0.60)
+rule: horizon 0 -> 0.72, horizon 10 -> 0.71, horizon 25 (canonical) -> 0.65,
+horizon 50 -> 0.62 (`results/tables/mt10_horizon{0,10,50}_detector_threshold.json`).
+The closed-loop ablation numbers committed earlier used the fixed 0.65 and
+are marked preliminary; detector-level pre-event / lead-time metrics per
+horizon live in `results/tables/mt10_horizon{0,10,25,50}_pre_event_audit.json`
+and `mt10_backfill_pre_event_summary.csv`.

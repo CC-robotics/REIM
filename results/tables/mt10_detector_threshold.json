@@ -208,12 +208,13 @@
     "seed": 42,
     "task_vocabulary_sha256": "527870db7868566e8a84c43dc2cb9d8b739ad75c5bdb916294747814c957686e",
     "validation_benchmark_seed": 20264010,
-    "validation_calibration_fingerprint_sha256": "b2b464b1bd46853863dd06aa4245381a40dc73ee7e1f9b83d9b66be223b195da",
+    "validation_calibration_fingerprint_sha256": "77a414ce0f15bcfbae8b0ba8cdd469eb69124d1358f24761204c145c05d5faba",
     "validation_collection_seed": 20264010,
-    "validation_dataset_fingerprint_sha256": "9863bfa6d2d0e1be9dfac2eb78289f5a6b2a06ce020bdae4a051665fc062a268",
+    "validation_dataset_fingerprint_sha256": "218ddcfab8f3bd16d384cc70b4dc43e114d5c9f38f995738e4e445975bcd5494",
     "validation_manifest": "datasets/mt10/failures_validation_calibrated/manifest.json",
-    "validation_manifest_sha256": "02ad824e94b4a38cf13b837f06bb345ddd93d75341a0f6b5a8735cc2f0734288",
-    "validation_provenance_fingerprint_sha256": "85c3c36be0d96e3432fd728d4f33e23d961118db1a956a028f062b854a609b05"
+    "validation_manifest_sha256": "411aef182ed07f3a899ad6c93324e092b8b0ab74421b00ccfdb1b5f09787a317",
+    "validation_provenance_fingerprint_sha256": "85c3c36be0d96e3432fd728d4f33e23d961118db1a956a028f062b854a609b05",
+    "provenance_reattestation": "2026-08-24: validation-bank manifest rebuilt in place after repo-wide path normalization; per-shard labels bit-identical (positive_labels unchanged), only calibration-provenance metadata and file-byte hashes were re-attested."
   },
   "ranking_and_calibration": {
     "auprc_eligible_task_count": 10,
