@@ -73,7 +73,7 @@
 ### 问题 3：occupancy
 
 - occupancy 已进论文主表：`Table_multitask_clean.tex` 新增 **Occup. ↓** 列，gate 宏为 MT10 Heuristic/REIM = 13.2%/18.9%，MT50 = 10.4%/16.6%（与 burden 汇总逐位一致）。
-- **MT10 noise 0.4 matched-occupancy 对照**（200 回合搜索库，方向性）：REIM 在 release=0.3/patience=5 时 occupancy 49.0%（heuristic 47.6%），success 49.5% vs 47.0%，**同预算下 +2.5 个百分点**。noise 0.1 网格 occupancy 上限 38.3%，达不到 heuristic 的 48.2%，已如实报告（REIM 用更低预算达到近似成功）。
+- **MT10 noise 0.4 matched-occupancy 对照**（200 回合搜索库，方向性）：REIM 在 release=0.3/patience=5 时 occupancy 49.0%（heuristic 47.6%），success 49.5% vs 47.0%，**同预算下 +2.5 个百分点**（配对统计见下方"对照已闭环"条）。
 - **success–occupancy 曲线**：`results/figures/mt10_success_occupancy.png`。
 - **三种负担口径已补齐**（官方库 bank 20265010，seed 42，每方法每条件 500 回合，`results/tables/intervention_burden_three_metrics.json`，脚本 `scripts/build_burden_three_metrics.py`）：
 
@@ -91,7 +91,9 @@
 
   （0.2/0.3 档在同一 JSON 中完整列出。开关切换次数 = 干预次数，每次干预对应一段 recovery 开→关。）
 - **分母效应已核验**：noise 0.4 下 REIM 每回合恢复 **157.1** 步 vs heuristic **167.4** 步（导师 PDF 引用值 157/167，逐位吻合）。注意 pooled 口径下 0.4 档 REIM 为 57.9%（而非 mean 口径的 69.0%）——REIM 高占用回合往往更短（更早成功），两种口径必须并列报告。
-- **matched-occupancy 补跑已备好**（`scripts/run_matched_occupancy_supplement.ps1`，仍在搜索库 20264010，不动 202650xx/202660xx）：① noise 0.4、release 0.3/patience 5，补 rescued/harmed 配对统计；② noise 0.1、release 0.02/patience 3（导师建议参数），验证 0.1 档 occupancy 能否抬到 heuristic 的 49.6%。跑完后更新 `mt10_matched_occupancy_comparison.json`。
+- **matched-occupancy 对照已闭环**（`results/tables/mt10_matched_occupancy_comparison.json`，脚本 `scripts/analyze_matched_occupancy_supplement.py`，配对经 `paired_episode_id` 与启发式参考逐回合对齐）：
+  - **noise 0.4（匹配成功）**：REIM release 0.3/patience 5 → success **49.5%** @ occupancy **49.0%** vs heuristic **47.0%** @ **47.6%**，同预算 +2.5pp；配对 rescued **32** / harmed **27**（净 +5 回合，恰为 +2.5pp）。
+  - **noise 0.1（匹配不可达，但结论更强）**：即使按导师建议的 release 0.02/patience 3 补跑，REIM occupancy 也只到 **39.3%**，够不到 heuristic 的 48.2%——但该点 success 已达 **48.0% ≥ 47.0%**（rescued 27 / harmed 25）。即 0.1 档 REIM 用**低约 9 个百分点的预算**实现持平/反超，同等占用预算的匹配点在现有参数范围内不存在。
 
 ---
 
@@ -145,7 +147,7 @@
 ## 五、口径声明与待确认
 
 - **backfill 闭环**为 tuned 阈值 + 每任务 20 回合的方向性结果（导师最低要求 20 回合）；需更高置信度可加机时到 50 回合。
-- **matched-occupancy** 为 200 回合搜索库（seed 20264010）的方向性对照，非 500 回合官方库（20265010）；rescued/harmed 配对统计与 0.1 档可达性补跑脚本已就绪待执行（见问题 3）。
+- **matched-occupancy** 为 200 回合搜索库（seed 20264010）的方向性对照，非 500 回合官方库（20265010）；rescued/harmed 配对统计与 0.1 档可达性已补跑完成（见问题 3"对照已闭环"）。
 - **precision-floor 双口径并行**：导师 PDF 要求 detector 触发 precision-floor **≥0.65**，而此前四个 horizon 调阈用的是仓库默认 **0.60**（val task-macro precision：h0=0.6049、h10=0.6024、h25=0.6001、h50=0.6036）。决定**两种口径都做**：0.60 闭环已有结果；0.65 已先完成**纯推理探针**（不动仿真，`results/tables/mt10_horizon*_detector_threshold_floor065.json`），四个 horizon 均有满足 0.65 的阈值，闭环重跑脚本已备好（`scripts/run_backfill_floor065_closed_loop.ps1`，12 单元）：
 
 | Horizon | 阈值（floor 0.60→0.65） | precision | F1 | recall |

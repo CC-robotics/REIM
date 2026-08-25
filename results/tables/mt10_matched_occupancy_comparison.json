@@ -5,7 +5,7 @@
     "episodes_per_task": 20,
     "seed": 42,
     "trigger_threshold": 0.65,
-    "note": "Directional comparison on the 200-episode search/validation library (seed 20264010), not the 500-episode official library (20265010). Heuristic reference re-run on the same library to obtain occupancy."
+    "note": "Directional comparison on the 200-episode search/validation library (seed 20264010), not the 500-episode official library (20265010). Heuristic reference re-run on the same library to obtain occupancy. Paired rescued/harmed computed via paired_episode_id against the heuristic reference (rescued = REIM success & heuristic failure)."
   },
   "comparisons": [
     {
@@ -21,9 +21,19 @@
         "recovery_occupancy": 0.382569,
         "occupancy_delta": 0.099371
       },
+      "supplementary_run": {
+        "release_threshold": 0.02,
+        "release_patience": 3,
+        "task_macro_success": 0.48,
+        "recovery_occupancy": 0.392506,
+        "paired_episodes": 200,
+        "rescued_vs_heuristic": 27,
+        "harmed_vs_heuristic": 25,
+        "run_tag": "mt10_matched_reim_rel002_pat3_noise10"
+      },
       "matched_within_0.02": false,
       "success_delta_reim_minus_heuristic": -0.01,
-      "caveat": "No grid point reaches the heuristic occupancy at this noise level (grid max 0.383 < 0.482); nearest point reported instead. The nearest point is the robustness-first operating point (0.05/10) itself."
+      "caveat": "No reachable operating point matches the heuristic occupancy at this noise level: even the professor-suggested 0.02/3 setting (supplementary run) reaches only 0.393 occupancy (< 0.482). However that run already matches/beats heuristic success (0.480 vs 0.470, rescued 27 vs harmed 25) while using ~9pp lower occupancy budget, i.e. REIM achieves parity at strictly lower budget at noise 0.1."
     },
     {
       "noise_level": 0.4,
@@ -37,6 +47,16 @@
         "micro_success": 0.495,
         "recovery_occupancy": 0.490342,
         "occupancy_delta": 0.014587
+      },
+      "supplementary_run": {
+        "release_threshold": 0.3,
+        "release_patience": 5,
+        "task_macro_success": 0.495,
+        "recovery_occupancy": 0.4903,
+        "paired_episodes": 200,
+        "rescued_vs_heuristic": 32,
+        "harmed_vs_heuristic": 27,
+        "run_tag": "mt10_matched_reim_rel030_pat5_noise40"
       },
       "matched_within_0.02": true,
       "success_delta_reim_minus_heuristic": 0.025
