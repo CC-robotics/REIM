@@ -605,6 +605,31 @@ Correction to the 2026-08-23 report: the 0.683 F1 / 74% early-warning figures
 quoted there were single-task PickPlace numbers, not MT10; the MT10
 detector-level values are the ones in the table above.
 
+Backfill closed loop with tuned thresholds (MT-REIM task-macro success,
+`results/tables/mt10_backfill_tuned_closed_loop_summary.csv`; bank 20265010,
+release 0.05/10, 20 episodes per task; the preliminary thr=0.65 rows at 50
+episodes per task are kept alongside):
+
+| Horizon | Threshold | Clean | Noise 0.1 | Noise 0.4 | Occupancy (clean / 0.1 / 0.4) |
+|---|---:|---:|---:|---:|---:|
+| h0 | 0.72 | 98.5% | 46.0% | 59.5% | 16.3% / 42.1% / 62.0% |
+| h10 | 0.71 | 98.0% | 45.0% | 61.0% | 14.8% / 44.7% / 68.2% |
+| h50 | 0.62 | 98.5% | 47.5% | 62.5% | 25.7% / 42.0% / 70.6% |
+
+Against the thr=0.65 runs the tuned thresholds trade nothing away: clean rises
+slightly (+1.2 to +1.7 points) and noise-0.4 shifts within ±0.5 points; h50
+gains +5.3 / +3.3 points at noise 0.1 / 0.4. Canonical horizon 25 is the main
+result reported above.
+
+Multi-seed confirmation (canonical horizon 25 detector+recovery, seeds
+42/43/44, bank 20265010, 50 episodes per task,
+`results/tables/mt10_multiseed_summary.csv`): MT-REIM task-macro success
+96.6% / 44.1% / 60.8% (mean over seeds; per-seed range 96.2-97.0% /
+43.0-45.6% / 55.6-65.4%) at noise 0 / 0.1 / 0.4, versus heuristic gate
+96.7% / 44.7% / 40.8% and MT-ACT 96.6% / 5.2% / 4.6%. REIM is statistically
+level with the heuristic gate at noise 0.1 and clearly ahead at noise 0.4 on
+every seed.
+
 ## Paper assets
 
 `visualization/plot_results.py` creates:

@@ -1,0 +1,63 @@
+{
+  "protocol": {
+    "action_std_scale": 0.4,
+    "benchmark": "MT10",
+    "benchmark_seed": 20265010,
+    "bootstrap_samples": 5000,
+    "checkpoint_sha256": {
+      "act": "e4493b456460c6641c1f2b28217effcfbda8487e2766cbd24d6be0a31fa59334",
+      "detector": "586de917961c19f093d09a68509f54b039b5be61e0320f7cfc505cb9b2dd4d65",
+      "recovery": "5b5899afbebc010b95b0db499c2751da6d9953e1af9ca59396afdf896238d0d3"
+    },
+    "condition": "robustness_noise_10",
+    "detector_threshold": 0.72,
+    "episode_seed_base": 42,
+    "episodes_per_task": 20,
+    "evaluation_schema_version": "reim-multitask-evaluation-v2",
+    "execution_device": "cuda",
+    "heuristic_min_steps": 30,
+    "heuristic_tolerance": 0.01,
+    "heuristic_window": 20,
+    "intervention_cooldown": 10,
+    "max_episode_steps": 500,
+    "metaworld_version": "3.1.1",
+    "methods": [
+      "reim"
+    ],
+    "min_recovery_steps": 5,
+    "noise_level": 0.1,
+    "object_position_noise": false,
+    "observation_std_scale": 0.025,
+    "recovery_budget": 250,
+    "release_patience": 10,
+    "release_threshold": 0.05,
+    "task_bank_sha256": "3d7066f522638c4aa9096d00062ee7b614ea9b4ee1eb0d529dcb862ddebe8578",
+    "task_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "task_vocabulary": [
+      "reach-v3",
+      "push-v3",
+      "pick-place-v3",
+      "door-open-v3",
+      "drawer-open-v3",
+      "drawer-close-v3",
+      "button-press-topdown-v3",
+      "peg-insert-side-v3",
+      "window-open-v3",
+      "window-close-v3"
+    ],
+    "task_vocabulary_sha256": "527870db7868566e8a84c43dc2cb9d8b739ad75c5bdb916294747814c957686e"
+  },
+  "run_fingerprint": "2c00f262f219a968d10c1eeecc789eb41115389418be721d659c7b77f5151ed4",
+  "schema_version": "reim-multitask-evaluation-run-v1"
+}

@@ -120,6 +120,41 @@ for r in backfill:
         if chk not in row:
             errors.append(f"backfill h{h}: {chk} not in README row: {row}")
 
+# 6) tuned backfill closed-loop table vs aggregate CSV
+tuned = list(csv.DictReader(
+    open(ROOT / "results" / "tables" / "mt10_backfill_tuned_closed_loop_summary.csv",
+         encoding="utf-8")))
+for h in ("0", "10", "50"):
+    sub = {float(r["noise_level"]): r for r in tuned if r["horizon"] == h}
+    if set(sub) != {0.0, 0.1, 0.4}:
+        errors.append(f"tuned closed loop h{h}: incomplete conditions")
+        continue
+    row = next((l for l in section.splitlines()
+                if l.startswith(f"| h{h} |") and "%" in l and "/" in l), None)
+    if row is None:
+        errors.append(f"tuned closed loop h{h}: row missing")
+        continue
+    checks = [f"{float(sub[0.0]['tuned_threshold']):.2f}"]
+    checks += [f"{float(sub[nl]['success_tuned_20ep']) * 100:.1f}%" for nl in (0.0, 0.1, 0.4)]
+    checks += [f"{float(sub[nl]['recovery_occupancy_tuned']) * 100:.1f}%" for nl in (0.0, 0.1, 0.4)]
+    for chk in checks:
+        if chk not in row:
+            errors.append(f"tuned closed loop h{h}: {chk} not in README row: {row}")
+
+# 7) multi-seed paragraph vs aggregate CSV
+multiseed = list(csv.DictReader(
+    open(ROOT / "results" / "tables" / "mt10_multiseed_summary.csv", encoding="utf-8")))
+for r in multiseed:
+    for field in ("mean",):
+        chk = f"{float(r[field]) * 100:.1f}%"
+        if chk not in section:
+            errors.append(f"multi-seed {r['method']} noise {r['noise_level']}: "
+                          f"{chk} not in README section")
+    if r["method"] == "reim":
+        rng = (f"{float(r['min']) * 100:.1f}-{float(r['max']) * 100:.1f}%")
+        if rng not in section:
+            errors.append(f"multi-seed reim noise {r['noise_level']}: range {rng} missing")
+
 if errors:
     print("MISMATCHES:")
     for e in errors:
