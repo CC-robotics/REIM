@@ -57,6 +57,22 @@
 
   结论：0.65 口径 clean 完全不掉点，但 0.1 档代价明显（−6~−12.5 pp，超出 20 回合噪声范围）、0.4 档小幅下降。两套口径数字均已落盘，论文可并列呈现，最终口径由导师定夺。
 
+**disagreement 状态分档统计 + h0/h50 恢复不匹配验证（PDF 第三节.3，纯计算完成）**
+- 定义（按 PDF 字面执行并留痕，`results/tables/mt10_disagreement_horizon_stats.json`，脚本 `scripts/build_disagreement_horizon_stats.py`）：disagreement 状态 = detector 触发（`intervention_count > 0`）；不匹配验证 = REIM 回合与同种子 MT-ACT 回合经 `paired_episode_id` 配对后的 2×2（触发 × ACT 单独成败）。数据用 floor-0.65 闭环（bank 20265010，20 回合/任务）。
+- **disagreement 分档（触发回合成功率 vs 未触发）**：噪声下触发回合成功率 42%–61%，未触发回合仅 12%–38%——detector 精准识别了"可挽救"局面；clean 下触发回合成功率 97%–100%（轻度误触发无害）。例（h25）：0.1 档触发 46.2% vs 未触发 14.6%；0.4 档触发 58.6% vs 28.6%。
+- **h0/h50 端到端不匹配（vs 配对 ACT）**：
+
+| Horizon | 条件 | 误干预（触发但ACT成功） | 正当干预（触发且ACT失败） | 漏检（未触发但ACT失败） | 正确静默 |
+|---|---|---:|---:|---:|---:|
+| h0 | clean | 20.0% | 0.5% | 1.5% | 78.0% |
+| h0 | 0.1 | 0.5% | 70.5% | 25.5% | 3.5% |
+| h0 | 0.4 | 3.0% | 93.0% | 3.0% | 1.0% |
+| h50 | clean | 30.0% | 0.5% | 1.5% | 68.0% |
+| h50 | 0.1 | 0.0% | 73.0% | 23.0% | 4.0% |
+| h50 | 0.4 | 1.5% | 92.0% | 4.0% | 2.5% |
+
+  结论：噪声 0.4 下干预 92–93% 是正当的、漏检仅 3–4%；clean 下的误干预（20–30%）不掉成功率；**0.1 档漏检率 23–25.5% 是当前主要改进空间**（与 0.1 档成功率持平启发式的现象互证）。
+
 **多种子（canonical horizon=25）**
 - detector + recovery 训练种子 **42/43/44**，ACT 固定，条件 clean / 0.1 / 0.4（每任务 50 回合，每方法每种子 500 回合）。
 - 按导师规范补报 **3 次实验均值 ± 样本标准差** 与**配对 rescued/harmed**（配对对象为 MT-ACT，`results/tables/mt10_multiseed_summary.csv`，生成脚本 `scripts/build_multiseed_stats.py`）：
@@ -173,9 +189,9 @@
 - **selection manifest 已补齐**：`results/diagnostics/selection_manifest.json`（脚本 `scripts/build_selection_manifest.py`），含候选网格全部 CSV/JSON 的 SHA256、优化目标（扰动条件平均 task-macro 成功率最大化）、约束（clean 不退化 + noise 0.4 occupancy 上限固定）、平局规则（先比扰动均值，再比 noise 0.4 occupancy 低者，再比 patience 高者），并由网格数据独立复算验证 0.05/10 确为 MT10/MT50 双库的 argmax；含 202650xx/202660xx 全程未触碰声明。
 - **阈值相关聚类置信区间已补齐**：`results/tables/mt10_threshold_metrics_clustered_bootstrap_ci.json`（脚本 `scripts/build_threshold_metrics_ci.py`）。按任务整簇有放回抽样（B=10000，种子 20260825），覆盖双口径 × 四 horizon 的 precision/recall/F1。例：floor 0.60 各 horizon precision 点估计 0.6001–0.6049，95% CI 宽约 ±0.06（如 h25：0.6001 [0.5357, 0.6775]）；floor 0.65 各 horizon precision 0.6503–0.6540，CI 全部落在 0.65 之下沿附近（如 h25：0.6540 [0.5925, 0.7266]）——即 10 个任务的簇结构下，floor 0.65 的"达标"在统计上是边缘性的，这一点建议向导师如实说明。
 - **search JSON 分片项已核销**：复核确认 `mt10_search.json` / `mt50_search.json` 本体完整无损（此前记录源于早期排查待办，并非实际缺陷）；其可追溯性已由 `selection_manifest.json` 中逐文件 SHA256 覆盖。
-- 导师 PDF 中明确列出、但**尚未排期**的工程项：
-  1. **disagreement 状态下 success 分档统计**（0/10/25/50 档）与 **h0/h50 端到端恢复不匹配验证**——定义需先与导师对齐；
-  2. **最终确认库 20266010/20266050**：待参数与代码完全冻结后只跑一次，出投稿终版数字。
+- **MT50 floor-0.65 探针也已补齐**：阈值 0.64 → 0.71，precision 0.6516（`results/tables/mt50_detector_threshold_floor065.json`）。
+- **disagreement 分档统计与 h0/h50 恢复不匹配验证已完成**：按 PDF 字面定义执行（见问题 2 末段），定义如有出入可随时按新定义重算（纯计算，分钟级）。
+- **最终确认库 20266010/20266050 已备好待跑**：`scripts/run_confirmation_banks_202660xx.ps1`。冻结配置：release 0.05/patience 10；detector 阈值按 floor-0.65 口径（MT10 h25 → 0.73，MT50 → 0.71）；4 方法 × 5 条件 × 50 回合/任务（MT10 共 10,000 回合，MT50 共 50,000 回合）；每单元独立输出 + 断点续跑。**这是收官唯一需要的仿真**，建议隔夜跑；跑完重建论文全部终版表格后即达投稿状态。若导师最终选择 floor 0.60 口径，仅需把阈值改回 0.65/0.64 再跑一次。
 
 ---
 
@@ -183,7 +199,7 @@
 
 - 三个出版门 + 校验脚本（README 数字、数据集哈希、绝对路径、三个 paper manifest）全部通过。
 - Git LFS 指引已写入 README；跨平台行尾符已统一为 LF。
-- 关键产物：`results/figures/mt10_success_occupancy.png`、`results/tables/mt10_matched_occupancy_comparison.json`、`results/tables/mt10_backfill_tuned_closed_loop_summary.csv`、`results/tables/mt10_multiseed_summary.csv`（含样本标准差 + rescued/harmed）、`results/tables/intervention_burden_three_metrics.json`（三种负担口径）、`results/diagnostics/selection_manifest.json`（参数选择清单）、`results/tables/mt10_horizon{0,10,25,50}_detector_threshold_floor065.json`（precision-floor 0.65 探针）。
+- 关键产物：`results/figures/mt10_success_occupancy.png`、`results/tables/mt10_matched_occupancy_comparison.json`、`results/tables/mt10_backfill_tuned_closed_loop_summary.csv`、`results/tables/mt10_backfill_floor065_closed_loop_summary.csv`、`results/tables/mt10_multiseed_summary.csv`（含样本标准差 + rescued/harmed）、`results/tables/intervention_burden_three_metrics.json`（三种负担口径）、`results/tables/mt10_disagreement_horizon_stats.json`（disagreement 分档 + h0/h50 不匹配）、`results/tables/mt10_threshold_metrics_clustered_bootstrap_ci.json`（聚类置信区间）、`results/diagnostics/selection_manifest.json`（参数选择清单）、`results/tables/mt10_horizon{0,10,25,50}_detector_threshold_floor065.json` + `results/tables/mt50_detector_threshold_floor065.json`（precision-floor 0.65 探针）、`scripts/run_confirmation_banks_202660xx.ps1`（确认库最终运行脚本）。
 - 本轮整改提交链（均可逐条 `git show` 复核）：`872238b1` 路径归一化 + manifest 入仓 → `cdd07009` README/tex 矛盾修复 → `478d4032` backfill 初步消融 → `b0568c93` paper_assets 自洽 → `faf273e5` 逐 horizon 阈值 + pre-event 审计 → `656cf6ae` occupancy 主表 + matched 对照 → `b038a815` 两个 gate manifest 重签 + ACL 修复 → `72664f50` 调阈闭环 + 多种子 → `c044b060` 行尾符跨平台根治。
 
 —— 本汇报由实验数据与提交记录逐项复核生成，所有数值均有对应产物可溯源。

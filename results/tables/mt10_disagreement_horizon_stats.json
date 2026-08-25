@@ -1,0 +1,258 @@
+{
+  "definitions": {
+    "disagreement_state": "detector fired (intervention_count > 0): the detector declared the ACT action stream risky and recovery took over",
+    "mismatch_cells": "REIM episode paired with same-seed MT-ACT episode via paired_episode_id; mismatch = unnecessary intervention (fired & ACT succeeds) or missed failure (silent & ACT fails)"
+  },
+  "disagreement_success_by_horizon": {
+    "horizon_0": {
+      "official_clean": {
+        "detector_fired": {
+          "episodes": 41,
+          "success": 1.0
+        },
+        "detector_silent": {
+          "episodes": 159,
+          "success": 0.9811
+        },
+        "episodes": 200,
+        "success_overall": 0.985
+      },
+      "robustness_noise_10": {
+        "detector_fired": {
+          "episodes": 142,
+          "success": 0.5141
+        },
+        "detector_silent": {
+          "episodes": 58,
+          "success": 0.1207
+        },
+        "episodes": 200,
+        "success_overall": 0.4
+      },
+      "robustness_noise_40": {
+        "detector_fired": {
+          "episodes": 192,
+          "success": 0.5729
+        },
+        "detector_silent": {
+          "episodes": 8,
+          "success": 0.25
+        },
+        "episodes": 200,
+        "success_overall": 0.56
+      }
+    },
+    "horizon_10": {
+      "official_clean": {
+        "detector_fired": {
+          "episodes": 32,
+          "success": 0.9688
+        },
+        "detector_silent": {
+          "episodes": 168,
+          "success": 0.9821
+        },
+        "episodes": 200,
+        "success_overall": 0.98
+      },
+      "robustness_noise_10": {
+        "detector_fired": {
+          "episodes": 146,
+          "success": 0.4452
+        },
+        "detector_silent": {
+          "episodes": 54,
+          "success": 0.1481
+        },
+        "episodes": 200,
+        "success_overall": 0.365
+      },
+      "robustness_noise_40": {
+        "detector_fired": {
+          "episodes": 189,
+          "success": 0.6138
+        },
+        "detector_silent": {
+          "episodes": 11,
+          "success": 0.3636
+        },
+        "episodes": 200,
+        "success_overall": 0.6
+      }
+    },
+    "horizon_25": {
+      "official_clean": {
+        "detector_fired": {
+          "episodes": 68,
+          "success": 1.0
+        },
+        "detector_silent": {
+          "episodes": 132,
+          "success": 0.9773
+        },
+        "episodes": 200,
+        "success_overall": 0.985
+      },
+      "robustness_noise_10": {
+        "detector_fired": {
+          "episodes": 145,
+          "success": 0.4621
+        },
+        "detector_silent": {
+          "episodes": 55,
+          "success": 0.1455
+        },
+        "episodes": 200,
+        "success_overall": 0.375
+      },
+      "robustness_noise_40": {
+        "detector_fired": {
+          "episodes": 186,
+          "success": 0.586
+        },
+        "detector_silent": {
+          "episodes": 14,
+          "success": 0.2857
+        },
+        "episodes": 200,
+        "success_overall": 0.565
+      }
+    },
+    "horizon_50": {
+      "official_clean": {
+        "detector_fired": {
+          "episodes": 61,
+          "success": 1.0
+        },
+        "detector_silent": {
+          "episodes": 139,
+          "success": 0.9784
+        },
+        "episodes": 200,
+        "success_overall": 0.985
+      },
+      "robustness_noise_10": {
+        "detector_fired": {
+          "episodes": 146,
+          "success": 0.4247
+        },
+        "detector_silent": {
+          "episodes": 54,
+          "success": 0.1481
+        },
+        "episodes": 200,
+        "success_overall": 0.35
+      },
+      "robustness_noise_40": {
+        "detector_fired": {
+          "episodes": 187,
+          "success": 0.5989
+        },
+        "detector_silent": {
+          "episodes": 13,
+          "success": 0.3846
+        },
+        "episodes": 200,
+        "success_overall": 0.585
+      }
+    }
+  },
+  "protocol": {
+    "benchmark": "MT10",
+    "benchmark_seed": 20265010,
+    "episodes_per_task": 20,
+    "precision_floor": 0.65,
+    "seed": 42,
+    "thresholds": {
+      "0": 0.79,
+      "10": 0.78,
+      "25": 0.73,
+      "50": 0.71
+    }
+  },
+  "recovery_mismatch_h0_h50": {
+    "horizon_0": {
+      "official_clean": {
+        "cells": {
+          "fired_act_fail": 1,
+          "fired_act_success": 40,
+          "silent_act_fail": 3,
+          "silent_act_success": 156
+        },
+        "correctly_silent_rate": 0.78,
+        "justified_intervention_rate": 0.005,
+        "missed_failure_rate": 0.015,
+        "paired_episodes": 200,
+        "unnecessary_intervention_rate": 0.2
+      },
+      "robustness_noise_10": {
+        "cells": {
+          "fired_act_fail": 141,
+          "fired_act_success": 1,
+          "silent_act_fail": 51,
+          "silent_act_success": 7
+        },
+        "correctly_silent_rate": 0.035,
+        "justified_intervention_rate": 0.705,
+        "missed_failure_rate": 0.255,
+        "paired_episodes": 200,
+        "unnecessary_intervention_rate": 0.005
+      },
+      "robustness_noise_40": {
+        "cells": {
+          "fired_act_fail": 186,
+          "fired_act_success": 6,
+          "silent_act_fail": 6,
+          "silent_act_success": 2
+        },
+        "correctly_silent_rate": 0.01,
+        "justified_intervention_rate": 0.93,
+        "missed_failure_rate": 0.03,
+        "paired_episodes": 200,
+        "unnecessary_intervention_rate": 0.03
+      }
+    },
+    "horizon_50": {
+      "official_clean": {
+        "cells": {
+          "fired_act_fail": 1,
+          "fired_act_success": 60,
+          "silent_act_fail": 3,
+          "silent_act_success": 136
+        },
+        "correctly_silent_rate": 0.68,
+        "justified_intervention_rate": 0.005,
+        "missed_failure_rate": 0.015,
+        "paired_episodes": 200,
+        "unnecessary_intervention_rate": 0.3
+      },
+      "robustness_noise_10": {
+        "cells": {
+          "fired_act_fail": 146,
+          "fired_act_success": 0,
+          "silent_act_fail": 46,
+          "silent_act_success": 8
+        },
+        "correctly_silent_rate": 0.04,
+        "justified_intervention_rate": 0.73,
+        "missed_failure_rate": 0.23,
+        "paired_episodes": 200,
+        "unnecessary_intervention_rate": 0.0
+      },
+      "robustness_noise_40": {
+        "cells": {
+          "fired_act_fail": 184,
+          "fired_act_success": 3,
+          "silent_act_fail": 8,
+          "silent_act_success": 5
+        },
+        "correctly_silent_rate": 0.025,
+        "justified_intervention_rate": 0.92,
+        "missed_failure_rate": 0.04,
+        "paired_episodes": 200,
+        "unnecessary_intervention_rate": 0.015
+      }
+    }
+  },
+  "schema_version": "reim-disagreement-horizon-stats-v1"
+}
