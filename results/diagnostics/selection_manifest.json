@@ -1,0 +1,327 @@
+{
+  "candidate_artifacts": [
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_search.json",
+      "sha256": "e2bf31da7e9139744e946f6b3151f799bdda3068c05da7dc849927b17105d9cf"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_reim_grid.csv",
+      "sha256": "560042f08fc7a2b3c6ba0ce8448c65b16ac3c0f3df2e54afdfc60d694898d142"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_references.csv",
+      "sha256": "3cbdfdcb10ea169cc8c2871fd85f76d0817c397ae29e09939498ca075759d795"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_ref_heuristic_noise10_episodes.csv",
+      "sha256": "0fd7711ec582f8491ca03085d0f4b142df3cea280956ebeae79ecd26bb4cedad"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_ref_heuristic_noise10_summary.json",
+      "sha256": "33a89e8ad6279c67af3b8917d8673c4eab4e75c263f2457abb52ee1dd6474213"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_ref_heuristic_noise20_episodes.csv",
+      "sha256": "fd2b01df338834e11caadd820da326179eb5cf482b0a7f6d9be82c3375ad4515"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_ref_heuristic_noise20_summary.json",
+      "sha256": "51556aec5d524e5fe850db2b9c92eb7687b679b63ef79fceb359ebc1b498205c"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_ref_heuristic_noise40_episodes.csv",
+      "sha256": "b174d7b711b6e4daf234904d13d1b6b51b5ed5e1406eb29c1f5f052639efb9ea"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt10_ref_heuristic_noise40_summary.json",
+      "sha256": "5cdabf369c70a5d13315eeb617329169a8708d5019c2d28f616b9250ec55db7d"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt50_search.json",
+      "sha256": "9107799fad4cf9121eac1d4f8761c7e9ee30498db17653904a0af01ab8d80cb5"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt50_reim_grid.csv",
+      "sha256": "539a6d3c1bb4712e7bba624281e25df5b1b8a0d43c6e75af57280ba208981817"
+    },
+    {
+      "file": "results/diagnostics/release_patience_search/mt50_references.csv",
+      "sha256": "40bb46456129ab1b13f2067ddbc49a3abbfc9be4199c6653693b9bdee714fa67"
+    }
+  ],
+  "candidate_ranking": {
+    "mt10": [
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.575,
+        "noise40_recovery_occupancy_mean": 0.701692,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.550943,
+            "task_macro_success": 0.53
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.701692,
+            "task_macro_success": 0.62
+          }
+        },
+        "point": "0.05/10"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.56,
+        "noise40_recovery_occupancy_mean": 0.685387,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.5406,
+            "task_macro_success": 0.515
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.685387,
+            "task_macro_success": 0.605
+          }
+        },
+        "point": "0.05/5"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.54,
+        "noise40_recovery_occupancy_mean": 0.6543,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.507694,
+            "task_macro_success": 0.505
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.6543,
+            "task_macro_success": 0.575
+          }
+        },
+        "point": "0.05/1"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.5325,
+        "noise40_recovery_occupancy_mean": 0.643593,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.49836,
+            "task_macro_success": 0.495
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.643593,
+            "task_macro_success": 0.57
+          }
+        },
+        "point": "0.15/10"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.52,
+        "noise40_recovery_occupancy_mean": 0.601198,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.473244,
+            "task_macro_success": 0.5
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.601198,
+            "task_macro_success": 0.54
+          }
+        },
+        "point": "0.15/5"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.505,
+        "noise40_recovery_occupancy_mean": 0.570589,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.449621,
+            "task_macro_success": 0.475
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.570589,
+            "task_macro_success": 0.535
+          }
+        },
+        "point": "0.3/10"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.4975,
+        "noise40_recovery_occupancy_mean": 0.517309,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.428156,
+            "task_macro_success": 0.475
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.517309,
+            "task_macro_success": 0.52
+          }
+        },
+        "point": "0.15/1"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.48,
+        "noise40_recovery_occupancy_mean": 0.376434,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.344778,
+            "task_macro_success": 0.47
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.376434,
+            "task_macro_success": 0.49
+          }
+        },
+        "point": "0.3/1"
+      },
+      {
+        "clean_task_macro_success": null,
+        "disturbed_mean_task_macro_success": 0.47750000000000004,
+        "noise40_recovery_occupancy_mean": 0.490342,
+        "per_condition": {
+          "robustness_noise_20": {
+            "recovery_occupancy_mean": 0.402904,
+            "task_macro_success": 0.46
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.490342,
+            "task_macro_success": 0.495
+          }
+        },
+        "point": "0.3/5"
+      }
+    ],
+    "mt50": [
+      {
+        "clean_task_macro_success": 0.932,
+        "disturbed_mean_task_macro_success": 0.42200000000000004,
+        "noise40_recovery_occupancy_mean": 0.653703,
+        "per_condition": {
+          "robustness_noise_10": {
+            "recovery_occupancy_mean": 0.453725,
+            "task_macro_success": 0.328
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.653703,
+            "task_macro_success": 0.516
+          }
+        },
+        "point": "0.05/10"
+      },
+      {
+        "clean_task_macro_success": 0.932,
+        "disturbed_mean_task_macro_success": 0.396,
+        "noise40_recovery_occupancy_mean": 0.614427,
+        "per_condition": {
+          "robustness_noise_10": {
+            "recovery_occupancy_mean": 0.444674,
+            "task_macro_success": 0.328
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.614427,
+            "task_macro_success": 0.464
+          }
+        },
+        "point": "0.05/5"
+      },
+      {
+        "clean_task_macro_success": 0.932,
+        "disturbed_mean_task_macro_success": 0.33599999999999997,
+        "noise40_recovery_occupancy_mean": 0.544183,
+        "per_condition": {
+          "robustness_noise_10": {
+            "recovery_occupancy_mean": 0.362746,
+            "task_macro_success": 0.256
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.544183,
+            "task_macro_success": 0.416
+          }
+        },
+        "point": "0.15/10"
+      },
+      {
+        "clean_task_macro_success": 0.932,
+        "disturbed_mean_task_macro_success": 0.316,
+        "noise40_recovery_occupancy_mean": 0.447109,
+        "per_condition": {
+          "robustness_noise_10": {
+            "recovery_occupancy_mean": 0.33051,
+            "task_macro_success": 0.252
+          },
+          "robustness_noise_40": {
+            "recovery_occupancy_mean": 0.447109,
+            "task_macro_success": 0.38
+          }
+        },
+        "point": "0.15/5"
+      }
+    ]
+  },
+  "constraints": [
+    "official_clean task-macro success must not degrade relative to the best candidate / reference on the same bank",
+    "noise-0.4 recovery occupancy ceiling fixed a priori as a protocol constraint (per-candidate occupancy reported in the ranking)"
+  ],
+  "objective": "Maximize the mean task-macro success rate over disturbed conditions (all noise levels present in the validation grid).",
+  "protocol": {
+    "mt10": {
+      "episode_seed_base": 42,
+      "episodes_per_task": 20,
+      "noise_levels": [
+        0.2,
+        0.4
+      ],
+      "release_patiences": [
+        1,
+        5,
+        10
+      ],
+      "release_thresholds": [
+        0.05,
+        0.15,
+        0.3
+      ],
+      "trigger_threshold": 0.65,
+      "validation_bank_seed": 20264010
+    },
+    "mt50": {
+      "episode_seed_base": 42,
+      "episodes_per_task": 5,
+      "noise_levels": [
+        0.0,
+        0.1,
+        0.4
+      ],
+      "release_patiences": [
+        5,
+        10
+      ],
+      "release_thresholds": [
+        0.05,
+        0.15
+      ],
+      "trigger_threshold": 0.64,
+      "validation_bank_seed": 20264050
+    }
+  },
+  "purpose": "Machine-readable selection record for the frozen release/patience operating point (release=0.05, patience=10), per the professor's review: candidate grid with SHA256 digests, explicit objective, constraints, tie-break rule, and untouched-bank statement.",
+  "schema_version": "reim-selection-manifest-v1",
+  "selected": {
+    "efficiency_reference": {
+      "note": "kept only as the efficiency comparison arm",
+      "release_patience": 5,
+      "release_threshold": 0.15
+    },
+    "release_patience": 10,
+    "release_threshold": 0.05,
+    "role": "robustness-first operating point (frozen)"
+  },
+  "selection_scope": "Grid search executed on MT10 validation bank only; the selected point is transferred verbatim to MT50 and sanity-checked with the small MT50 grid (no separate MT50 tuning).",
+  "tie_break_rule": "Higher disturbed-mean success first; ties break toward lower noise-0.4 recovery occupancy, then toward higher patience.",
+  "untouched_banks_statement": "Final evaluation banks 20265010/20265050 and the new confirmation banks 20266010/20266050 were never opened by the search, tuning, or selection procedures recorded in this manifest."
+}

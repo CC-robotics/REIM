@@ -46,16 +46,27 @@
   结论：调阈后闭环不掉点——clean 反而略升（+1.2~+1.7 pp），noise 0.4 持平，h50 上升；0.1 档的 −3 pp 在 20 回合样本噪声范围内。即 REIM 对 horizon 标注口径不敏感。
 
 **多种子（canonical horizon=25）**
-- detector + recovery 训练种子 **42/43/44**，ACT 固定，条件 clean / 0.1 / 0.4（每任务 50 回合）。
-- 三种子均值（`results/tables/mt10_multiseed_summary.csv`）：
+- detector + recovery 训练种子 **42/43/44**，ACT 固定，条件 clean / 0.1 / 0.4（每任务 50 回合，每方法每种子 500 回合）。
+- 按导师规范补报 **3 次实验均值 ± 样本标准差** 与**配对 rescued/harmed**（配对对象为 MT-ACT，`results/tables/mt10_multiseed_summary.csv`，生成脚本 `scripts/build_multiseed_stats.py`）：
 
 | Method | clean | 0.1 | 0.4 |
 |---|---:|---:|---:|
-| MT-REIM | 96.6% | 44.1% | 60.8% |
-| Heuristic gate | 96.7% | 44.7% | 40.8% |
-| MT-ACT | 96.6% | 5.2% | 4.6% |
+| MT-REIM | 96.6% ± 0.4 | 44.1% ± 1.3 | 60.8% ± 4.9 |
+| Heuristic gate | 96.7% ± 0.9 | 44.7% ± 3.2 | 40.8% ± 3.6 |
+| MT-ACT | 96.6% ± 0.0 | 5.2% ± 0.0 | 4.6% ± 0.0 |
 
-- REIM 每种子范围：clean 96.2–97.0%，0.1 档 43.0–45.6%，0.4 档 55.6–65.4%；0.1 档与启发式打平，0.4 档每个种子都明显领先。
+| Method | 条件 | rescued（42/43/44） | harmed（42/43/44） |
+|---|---|---|---|
+| MT-REIM | clean | 2/0/0 | 0/0/2 |
+| MT-REIM | 0.1 | 202/189/193 | **0/0/0** |
+| MT-REIM | 0.4 | 284/257/306 | 0/2/2 |
+| Heuristic | clean | 9/6/10 | 9/10/5 |
+| Heuristic | 0.1 | 213/182/201 | 0/1/2 |
+| Heuristic | 0.4 | 202/171/171 | 0/0/1 |
+
+（MT-ACT 标准差为 0 是预期的：ACT checkpoint 固定且 CRN 配对复用相同 episode 种子，三种子下 ACT 轨迹逐位一致。）
+
+- 三个要点：① 0.1 档 REIM harmed **三个种子全为 0**（不误伤）；② 0.4 档 REIM 比 heuristic 每种多救约 100 回合（均值 282 vs 181）；③ 0.1 档 REIM 与启发式打平（44.1% vs 44.7%，差距在样本标准差内），0.4 档每个种子都明显领先。
 
 - 未做 MT50 三种子，未与四个 backfill horizon 交叉。
 
@@ -64,6 +75,23 @@
 - occupancy 已进论文主表：`Table_multitask_clean.tex` 新增 **Occup. ↓** 列，gate 宏为 MT10 Heuristic/REIM = 13.2%/18.9%，MT50 = 10.4%/16.6%（与 burden 汇总逐位一致）。
 - **MT10 noise 0.4 matched-occupancy 对照**（200 回合搜索库，方向性）：REIM 在 release=0.3/patience=5 时 occupancy 49.0%（heuristic 47.6%），success 49.5% vs 47.0%，**同预算下 +2.5 个百分点**。noise 0.1 网格 occupancy 上限 38.3%，达不到 heuristic 的 48.2%，已如实报告（REIM 用更低预算达到近似成功）。
 - **success–occupancy 曲线**：`results/figures/mt10_success_occupancy.png`。
+- **三种负担口径已补齐**（官方库 bank 20265010，seed 42，每方法每条件 500 回合，`results/tables/intervention_burden_three_metrics.json`，脚本 `scripts/build_burden_three_metrics.py`）：
+
+| 条件 | 口径 | REIM | Heuristic |
+|---|---|---:|---:|
+| clean | mean per-episode occupancy | 18.9% | 13.2% |
+| clean | pooled control share | 17.7% | 28.1% |
+| clean | 干预次数/回合（段长） | 0.47（33 步） | 0.24（120 步） |
+| 0.1 | mean per-episode occupancy | 39.4% | 49.6% |
+| 0.1 | pooled control share | 31.7% | 48.3% |
+| 0.1 | 干预次数/回合（段长） | 0.92（121 步） | 1.09（159 步） |
+| 0.4 | mean per-episode occupancy | 69.0% | 47.9% |
+| 0.4 | pooled control share | 57.9% | 45.8% |
+| 0.4 | 干预次数/回合（段长） | 1.22（129 步） | 1.05（159 步） |
+
+  （0.2/0.3 档在同一 JSON 中完整列出。开关切换次数 = 干预次数，每次干预对应一段 recovery 开→关。）
+- **分母效应已核验**：noise 0.4 下 REIM 每回合恢复 **157.1** 步 vs heuristic **167.4** 步（导师 PDF 引用值 157/167，逐位吻合）。注意 pooled 口径下 0.4 档 REIM 为 57.9%（而非 mean 口径的 69.0%）——REIM 高占用回合往往更短（更早成功），两种口径必须并列报告。
+- **matched-occupancy 补跑已备好**（`scripts/run_matched_occupancy_supplement.ps1`，仍在搜索库 20264010，不动 202650xx/202660xx）：① noise 0.4、release 0.3/patience 5，补 rescued/harmed 配对统计；② noise 0.1、release 0.02/patience 3（导师建议参数），验证 0.1 档 occupancy 能否抬到 heuristic 的 49.6%。跑完后更新 `mt10_matched_occupancy_comparison.json`。
 
 ---
 
@@ -71,18 +99,19 @@
 
 ### 问题 A：SHA256 全部失效
 
-根因有三层，均已修复：
+根因有**四层**，均已修复：
 
 1. **Git LFS 指针**：仓库二进制（`*.npz`/`*.pt`）走 Git LFS，未 `git lfs pull` 会拿到指针导致哈希失配。README 已明确 clone 指引。
 2. **绝对路径改写 manifest 字节**：`normalize_artifact_paths.py` 把机器绝对路径改为仓库相对路径，改变了 manifest 字节但语义不变；已对受影响的 manifest 重签哈希（内容指纹一致则放行、数据变了仍拒止）。
-3. **行尾符（本轮根治）**：`core.autocrlf=true` 使 manifest 记录的是 Windows CRLF 哈希，Linux/CI 克隆（LF）会失配。已加 `.gitattributes` 的 `* text=auto eol=lf`，强制所有平台检出为 LF；并把三个写入点（两个 gate 生成器 + `evaluate_multitask.py`）钉为 LF，防止下次重跑再产生 CRLF 文件。
+3. **行尾符（跨平台根治）**：`core.autocrlf=true` 使 manifest 记录的是 Windows CRLF 哈希，Linux/CI 克隆（LF）会失配。已加 `.gitattributes` 的 `* text=auto eol=lf`，强制所有平台检出为 LF；并把三个写入点（两个 gate 生成器 + `evaluate_multitask.py`）钉为 LF，防止下次重跑再产生 CRLF 文件。
+4. **哈希链内路径被误改（本轮新发现并回滚）**：第 2 层的归一化曾改写 5 个 calibrated 验证库 manifest 里 `calibration_source.manifest_path` 的历史绝对路径——该字段被 `label_calibration_fingerprint_sha256` 覆盖并链入 `dataset_fingerprint_sha256` 与每个 `.npz` 分片内的溯源记录，改写后整条审计链断裂（调阈/审计脚本直接报 "Label calibration fingerprint mismatch"）。已将这 5 个 manifest 回滚到归一化前内容（指纹链恢复自洽，调阈脚本完整审计复跑通过），并给 `normalize_artifact_paths.py` 增加排除规则：**`datasets/**/manifest.json` 属于哈希链存证，其中的历史路径是有意的溯源记录，今后不再改写**。
 
-现状：`assets_manifest.json`（5+16=21）、`multitask_results_manifest.json`（26+5=31）、`paper_results_manifest.json`（10）全部自洽；数据集清单 **19184 条、0 失配/0 缺失**。
+现状：`assets_manifest.json`（5+16=21）、`multitask_results_manifest.json`（26+5=31）、`paper_results_manifest.json`（10）全部自洽；数据集清单 **19184 条、0 失配/0 缺失**；12 个 calibrated manifest 的内部指纹链全部通过重算校验（唯一例外是未入仓的本地 smoke 验证库，属本地测试数据，重新生成即可）。
 
 ### 问题 B：硬编码 Windows 绝对路径
 
-- 所有产物路径已归一化为仓库相对路径；生成器与评估脚本不再写入 `C:\Users\...` 绝对路径。
-- 现状：绝对路径残留 0（仅 `normalize_artifact_paths.py` 内一行解释"如何避免绝对路径"的说明字符串）。
+- 所有**可改写**的产物路径已归一化为仓库相对路径；生成器与评估脚本不再写入 `C:\Users\...` 绝对路径。
+- 现状：除 `datasets/**/manifest.json` 中被哈希链锁定的历史溯源路径（见问题 A 第 4 层，有意保留）与 `normalize_artifact_paths.py` 内一行说明字符串外，绝对路径残留 0。
 
 ### 问题 C：README 与 tex 矛盾
 
@@ -116,11 +145,22 @@
 ## 五、口径声明与待确认
 
 - **backfill 闭环**为 tuned 阈值 + 每任务 20 回合的方向性结果（导师最低要求 20 回合）；需更高置信度可加机时到 50 回合。
-- **matched-occupancy** 为 200 回合搜索库（seed 20264010）的方向性对照，非 500 回合官方库（20265010）。
-- 导师 PDF 中明确列出、但**尚未排期**的四个工程项（不属于本轮 Codex 四步范围）：
-  1. 机器可读的 **selection manifest**（阈值/工作点选择依据落盘）；
-  2. **search JSON 分片修复**；
-  3. precision 的 **clustered bootstrap 置信区间**；
+- **matched-occupancy** 为 200 回合搜索库（seed 20264010）的方向性对照，非 500 回合官方库（20265010）；rescued/harmed 配对统计与 0.1 档可达性补跑脚本已就绪待执行（见问题 3）。
+- **precision-floor 口径待导师确认**：导师 PDF 要求 detector 触发 precision-floor **≥0.65**，而此前四个 horizon 调阈用的是仓库默认 **0.60**（val task-macro precision：h0=0.6049、h10=0.6024、h25=0.6001、h50=0.6036）。已用 0.65 做了**纯推理探针**（不动仿真，`results/tables/mt10_horizon*_detector_threshold_floor065.json`）：四个 horizon 均有满足 0.65 的阈值，代价是 recall 下降、F1 略降：
+
+| Horizon | 阈值（floor 0.60→0.65） | precision | F1 | recall |
+|---|---|---:|---:|---:|
+| h0 | 0.72 → 0.79 | 0.6518 | 0.5142 | 0.4525 |
+| h10 | 0.71 → 0.78 | 0.6503 | 0.4897 | 0.4045 |
+| h25 | 0.65 → 0.73 | 0.6540 | 0.4891 | 0.3994 |
+| h50 | 0.62 → 0.71 | 0.6513 | 0.5065 | 0.4214 |
+
+  若确认采用 0.65 口径，阈值改为上表右列即可（无需重训、无需重跑仿真，仅需用新阈值重跑闭环评估）。
+- **selection manifest 已补齐**：`results/diagnostics/selection_manifest.json`（脚本 `scripts/build_selection_manifest.py`），含候选网格全部 CSV/JSON 的 SHA256、优化目标（扰动条件平均 task-macro 成功率最大化）、约束（clean 不退化 + noise 0.4 occupancy 上限固定）、平局规则（先比扰动均值，再比 noise 0.4 occupancy 低者，再比 patience 高者），并由网格数据独立复算验证 0.05/10 确为 MT10/MT50 双库的 argmax；含 202650xx/202660xx 全程未触碰声明。
+- 导师 PDF 中明确列出、但**尚未排期**的工程项：
+  1. **search JSON 分片修复**；
+  2. precision 的 **clustered bootstrap 置信区间**；
+  3. **disagreement 状态下 success 分档统计**（0/10/25/50 档）与 **h0/h50 端到端恢复不匹配验证**——定义需先与导师对齐；
   4. **最终确认库 20266010/20266050**：待参数与代码完全冻结后只跑一次，出投稿终版数字。
 
 ---
@@ -129,7 +169,7 @@
 
 - 三个出版门 + 校验脚本（README 数字、数据集哈希、绝对路径、三个 paper manifest）全部通过。
 - Git LFS 指引已写入 README；跨平台行尾符已统一为 LF。
-- 关键产物：`results/figures/mt10_success_occupancy.png`、`results/tables/mt10_matched_occupancy_comparison.json`、`results/tables/mt10_backfill_tuned_closed_loop_summary.csv`、`results/tables/mt10_multiseed_summary.csv`。
+- 关键产物：`results/figures/mt10_success_occupancy.png`、`results/tables/mt10_matched_occupancy_comparison.json`、`results/tables/mt10_backfill_tuned_closed_loop_summary.csv`、`results/tables/mt10_multiseed_summary.csv`（含样本标准差 + rescued/harmed）、`results/tables/intervention_burden_three_metrics.json`（三种负担口径）、`results/diagnostics/selection_manifest.json`（参数选择清单）、`results/tables/mt10_horizon{0,10,25,50}_detector_threshold_floor065.json`（precision-floor 0.65 探针）。
 - 本轮整改提交链（均可逐条 `git show` 复核）：`872238b1` 路径归一化 + manifest 入仓 → `cdd07009` README/tex 矛盾修复 → `478d4032` backfill 初步消融 → `b0568c93` paper_assets 自洽 → `faf273e5` 逐 horizon 阈值 + pre-event 审计 → `656cf6ae` occupancy 主表 + matched 对照 → `b038a815` 两个 gate manifest 重签 + ACL 修复 → `72664f50` 调阈闭环 + 多种子 → `c044b060` 行尾符跨平台根治。
 
 —— 本汇报由实验数据与提交记录逐项复核生成，所有数值均有对应产物可溯源。

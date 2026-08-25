@@ -33,6 +33,21 @@ EXCLUDE_DIRS = {".git", ".venv", "node_modules", "__pycache__", ".pytest_cache"}
 # example paths) and personal logs that are not repo deliverables.
 EXCLUDE_FILES = {"normalize_artifact_paths.py", "REIM-Kimi对话记录.md"}
 
+
+def _is_hashed_dataset_manifest(path: Path) -> bool:
+    """Dataset manifests under datasets/ whose content is hash-chained.
+
+    ``label_calibration.calibration_source.manifest_path`` records the
+    absolute path of the source manifest *as it was at dataset creation
+    time* and is covered by ``label_calibration_fingerprint_sha256`` (and,
+    transitively, ``dataset_fingerprint_sha256`` and the per-shard
+    provenance stored inside every .npz).  Rewriting the path invalidates
+    the fingerprint chain and makes every downstream audit fail, so these
+    files keep their historical absolute paths on purpose.
+    """
+    return path.name == "manifest.json" and path.parts[0] == "datasets"
+
+
 # An absolute path that enters the repo: drive-letter or POSIX root prefix,
 # any intermediate directories, then the repo directory name ("REIM") and one
 # separator, then the repo-relative remainder up to the closing quote.
@@ -57,6 +72,8 @@ def iter_files(root: Path):
         if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         if path.name in EXCLUDE_FILES:
+            continue
+        if _is_hashed_dataset_manifest(path.relative_to(root)):
             continue
         if any(part in EXCLUDE_DIRS for part in path.parts):
             continue

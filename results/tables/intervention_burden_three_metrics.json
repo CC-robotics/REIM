@@ -1,0 +1,226 @@
+{
+  "conditions": {
+    "official_clean": {
+      "act": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.0,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 0,
+          "mean_recovery_steps_per_episode": 0.0,
+          "mean_segment_length": 0.0,
+          "mean_steps_per_episode": 90.496
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.0,
+        "pooled_control_share": 0.0
+      },
+      "heuristic_recovery": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.238,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 28.588,
+          "mean_segment_length": 120.11764705882354,
+          "mean_steps_per_episode": 101.618
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.1320510683734057,
+        "pooled_control_share": 0.28132811116140843
+      },
+      "reim": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.466,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 1,
+          "mean_recovery_steps_per_episode": 15.552,
+          "mean_segment_length": 33.37339055793991,
+          "mean_steps_per_episode": 87.786
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.1888637060858853,
+        "pooled_control_share": 0.17715808898913266
+      }
+    },
+    "robustness_noise_10": {
+      "act": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.0,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 0,
+          "mean_recovery_steps_per_episode": 0.0,
+          "mean_segment_length": 0.0,
+          "mean_steps_per_episode": 484.57
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.0,
+        "pooled_control_share": 0.0
+      },
+      "heuristic_recovery": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.088,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 172.636,
+          "mean_segment_length": 158.67279411764707,
+          "mean_steps_per_episode": 357.234
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.49618750744937046,
+        "pooled_control_share": 0.48325747269296876
+      },
+      "reim": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.922,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 111.194,
+          "mean_segment_length": 120.60086767895879,
+          "mean_steps_per_episode": 351.296
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.39390295969347017,
+        "pooled_control_share": 0.31652509564583714
+      }
+    },
+    "robustness_noise_20": {
+      "act": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.0,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 0,
+          "mean_recovery_steps_per_episode": 0.0,
+          "mean_segment_length": 0.0,
+          "mean_steps_per_episode": 483.556
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.0,
+        "pooled_control_share": 0.0
+      },
+      "heuristic_recovery": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.074,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 170.398,
+          "mean_segment_length": 158.65735567970205,
+          "mean_steps_per_episode": 355.736
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.49310478013439907,
+        "pooled_control_share": 0.4790012818494614
+      },
+      "reim": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.044,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 128.504,
+          "mean_segment_length": 123.08812260536398,
+          "mean_steps_per_episode": 303.118
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.5481927807980986,
+        "pooled_control_share": 0.4239405116159383
+      }
+    },
+    "robustness_noise_30": {
+      "act": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.0,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 0,
+          "mean_recovery_steps_per_episode": 0.0,
+          "mean_segment_length": 0.0,
+          "mean_steps_per_episode": 485.434
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.0,
+        "pooled_control_share": 0.0
+      },
+      "heuristic_recovery": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.054,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 166.0,
+          "mean_segment_length": 157.49525616698293,
+          "mean_steps_per_episode": 358.89
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.48241937848724104,
+        "pooled_control_share": 0.46253726768647774
+      },
+      "reim": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.126,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 3,
+          "mean_recovery_steps_per_episode": 139.102,
+          "mean_segment_length": 123.53641207815275,
+          "mean_steps_per_episode": 285.378
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.6153036588630965,
+        "pooled_control_share": 0.48743070594089244
+      }
+    },
+    "robustness_noise_40": {
+      "act": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 0.0,
+          "interventions_per_episode_median": 0.0,
+          "max_interventions_in_episode": 0,
+          "mean_recovery_steps_per_episode": 0.0,
+          "mean_segment_length": 0.0,
+          "mean_steps_per_episode": 486.36
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.0,
+        "pooled_control_share": 0.0
+      },
+      "heuristic_recovery": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.052,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 2,
+          "mean_recovery_steps_per_episode": 167.36,
+          "mean_segment_length": 159.0874524714829,
+          "mean_steps_per_episode": 365.712
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.4791293488707466,
+        "pooled_control_share": 0.4576278601741261
+      },
+      "reim": {
+        "absolute_burden": {
+          "interventions_per_episode_mean": 1.218,
+          "interventions_per_episode_median": 1.0,
+          "max_interventions_in_episode": 5,
+          "mean_recovery_steps_per_episode": 157.12,
+          "mean_segment_length": 128.9983579638752,
+          "mean_steps_per_episode": 271.194
+        },
+        "episodes": 500,
+        "mean_per_episode_occupancy": 0.6902841405223611,
+        "pooled_control_share": 0.5793638502326748
+      }
+    }
+  },
+  "denominator_effect_check": {
+    "noise_0.4_mean_recovery_steps_per_episode": {
+      "heuristic_recovery": 167.36,
+      "reim": 157.12
+    },
+    "review_quoted_values": {
+      "heuristic": 167,
+      "reim": 157
+    }
+  },
+  "metric_definitions": {
+    "absolute_burden": "interventions per episode (mean/median/max), mean segment length = total recovery steps / total interventions (the on/off cycle size), and mean recovery steps per episode",
+    "mean_per_episode_occupancy": "mean over episodes of recovery_steps_total / steps",
+    "pooled_control_share": "sum(recovery_steps_total) / sum(steps) over all episodes"
+  },
+  "schema_version": "reim-intervention-burden-three-metrics-v1",
+  "source": "official evaluation bank seed 20265010 episode CSVs (seed 42, 500 episodes per method per condition), no re-run"
+}
