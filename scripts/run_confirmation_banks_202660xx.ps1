@@ -27,6 +27,7 @@ function Run-Cell($bench, $benchseed, $thr, $condition, $noise) {
     --act-checkpoint "checkpoints/$($bench.ToLower())/seed_42/act.pt" `
     --detector-checkpoint "checkpoints/$($bench.ToLower())/seed_42/failure_detector.pt" `
     --recovery-checkpoint "checkpoints/$($bench.ToLower())/seed_42/recovery.pt" `
+    --mlp-checkpoint "checkpoints/$($bench.ToLower())/seed_42/mlp_bc.pt" `
     --output-csv "$OUTDIR/${tag}_episodes.csv" `
     --output-summary "$OUTDIR/${tag}_summary.json" `
     --methods mlp_bc act heuristic_recovery reim --episodes-per-task 50 --max-steps 500 `
