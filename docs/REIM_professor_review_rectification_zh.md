@@ -146,7 +146,7 @@
 
 - **backfill 闭环**为 tuned 阈值 + 每任务 20 回合的方向性结果（导师最低要求 20 回合）；需更高置信度可加机时到 50 回合。
 - **matched-occupancy** 为 200 回合搜索库（seed 20264010）的方向性对照，非 500 回合官方库（20265010）；rescued/harmed 配对统计与 0.1 档可达性补跑脚本已就绪待执行（见问题 3）。
-- **precision-floor 口径待导师确认**：导师 PDF 要求 detector 触发 precision-floor **≥0.65**，而此前四个 horizon 调阈用的是仓库默认 **0.60**（val task-macro precision：h0=0.6049、h10=0.6024、h25=0.6001、h50=0.6036）。已用 0.65 做了**纯推理探针**（不动仿真，`results/tables/mt10_horizon*_detector_threshold_floor065.json`）：四个 horizon 均有满足 0.65 的阈值，代价是 recall 下降、F1 略降：
+- **precision-floor 双口径并行**：导师 PDF 要求 detector 触发 precision-floor **≥0.65**，而此前四个 horizon 调阈用的是仓库默认 **0.60**（val task-macro precision：h0=0.6049、h10=0.6024、h25=0.6001、h50=0.6036）。决定**两种口径都做**：0.60 闭环已有结果；0.65 已先完成**纯推理探针**（不动仿真，`results/tables/mt10_horizon*_detector_threshold_floor065.json`），四个 horizon 均有满足 0.65 的阈值，闭环重跑脚本已备好（`scripts/run_backfill_floor065_closed_loop.ps1`，12 单元）：
 
 | Horizon | 阈值（floor 0.60→0.65） | precision | F1 | recall |
 |---|---|---:|---:|---:|
@@ -155,7 +155,7 @@
 | h25 | 0.65 → 0.73 | 0.6540 | 0.4891 | 0.3994 |
 | h50 | 0.62 → 0.71 | 0.6513 | 0.5065 | 0.4214 |
 
-  若确认采用 0.65 口径，阈值改为上表右列即可（无需重训、无需重跑仿真，仅需用新阈值重跑闭环评估）。
+  跑完后两套口径的闭环数字并列呈现，导师勾哪个用哪个，选定后无需再跑。
 - **selection manifest 已补齐**：`results/diagnostics/selection_manifest.json`（脚本 `scripts/build_selection_manifest.py`），含候选网格全部 CSV/JSON 的 SHA256、优化目标（扰动条件平均 task-macro 成功率最大化）、约束（clean 不退化 + noise 0.4 occupancy 上限固定）、平局规则（先比扰动均值，再比 noise 0.4 occupancy 低者，再比 patience 高者），并由网格数据独立复算验证 0.05/10 确为 MT10/MT50 双库的 argmax；含 202650xx/202660xx 全程未触碰声明。
 - 导师 PDF 中明确列出、但**尚未排期**的工程项：
   1. **search JSON 分片修复**；
