@@ -1037,7 +1037,7 @@ def _write_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
     if not rows:
         raise PublicationGateError(f"refusing to write empty CSV {path}")
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -1253,7 +1253,7 @@ def generate_assets(
             _write_csv(tmp / "robustness.csv", robustness_rows)
             _plot_robustness(suites, tmp / "robustness.png")
             gate_text = _render_gate_tex(suites, input_manifest_sha)
-            (tmp / "gate.tex").write_text(gate_text, encoding="utf-8")
+            (tmp / "gate.tex").write_text(gate_text, encoding="utf-8", newline="\n")
             staged = {
                 targets["clean_csv"]: tmp / "clean.csv",
                 targets["robustness_csv"]: tmp / "robustness.csv",
@@ -1299,7 +1299,7 @@ def generate_assets(
             "outputs": outputs,
         }
         tmp_manifest = targets["manifest"].with_suffix(".json.tmp")
-        tmp_manifest.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        tmp_manifest.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
         os.replace(tmp_manifest, targets["manifest"])
         return manifest
     except BaseException:

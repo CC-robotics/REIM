@@ -1,3 +1,8 @@
+# Normalize all text to LF so recorded SHA256 provenance in the manifests is
+# identical on Windows, Linux, and CI checkouts.  Line-ending differences
+# previously made every text-artifact hash fail to verify on non-Windows clones.
+* text=auto eol=lf
+
 # Binary research artifacts are stored with Git LFS so that the source history
 # remains cloneable. Figures and the final paper stay in regular Git for browsing.
 *.npz filter=lfs diff=lfs merge=lfs -text

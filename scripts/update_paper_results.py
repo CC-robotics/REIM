@@ -1372,7 +1372,7 @@ def _atomic_write_many(payloads: Mapping[Path, str]) -> None:
         for path, content in payloads.items():
             path.parent.mkdir(parents=True, exist_ok=True)
             temporary = path.with_name(f".{path.name}.paper-results.tmp")
-            temporary.write_text(content, encoding="utf-8")
+            temporary.write_text(content, encoding="utf-8", newline="\n")
             temporary_paths.append((temporary, path))
         for temporary, path in temporary_paths:
             temporary.replace(path)
