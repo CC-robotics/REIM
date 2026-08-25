@@ -1,0 +1,191 @@
+{
+  "method": "percentile bootstrap clustered by task: the 10 MT10 tasks are resampled with replacement (B=10000, seed 20260825); the task-macro metric is recomputed per resample. Episodes within a task are treated as a single cluster, matching the review requirement that intra-task episodes are correlated.",
+  "results": [
+    {
+      "horizon": 0,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4894,
+          "ci95_upper": 0.6284,
+          "point_estimate": 0.5554
+        },
+        "precision": {
+          "ci95_lower": 0.5446,
+          "ci95_upper": 0.6693,
+          "point_estimate": 0.6049
+        },
+        "recall": {
+          "ci95_lower": 0.44,
+          "ci95_upper": 0.6351,
+          "point_estimate": 0.536
+        }
+      },
+      "precision_floor": 0.6,
+      "task_count": 10,
+      "threshold": 0.72
+    },
+    {
+      "horizon": 10,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4744,
+          "ci95_upper": 0.6015,
+          "point_estimate": 0.5367
+        },
+        "precision": {
+          "ci95_lower": 0.5427,
+          "ci95_upper": 0.6739,
+          "point_estimate": 0.6024
+        },
+        "recall": {
+          "ci95_lower": 0.4237,
+          "ci95_upper": 0.5631,
+          "point_estimate": 0.493
+        }
+      },
+      "precision_floor": 0.6,
+      "task_count": 10,
+      "threshold": 0.7100000000000001
+    },
+    {
+      "horizon": 25,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4987,
+          "ci95_upper": 0.5954,
+          "point_estimate": 0.5443
+        },
+        "precision": {
+          "ci95_lower": 0.5357,
+          "ci95_upper": 0.6775,
+          "point_estimate": 0.6001
+        },
+        "recall": {
+          "ci95_lower": 0.4591,
+          "ci95_upper": 0.5567,
+          "point_estimate": 0.5048
+        }
+      },
+      "precision_floor": 0.6,
+      "task_count": 10,
+      "threshold": 0.65
+    },
+    {
+      "horizon": 50,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.5238,
+          "ci95_upper": 0.6116,
+          "point_estimate": 0.5645
+        },
+        "precision": {
+          "ci95_lower": 0.5529,
+          "ci95_upper": 0.6564,
+          "point_estimate": 0.6036
+        },
+        "recall": {
+          "ci95_lower": 0.4884,
+          "ci95_upper": 0.5858,
+          "point_estimate": 0.5347
+        }
+      },
+      "precision_floor": 0.6,
+      "task_count": 10,
+      "threshold": 0.62
+    },
+    {
+      "horizon": 0,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4299,
+          "ci95_upper": 0.6011,
+          "point_estimate": 0.5142
+        },
+        "precision": {
+          "ci95_lower": 0.5964,
+          "ci95_upper": 0.7091,
+          "point_estimate": 0.6518
+        },
+        "recall": {
+          "ci95_lower": 0.345,
+          "ci95_upper": 0.5653,
+          "point_estimate": 0.4525
+        }
+      },
+      "precision_floor": 0.65,
+      "task_count": 10,
+      "threshold": 0.79
+    },
+    {
+      "horizon": 10,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4113,
+          "ci95_upper": 0.5684,
+          "point_estimate": 0.4897
+        },
+        "precision": {
+          "ci95_lower": 0.596,
+          "ci95_upper": 0.7172,
+          "point_estimate": 0.6503
+        },
+        "recall": {
+          "ci95_lower": 0.3232,
+          "ci95_upper": 0.4872,
+          "point_estimate": 0.4045
+        }
+      },
+      "precision_floor": 0.65,
+      "task_count": 10,
+      "threshold": 0.78
+    },
+    {
+      "horizon": 25,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4302,
+          "ci95_upper": 0.5539,
+          "point_estimate": 0.4891
+        },
+        "precision": {
+          "ci95_lower": 0.5925,
+          "ci95_upper": 0.7266,
+          "point_estimate": 0.654
+        },
+        "recall": {
+          "ci95_lower": 0.3352,
+          "ci95_upper": 0.4712,
+          "point_estimate": 0.3994
+        }
+      },
+      "precision_floor": 0.65,
+      "task_count": 10,
+      "threshold": 0.73
+    },
+    {
+      "horizon": 50,
+      "metrics": {
+        "f1": {
+          "ci95_lower": 0.4516,
+          "ci95_upper": 0.5687,
+          "point_estimate": 0.5065
+        },
+        "precision": {
+          "ci95_lower": 0.5993,
+          "ci95_upper": 0.7101,
+          "point_estimate": 0.6513
+        },
+        "recall": {
+          "ci95_lower": 0.3608,
+          "ci95_upper": 0.4883,
+          "point_estimate": 0.4214
+        }
+      },
+      "precision_floor": 0.65,
+      "task_count": 10,
+      "threshold": 0.7100000000000001
+    }
+  ],
+  "schema_version": "reim-threshold-metrics-ci-v1",
+  "source": "validation-bank per-task metrics at each selected threshold (no re-run)"
+}

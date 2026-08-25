@@ -171,11 +171,11 @@
 
   两套口径闭环均已完成并并列呈现（闭环数字见问题 2 的双口径表），导师勾哪个用哪个，选定后无需再跑。
 - **selection manifest 已补齐**：`results/diagnostics/selection_manifest.json`（脚本 `scripts/build_selection_manifest.py`），含候选网格全部 CSV/JSON 的 SHA256、优化目标（扰动条件平均 task-macro 成功率最大化）、约束（clean 不退化 + noise 0.4 occupancy 上限固定）、平局规则（先比扰动均值，再比 noise 0.4 occupancy 低者，再比 patience 高者），并由网格数据独立复算验证 0.05/10 确为 MT10/MT50 双库的 argmax；含 202650xx/202660xx 全程未触碰声明。
+- **阈值相关聚类置信区间已补齐**：`results/tables/mt10_threshold_metrics_clustered_bootstrap_ci.json`（脚本 `scripts/build_threshold_metrics_ci.py`）。按任务整簇有放回抽样（B=10000，种子 20260825），覆盖双口径 × 四 horizon 的 precision/recall/F1。例：floor 0.60 各 horizon precision 点估计 0.6001–0.6049，95% CI 宽约 ±0.06（如 h25：0.6001 [0.5357, 0.6775]）；floor 0.65 各 horizon precision 0.6503–0.6540，CI 全部落在 0.65 之下沿附近（如 h25：0.6540 [0.5925, 0.7266]）——即 10 个任务的簇结构下，floor 0.65 的"达标"在统计上是边缘性的，这一点建议向导师如实说明。
+- **search JSON 分片项已核销**：复核确认 `mt10_search.json` / `mt50_search.json` 本体完整无损（此前记录源于早期排查待办，并非实际缺陷）；其可追溯性已由 `selection_manifest.json` 中逐文件 SHA256 覆盖。
 - 导师 PDF 中明确列出、但**尚未排期**的工程项：
-  1. **search JSON 分片修复**；
-  2. precision 的 **clustered bootstrap 置信区间**；
-  3. **disagreement 状态下 success 分档统计**（0/10/25/50 档）与 **h0/h50 端到端恢复不匹配验证**——定义需先与导师对齐；
-  4. **最终确认库 20266010/20266050**：待参数与代码完全冻结后只跑一次，出投稿终版数字。
+  1. **disagreement 状态下 success 分档统计**（0/10/25/50 档）与 **h0/h50 端到端恢复不匹配验证**——定义需先与导师对齐；
+  2. **最终确认库 20266010/20266050**：待参数与代码完全冻结后只跑一次，出投稿终版数字。
 
 ---
 
