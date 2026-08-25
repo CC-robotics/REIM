@@ -18,7 +18,7 @@
 ### 问题 1：参数
 
 - 已冻结 **release=0.05 / patience=10**，MT10 与 MT50 统一，定义为 **robustness-first operating point**。
-- **release=0.15 / patience=5** 作为效率对照保留在 release/patience 搜索网格产物中（`results/diagnostics/release_patience_search/mt10_reim_grid.csv` 等，0.15/5 行原样保留），不再作为运行点引用。
+- **release=0.15 / patience=5** 作为效率对照完整归档在 `results/tables/archive_release_015_05/`（MT10）与 `results/tables/archive_release_015_05_mt50/`（MT50）（含全部 summary/episodes/sidecar，与导师 PDF 核查依据中的引用路径一致），搜索网格产物（`results/diagnostics/release_patience_search/mt10_reim_grid.csv` 等）中的 0.15/5 行也原样保留；不再作为运行点引用。
 - 未再做完整 MT50 网格，仅做 clean / 0.1 / 0.4 的小规模方向确认。
 - **参数自本决定起停止修改。**
 
