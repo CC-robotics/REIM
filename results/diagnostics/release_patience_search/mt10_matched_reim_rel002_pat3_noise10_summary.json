@@ -249,21 +249,21 @@
   "benchmark_seed": 20264010,
   "checkpoints": {
     "act": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\act.pt",
+      "path": "checkpoints/mt10/seed_42/act.pt",
       "sha256": "e4493b456460c6641c1f2b28217effcfbda8487e2766cbd24d6be0a31fa59334"
     },
     "detector": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\failure_detector.pt",
+      "path": "checkpoints/mt10/seed_42/failure_detector.pt",
       "sha256": "54da6920f97952ca3f3a72b507f1281408e9660cb8ce9e91e56950c5a04a2450"
     },
     "recovery": {
-      "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\checkpoints\\mt10\\seed_42\\recovery.pt",
+      "path": "checkpoints/mt10/seed_42/recovery.pt",
       "sha256": "90069f6c680ab025244c2689760137485b3dd25b9b54e3eb929f0d98d20f7c46"
     }
   },
   "condition": "robustness_noise_10",
   "detector_threshold": 0.65,
-  "episode_csv": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\diagnostics\\release_patience_search\\mt10_matched_reim_rel002_pat3_noise10_episodes.csv",
+  "episode_csv": "results/diagnostics/release_patience_search/mt10_matched_reim_rel002_pat3_noise10_episodes.csv",
   "episode_csv_sha256": "72ee7d01c9b625da940e6627682d4b8878a5c3926bc65c943286035965c3cef3",
   "episodes_per_task": 20,
   "intervention_cooldown": 10,
@@ -312,7 +312,7 @@
   "release_threshold": 0.02,
   "robustness_extension": true,
   "run_fingerprint": "53bd429ac762661306bd501c410b96f594b9254811107ebad8bd2eabbf5a00b3",
-  "run_sidecar": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\diagnostics\\release_patience_search\\mt10_matched_reim_rel002_pat3_noise10_episodes.csv.run.json",
+  "run_sidecar": "results/diagnostics/release_patience_search/mt10_matched_reim_rel002_pat3_noise10_episodes.csv.run.json",
   "run_sidecar_sha256": "19c762b17fcac40cc813007827bc15444a00da60b38008272752876d8e61be99",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,

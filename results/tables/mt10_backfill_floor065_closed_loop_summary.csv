@@ -1,0 +1,13 @@
+horizon,precision_floor,threshold,condition,success_rate_task_macro,success_rate_micro,recovery_occupancy_mean,episodes
+0,0.65,0.79,official_clean,0.985,0.985,0.0451,200
+0,0.65,0.79,robustness_noise_10,0.4,0.4,0.3086,200
+0,0.65,0.79,robustness_noise_40,0.56,0.56,0.5771,200
+10,0.65,0.78,official_clean,0.98,0.98,0.0416,200
+10,0.65,0.78,robustness_noise_10,0.365,0.365,0.3274,200
+10,0.65,0.78,robustness_noise_40,0.6,0.6,0.6224,200
+25,0.65,0.73,official_clean,0.985,0.985,0.1287,200
+25,0.65,0.73,robustness_noise_10,0.375,0.375,0.3186,200
+25,0.65,0.73,robustness_noise_40,0.565,0.565,0.6332,200
+50,0.65,0.71,official_clean,0.985,0.985,0.1237,200
+50,0.65,0.71,robustness_noise_10,0.35,0.35,0.301,200
+50,0.65,0.71,robustness_noise_40,0.585,0.585,0.6446,200

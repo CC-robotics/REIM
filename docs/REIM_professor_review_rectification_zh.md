@@ -45,6 +45,18 @@
 
   结论：调阈后闭环不掉点——clean 反而略升（+1.2~+1.7 pp），noise 0.4 持平，h50 上升；0.1 档的 −3 pp 在 20 回合样本噪声范围内。即 REIM 对 horizon 标注口径不敏感。
 
+**precision-floor 0.65 口径闭环（双口径并行）**
+- 用探针阈值（h0=0.79、h10=0.78、h25=0.73、h50=0.71）完成 12 单元闭环（同库 20265010、同 20 回合规格），数据见 `results/tables/mt10_backfill_floor065_closed_loop_summary.csv`：
+
+| Horizon | 阈值（0.60→0.65） | clean | 0.1 | 0.4 |
+|---|---:|---:|---:|---:|
+| h0 | 0.72 → 0.79 | 98.5%（=） | 40.0%（−6.0） | 56.0%（−3.5） |
+| h10 | 0.71 → 0.78 | 98.0%（=） | 36.5%（−8.5） | 60.0%（−1.0） |
+| h25 | 0.65 → 0.73 | 98.5% | 37.5% | 56.5% |
+| h50 | 0.62 → 0.71 | 98.5%（=） | 35.0%（−12.5） | 58.5%（−4.0） |
+
+  结论：0.65 口径 clean 完全不掉点，但 0.1 档代价明显（−6~−12.5 pp，超出 20 回合噪声范围）、0.4 档小幅下降。两套口径数字均已落盘，论文可并列呈现，最终口径由导师定夺。
+
 **多种子（canonical horizon=25）**
 - detector + recovery 训练种子 **42/43/44**，ACT 固定，条件 clean / 0.1 / 0.4（每任务 50 回合，每方法每种子 500 回合）。
 - 按导师规范补报 **3 次实验均值 ± 样本标准差** 与**配对 rescued/harmed**（配对对象为 MT-ACT，`results/tables/mt10_multiseed_summary.csv`，生成脚本 `scripts/build_multiseed_stats.py`）：
@@ -148,7 +160,7 @@
 
 - **backfill 闭环**为 tuned 阈值 + 每任务 20 回合的方向性结果（导师最低要求 20 回合）；需更高置信度可加机时到 50 回合。
 - **matched-occupancy** 为 200 回合搜索库（seed 20264010）的方向性对照，非 500 回合官方库（20265010）；rescued/harmed 配对统计与 0.1 档可达性已补跑完成（见问题 3"对照已闭环"）。
-- **precision-floor 双口径并行**：导师 PDF 要求 detector 触发 precision-floor **≥0.65**，而此前四个 horizon 调阈用的是仓库默认 **0.60**（val task-macro precision：h0=0.6049、h10=0.6024、h25=0.6001、h50=0.6036）。决定**两种口径都做**：0.60 闭环已有结果；0.65 已先完成**纯推理探针**（不动仿真，`results/tables/mt10_horizon*_detector_threshold_floor065.json`），四个 horizon 均有满足 0.65 的阈值，闭环重跑脚本已备好（`scripts/run_backfill_floor065_closed_loop.ps1`，12 单元）：
+- **precision-floor 双口径并行**：导师 PDF 要求 detector 触发 precision-floor **≥0.65**，而此前四个 horizon 调阈用的是仓库默认 **0.60**（val task-macro precision：h0=0.6049、h10=0.6024、h25=0.6001、h50=0.6036）。决定**两种口径都做**：0.60 闭环已有结果；0.65 的**纯推理探针**（`results/tables/mt10_horizon*_detector_threshold_floor065.json`）与 **12 单元闭环重跑**（`results/tables/mt10_backfill_floor065_closed_loop_summary.csv`）均已完成，四个 horizon 均有满足 0.65 的阈值：
 
 | Horizon | 阈值（floor 0.60→0.65） | precision | F1 | recall |
 |---|---|---:|---:|---:|
@@ -157,7 +169,7 @@
 | h25 | 0.65 → 0.73 | 0.6540 | 0.4891 | 0.3994 |
 | h50 | 0.62 → 0.71 | 0.6513 | 0.5065 | 0.4214 |
 
-  跑完后两套口径的闭环数字并列呈现，导师勾哪个用哪个，选定后无需再跑。
+  两套口径闭环均已完成并并列呈现（闭环数字见问题 2 的双口径表），导师勾哪个用哪个，选定后无需再跑。
 - **selection manifest 已补齐**：`results/diagnostics/selection_manifest.json`（脚本 `scripts/build_selection_manifest.py`），含候选网格全部 CSV/JSON 的 SHA256、优化目标（扰动条件平均 task-macro 成功率最大化）、约束（clean 不退化 + noise 0.4 occupancy 上限固定）、平局规则（先比扰动均值，再比 noise 0.4 occupancy 低者，再比 patience 高者），并由网格数据独立复算验证 0.05/10 确为 MT10/MT50 双库的 argmax；含 202650xx/202660xx 全程未触碰声明。
 - 导师 PDF 中明确列出、但**尚未排期**的工程项：
   1. **search JSON 分片修复**；
