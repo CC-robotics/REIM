@@ -1,16 +1,24 @@
-# FINAL confirmation-bank runs — 20266010 (MT10) / 20266050 (MT50).
-# 教授 PDF 第二节：现有 202650xx 库在调参前已被查阅，需全新确认库做一次性盲测。
+# FINAL confirmation-bank runs -- 20266010 (MT10) / 20266050 (MT50).
+# Per the professor's review section 2: the 202650xx banks were inspected
+# before tuning, so the final numbers must come from fresh one-shot banks.
 #
-# 冻结配置（参数停止修改）：
-#   - release 0.05 / patience 10（robustness-first operating point）
-#   - detector threshold 按 precision-floor 0.65 口径：
-#       MT10 canonical horizon=25 → 0.73；MT50 → 0.71
-#     （floor 0.60 口径数字已全部留档，若导师最终选 0.60，把阈值改回 0.65/0.64 即可）
-#   - 4 方法（mlp_bc / act / heuristic_recovery / reim）× 5 条件 × 50 回合/任务
-#   - MT10: 10,000 回合；MT50: 50,000 回合 —— 预计需要数十小时 GPU，建议隔夜跑
+# Frozen configuration (no more parameter changes):
+#   - release 0.05 / patience 10 (robustness-first operating point)
+#   - detector threshold per precision-floor 0.65 caliber:
+#       MT10 canonical horizon=25 -> 0.73 ; MT50 -> 0.71
+#     (floor-0.60 numbers are all archived; if the professor picks 0.60,
+#      change the two thresholds back to 0.65/0.64 and re-run)
+#   - 4 methods (mlp_bc / act / heuristic_recovery / reim) x 5 conditions
+#     x 50 episodes per task
+#   - MT10: 10,000 episodes; MT50: 50,000 episodes (tens of GPU-hours)
 #
-# 每个单元独立输出 + --resume，中断后重跑本脚本即可续跑。
-# 用法（PowerShell）:
+# NOTE: keep this file ASCII-only. Windows PowerShell 5.1 misreads UTF-8
+# no-BOM scripts as GBK, and a CJK comment can swallow the following code
+# line (this bug silently skipped the two official_clean cells before).
+#
+# Each cell writes its own outputs and supports --resume; rerun the script
+# to continue after an interruption.
+# Usage (PowerShell):
 #   powershell -ExecutionPolicy Bypass -File scripts/run_confirmation_banks_202660xx.ps1
 $ErrorActionPreference = "Continue"
 Set-Location (Join-Path $PSScriptRoot "..")
@@ -38,14 +46,14 @@ function Run-Cell($bench, $benchseed, $thr, $condition, $noise) {
     --log-file "results/logs/confirmation_202660xx/${tag}.log" --resume
 }
 
-# MT10 确认库 20266010（阈值 0.73）
+# MT10 confirmation bank 20266010 (threshold 0.73)
 Run-Cell "MT10" 20266010 0.73 "official_clean" 0.0
 Run-Cell "MT10" 20266010 0.73 "robustness_noise_10" 0.1
 Run-Cell "MT10" 20266010 0.73 "robustness_noise_20" 0.2
 Run-Cell "MT10" 20266010 0.73 "robustness_noise_30" 0.3
 Run-Cell "MT10" 20266010 0.73 "robustness_noise_40" 0.4
 
-# MT50 确认库 20266050（阈值 0.71）
+# MT50 confirmation bank 20266050 (threshold 0.71)
 Run-Cell "MT50" 20266050 0.71 "official_clean" 0.0
 Run-Cell "MT50" 20266050 0.71 "robustness_noise_10" 0.1
 Run-Cell "MT50" 20266050 0.71 "robustness_noise_20" 0.2
