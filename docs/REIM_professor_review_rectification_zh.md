@@ -191,7 +191,7 @@
 - **search JSON 分片项已核销**：复核确认 `mt10_search.json` / `mt50_search.json` 本体完整无损（此前记录源于早期排查待办，并非实际缺陷）；其可追溯性已由 `selection_manifest.json` 中逐文件 SHA256 覆盖。
 - **MT50 floor-0.65 探针也已补齐**：阈值 0.64 → 0.71，precision 0.6516（`results/tables/mt50_detector_threshold_floor065.json`）。
 - **disagreement 分档统计与 h0/h50 恢复不匹配验证已完成**：按 PDF 字面定义执行（见问题 2 末段），定义如有出入可随时按新定义重算（纯计算，分钟级）。
-- **最终确认库 20266010/20266050 已备好待跑**：`scripts/run_confirmation_banks_202660xx.ps1`。冻结配置：release 0.05/patience 10；detector 阈值按 floor-0.65 口径（MT10 h25 → 0.73，MT50 → 0.71）；4 方法 × 5 条件 × 50 回合/任务（MT10 共 10,000 回合，MT50 共 50,000 回合）；每单元独立输出 + 断点续跑。**这是收官唯一需要的仿真**，建议隔夜跑；跑完重建论文全部终版表格后即达投稿状态。若导师最终选择 floor 0.60 口径，仅需把阈值改回 0.65/0.64 再跑一次。
+- **最终确认库 20266010/20266050 已跑完并通过出版门**：`scripts/run_confirmation_banks_202660xx.ps1` + 补跑脚本 `scripts/run_confirmation_noise00_supplement.ps1`。冻结配置：release 0.05/patience 10；detector 阈值按 floor-0.65 口径（MT10 h25 → 0.73，MT50 → 0.71）；4 方法 ×（clean + 5 档扰动）× 50 回合/任务。终版数字见第七节。若导师最终选择 floor 0.60 口径，仅需把阈值改回 0.65/0.64 再跑一次。
 
 ---
 
@@ -201,5 +201,32 @@
 - Git LFS 指引已写入 README；跨平台行尾符已统一为 LF。
 - 关键产物：`results/figures/mt10_success_occupancy.png`、`results/tables/mt10_matched_occupancy_comparison.json`、`results/tables/mt10_backfill_tuned_closed_loop_summary.csv`、`results/tables/mt10_backfill_floor065_closed_loop_summary.csv`、`results/tables/mt10_multiseed_summary.csv`（含样本标准差 + rescued/harmed）、`results/tables/intervention_burden_three_metrics.json`（三种负担口径）、`results/tables/mt10_disagreement_horizon_stats.json`（disagreement 分档 + h0/h50 不匹配）、`results/tables/mt10_threshold_metrics_clustered_bootstrap_ci.json`（聚类置信区间）、`results/diagnostics/selection_manifest.json`（参数选择清单）、`results/tables/mt10_horizon{0,10,25,50}_detector_threshold_floor065.json` + `results/tables/mt50_detector_threshold_floor065.json`（precision-floor 0.65 探针）、`scripts/run_confirmation_banks_202660xx.ps1`（确认库最终运行脚本）。
 - 本轮整改提交链（均可逐条 `git show` 复核）：`872238b1` 路径归一化 + manifest 入仓 → `cdd07009` README/tex 矛盾修复 → `478d4032` backfill 初步消融 → `b0568c93` paper_assets 自洽 → `faf273e5` 逐 horizon 阈值 + pre-event 审计 → `656cf6ae` occupancy 主表 + matched 对照 → `b038a815` 两个 gate manifest 重签 + ACL 修复 → `72664f50` 调阈闭环 + 多种子 → `c044b060` 行尾符跨平台根治。
+
+---
+
+## 七、确认库终版结果（bank 20266010 / 20266050）
+
+最终确认库已全部跑完并重新通过出版门。口径：bank seed 20266010（MT10）/ 20266050（MT50），50 回合/任务，冻结 release 0.05 / patience 10，detector 阈值 0.73（MT10）/ 0.71（MT50）。本节数字为最终口径，取代第四节中 202650xx 库的 MT10/MT50 主表数字。
+
+**任务宏平均成功率（%，4 方法 × clean + 5 档扰动）**
+
+| 条件 | MT10 MLP BC | MT10 ACT | MT10 Heuristic | MT10 REIM | MT50 MLP BC | MT50 ACT | MT50 Heuristic | MT50 REIM |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| official clean | 94.2 | 97.4 | **98.0** | 97.4 | 81.5 | 91.6 | **94.0** | 92.3 |
+| noise 0.0 | 94.2 | 97.4 | **98.0** | 97.4 | 81.5 | 91.6 | **94.0** | 92.3 |
+| noise 0.1 | 3.4 | 5.2 | **49.8** | 35.8 | 0.3 | 1.8 | **35.8** | 28.3 |
+| noise 0.2 | 3.2 | 6.0 | 50.6 | **50.8** | 0.3 | 1.7 | 36.0 | **36.4** |
+| noise 0.3 | 3.6 | 5.8 | 49.0 | **57.2** | 0.3 | 1.7 | 35.0 | **42.4** |
+| noise 0.4 | 3.6 | 6.0 | 46.4 | **59.4** | 0.4 | 2.0 | 34.0 | **46.4** |
+
+要点：
+
+- **clean 条件启发式反超，如实记录**：MT10 Heuristic 98.0% vs REIM 97.4%（REIM 与 MT-ACT 97.4% 持平）；MT50 Heuristic 94.0% vs REIM 92.3%（REIM 仍显著高于 MT-ACT 91.6%，+0.6 pp，95% CI [+0.2, +1.1]）。
+- 扰动下 ACT/MLP 崩坏至个位数；noise 0.1 启发式领先；noise 0.2 两者统计持平（50.8 vs 50.6、36.4 vs 36.0）；noise ≥ 0.3 REIM 明显领先。
+- **noise 0.0 与 official clean 逐方法完全一致**（如 REIM 97.4% / 92.3%），验证零噪声扰动协议的等价性。
+- **noise_00 补齐说明**：出版门要求 robustness 覆盖 0.0–0.4 五档，初版确认库缺 noise_00 两个单元（MT10 2,000 回合、MT50 10,000 回合），已由 `scripts/run_confirmation_noise00_supplement.ps1` 于 2026-08-26 补跑完成（零噪声扰动协议）。两个单元的 summary / episodes.csv / run sidecar 已按 `{mt10|mt50}_disturbed_noise_00_*` 命名并入 `results/tables/confirmation_gate_staging/`，summary 内路径字段已归一化为仓库相对路径（sha256 未动）。
+- **出版门已基于确认库重开**：`paper_assets/multitask_results.tex`、`multitask_clean_statistics.csv`、`multitask_robustness_statistics.csv`、`Figure_multitask_robustness.png/pdf`、`multitask_results_manifest.json` 全部原子覆写；README 主表与 `scripts/verify_readme_multitask_numbers.py` 数据源已切到确认库口径。终验三件套全绿：README 数字校验通过、manifest 哈希 19,184 条全绿、绝对路径归一化 0 残留。
+
+---
 
 —— 本汇报由实验数据与提交记录逐项复核生成，所有数值均有对应产物可溯源。

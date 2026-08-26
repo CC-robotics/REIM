@@ -2,7 +2,11 @@
 
 Verifies every number in the README '### MT10/MT50 breadth results' section
 against paper_assets/multitask_results.tex (clean table, incl. intervention
-rates), results/tables/*.json (robustness table, occupancy table),
+rates), results/tables/confirmation_202660xx/*.json (robustness table,
+confirmation library banks 20266010/20266050),
+paper_assets/multitask_clean_statistics.csv +
+paper_assets/multitask_robustness_statistics.csv (occupancy table,
+gate-generated from the confirmation library),
 results/tables/mt10_matched_occupancy_comparison.json +
 results/diagnostics/release_patience_search/mt10_references.csv
 (matched-occupancy control), and
@@ -46,42 +50,55 @@ for bench, p in [("MT10", "MTTen"), ("MT50", "MTFifty")]:
         if f"{v:.1f}%" not in row:
             errors.append(f"clean {bench} {label}: tex={v:.1f}% not in README row: {row}")
 
-# 2) robustness table vs summary JSONs
-conds = [("0.1", "disturbed_noise_10"), ("0.2", "disturbed_noise_20"),
-         ("0.3", "disturbed_noise_30"), ("0.4", "disturbed_noise_40")]
+# 2) robustness table vs confirmation-library summary JSONs
+CONF = ROOT / "results" / "tables" / "confirmation_202660xx"
+conds = [("0.0", "robustness_noise_00"), ("0.1", "robustness_noise_10"),
+         ("0.2", "robustness_noise_20"), ("0.3", "robustness_noise_30"),
+         ("0.4", "robustness_noise_40")]
 for label, cond in conds:
     row = next(l for l in section.splitlines() if l.startswith("| " + label))
     for bench in ["mt10", "mt50"]:
         data = json.loads(
-            (ROOT / "results" / "tables" / f"{bench}_{cond}_summary.json").read_text(encoding="utf-8"))
+            (CONF / f"{bench}_confirm_{cond}_summary.json").read_text(encoding="utf-8"))
         for method in ["act", "heuristic_recovery", "reim"]:
             v = data["aggregates"][method]["summary"]["success_rate_task_macro"] * 100
             if f"{v:.1f}%" not in row:
                 errors.append(f"noise {label} {bench} {method}: json={v:.1f}% not in README row: {row}")
 
-# 3) occupancy table vs burden summary (first-class occupancy reporting)
-burden = json.loads(
-    (ROOT / "results" / "tables" / "intervention_burden_summary.json").read_text(encoding="utf-8"))
-occ_conds = [("clean", "official_clean"), ("0.1", "robustness_noise_10"),
-             ("0.2", "robustness_noise_20"), ("0.3", "robustness_noise_30"),
-             ("0.4", "robustness_noise_40")]
-for label, cond in occ_conds:
+# 3) occupancy table vs gate-generated confirmation statistics CSVs
+import csv
+
+def _occ(cond_label):
     vals = []
     for bench in ["MT10", "MT50"]:
-        b = burden["benchmarks"][bench][cond]["burden"]
-        for method in ["reim", "heuristic_recovery"]:
-            vals.append(f"{b[method]['recovery_occupancy_mean'] * 100:.1f}%")
+        if cond_label == "clean":
+            src = ROOT / "paper_assets" / "multitask_clean_statistics.csv"
+            rows = [r for r in csv.DictReader(open(src, encoding="utf-8"))
+                    if r["benchmark"] == bench and r["condition"] == "official_clean"]
+        else:
+            src = ROOT / "paper_assets" / "multitask_robustness_statistics.csv"
+            nl = f"{float(cond_label):.6g}"
+            rows = [r for r in csv.DictReader(open(src, encoding="utf-8"))
+                    if r["benchmark"] == bench
+                    and abs(float(r["noise_level"]) - float(cond_label)) < 1e-9]
+        by_method = {r["method"]: r for r in rows}
+        for method in ["MT-REIM", "MT-ACT + Heuristic-Gated Learned Recovery"]:
+            vals.append(f"{float(by_method[method]['recovery_occupancy_mean']) * 100:.1f}%")
+    return vals
+
+for label in ["clean", "0.1", "0.2", "0.3", "0.4"]:
+    vals = _occ(label)
     row = next((l for l in section.splitlines()
                 if l.startswith(f"| {label} |") and all(v in l for v in vals)), None)
     if row is None:
         errors.append(f"occupancy row {label}: expected values {vals} not found together")
 
-# 3b) legacy occupancy spot-check (MT10 noise 0.4: REIM 69.0%, heuristic 47.9%)
-noise40 = burden["benchmarks"]["MT10"]["robustness_noise_40"]["burden"]
-for who, expect in [("reim", 69.0), ("heuristic_recovery", 47.9)]:
-    v = noise40[who]["recovery_occupancy_mean"] * 100
+# 3b) occupancy spot-check (confirmation MT10 noise 0.4: REIM 61.7%, heuristic 47.7%)
+spot = dict(zip(["reim", "heuristic_recovery"], _occ("0.4")[:2]))
+for who, expect in [("reim", 61.7), ("heuristic_recovery", 47.7)]:
+    v = float(spot[who].rstrip("%"))
     if abs(v - expect) > 0.05 or f"{expect:.1f}%" not in section:
-        errors.append(f"occupancy {who}: json={v:.2f}% vs README={expect:.1f}%")
+        errors.append(f"occupancy {who}: csv={v:.2f}% vs README={expect:.1f}%")
 
 # 4) matched-occupancy comparison vs machine-readable record
 import csv
@@ -160,4 +177,4 @@ if errors:
     for e in errors:
         print(" ", e)
     sys.exit(1)
-print("ALL README MT10/MT50 NUMBERS VERIFIED against tex + results/tables")
+print("ALL README MT10/MT50 NUMBERS VERIFIED against tex + confirmation library + gate CSVs")

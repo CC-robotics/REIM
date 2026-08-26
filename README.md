@@ -16,8 +16,9 @@ ablation, and qualitative operation sequence. A separate shared-policy MT10/MT50
 protocol tests breadth across known task families. Its official-clean condition
 is kept separate from a task-universal action/observation-noise extension. The
 multi-task paper-results gate has passed for the frozen configuration
-(detector threshold 0.65/0.64, release 0.05, patience 10), so the audited
-MT10/MT50 numbers are reported below and in the compiled manuscript.
+(detector threshold 0.73/0.71, release 0.05, patience 10, confirmation bank
+20266010/20266050), so the audited MT10/MT50 numbers are reported below and
+in the compiled manuscript.
 
 The repository contains data collection, resumable training, closed-loop
 evaluation, robustness and ablation studies, plots, LaTeX tables, checkpoints,
@@ -529,52 +530,61 @@ be treated as scientific evidence.
 
 ### MT10/MT50 breadth results
 
-The independent multi-task paper-results gate has passed: complete MT10 and
-MT50 clean plus all four disturbed conditions (action/observation noise 0.1,
-0.2, 0.3, 0.4) were audited with immutable run sidecars, checkpoint hashes,
-and task-vocabulary/task-bank provenance. Numbers below are task-macro success
-from `results/tables/mt{10,50}_{clean,disturbed_noise_*}_summary.json` (final
-evaluation bank seed 20265010, 50 episodes per task, frozen detector threshold
-0.65 MT10 / 0.64 MT50, release 0.05, patience 10); the same values populate
-`paper_assets/multitask_results.tex`.
+The independent multi-task paper-results gate has passed on the final
+confirmation library: complete MT10 and MT50 clean plus all five disturbed
+conditions (action/observation noise 0.0, 0.1, 0.2, 0.3, 0.4; the 0.0
+zero-noise control reproduces the official-clean numbers exactly) were
+audited with immutable run sidecars, checkpoint hashes, and
+task-vocabulary/task-bank provenance. Numbers below are task-macro success
+from
+`results/tables/confirmation_202660xx/mt{10,50}_confirm_{official_clean,robustness_noise_*}_summary.json`
+(confirmation bank seed 20266010 MT10 / 20266050 MT50, 50 episodes per task,
+frozen detector threshold 0.73 MT10 / 0.71 MT50, release 0.05, patience 10);
+the same values populate `paper_assets/multitask_results.tex`.
 
 Official clean condition:
 
 | Benchmark | MT-MLP BC | MT-ACT | Heuristic recovery | MT-REIM |
 |---|---:|---:|---:|---:|
-| MT10 | 91.4% | 96.6% | 96.6% (22.2% interv.) | **97.0%** (46.6% interv.) |
-| MT50 | 81.3% | 92.1% | 94.8% (17.3% interv.) | **92.2%** (28.4% interv.) |
+| MT10 | 94.2% | 97.4% | **98.0%** (23.4% interv.) | 97.4% (36.4% interv.) |
+| MT50 | 81.5% | 91.6% | **94.0%** (17.8% interv.) | 92.3% (20.2% interv.) |
 
 Robustness extension (task-universal action/observation noise; non-official):
 
 | Noise | MT10 REIM | MT10 ACT | MT10 Heuristic | MT50 REIM | MT50 ACT | MT50 Heuristic |
 |---|---:|---:|---:|---:|---:|---:|
-| 0.1 | 45.6% | 5.2% | **47.8%** | 34.0% | 2.0% | **35.9%** |
-| 0.2 | **53.8%** | 5.4% | 47.8% | **42.2%** | 1.9% | 35.2% |
-| 0.3 | **57.8%** | 4.8% | 45.8% | **46.3%** | 1.9% | 34.4% |
-| 0.4 | **61.4%** | 4.6% | 45.0% | **49.7%** | 1.9% | 33.9% |
+| 0.0 | 97.4% | 97.4% | **98.0%** | 92.3% | 91.6% | **94.0%** |
+| 0.1 | 35.8% | 5.2% | **49.8%** | 28.3% | 1.8% | **35.8%** |
+| 0.2 | **50.8%** | 6.0% | 50.6% | **36.4%** | 1.7% | 36.0% |
+| 0.3 | **57.2%** | 5.8% | 49.0% | **42.4%** | 1.7% | 35.0% |
+| 0.4 | **59.4%** | 6.0% | 46.4% | **46.4%** | 2.0% | 34.0% |
 
-REIM matches ACT on clean tasks and is far more robust under noise: the ACT
-policy collapses to single digits while REIM retains roughly half or more of
-its clean success. At noise 0.1 REIM is statistically level with the heuristic
-gate; from noise 0.2 upward it leads both baselines.
+On clean tasks the heuristic gate edges out REIM on the confirmation bank
+(MT10 98.0% vs 97.4%; MT50 94.0% vs 92.3%), while REIM matches MT-ACT on
+MT10 (97.4%) and stays significantly ahead of MT-ACT on MT50 (+0.6 pp,
+95% CI [+0.2, +1.1]). Under noise the ACT policy collapses to single digits.
+At noise 0.1 the heuristic gate leads; at noise 0.2 REIM is statistically
+level with it; from noise 0.3 upward REIM leads both baselines (MT10 57.2%
+vs 49.0% and MT50 42.4% vs 35.0% at 0.3; MT10 59.4% vs 46.4% and MT50
+46.4% vs 34.0% at 0.4).
 
 Recovery occupancy (share of episode steps spent in recovery) is reported as a
-first-class metric alongside success, from
-`results/tables/intervention_burden_summary.json` (official bank, seed
-20265010):
+first-class metric alongside success, from the gate-generated
+`paper_assets/multitask_clean_statistics.csv` and
+`paper_assets/multitask_robustness_statistics.csv` (confirmation bank, seeds
+20266010/20266050):
 
 | Noise | MT10 REIM occ. | MT10 Heuristic occ. | MT50 REIM occ. | MT50 Heuristic occ. |
 |---|---:|---:|---:|---:|
-| clean | 18.9% | 13.2% | 16.6% | 10.4% |
-| 0.1 | 39.4% | 49.6% | 45.2% | 60.8% |
-| 0.2 | 54.8% | 49.3% | 54.3% | 60.7% |
-| 0.3 | 61.5% | 48.2% | 61.3% | 60.2% |
-| 0.4 | 69.0% | 47.9% | 67.1% | 59.7% |
+| clean | 14.3% | 14.2% | 11.0% | 10.6% |
+| 0.1 | 26.9% | 49.3% | 36.9% | 60.9% |
+| 0.2 | 46.2% | 48.8% | 49.2% | 60.8% |
+| 0.3 | 55.7% | 48.4% | 56.6% | 60.3% |
+| 0.4 | 61.7% | 47.7% | 62.7% | 60.0% |
 
 The robustness gain comes with a measurable occupancy cost; per-condition
-segment and rescued/harmed counts are reported alongside success in the same
-burden summary.
+segment and rescued/harmed counts are reported alongside success in the
+per-condition episode records under `results/tables/confirmation_202660xx/`.
 
 Matched-occupancy control (directional, 200-episode search bank seed
 20264010, 20 episodes per task; heuristic reference re-run on the same bank,

@@ -1,0 +1,277 @@
+{
+  "benchmark": "MT10",
+  "checks": {
+    "all_artifacts_complete_and_digest_verified": true,
+    "artifact_protocol_descriptors_pairwise_distinct": true,
+    "benchmark_bank_seeds_pairwise_distinct": true,
+    "materialized_native_task_payloads_pairwise_disjoint": true,
+    "materialized_sampling_unit_identities_pairwise_disjoint": true,
+    "reserved_native_task_payloads_pairwise_disjoint": true,
+    "task_bank_content_fingerprints_pairwise_distinct": true
+  },
+  "pairwise": [
+    {
+      "benchmark_seed_equal": false,
+      "left": "demonstrations",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "failure_training",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "demonstrations",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "failure_validation",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "demonstrations",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "recovery_training",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "demonstrations",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "final_evaluation",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "failure_training",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "failure_validation",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "failure_training",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "recovery_training",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "failure_training",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [
+          42,
+          43,
+          44
+        ],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 500,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "final_evaluation",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "failure_validation",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "recovery_training",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "failure_validation",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "final_evaluation",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    },
+    {
+      "benchmark_seed_equal": false,
+      "left": "recovery_training",
+      "materialized_task_payload_overlap_count": 0,
+      "overlap_examples": {
+        "raw_episode_seed": [],
+        "sampling_unit_identity": [],
+        "task_payload_sha256": []
+      },
+      "raw_episode_seed_overlap_count": 0,
+      "raw_episode_seed_reuse_is_leakage": false,
+      "reserved_task_payload_overlap_count": 0,
+      "right": "final_evaluation",
+      "sampling_unit_identity_overlap_count": 0,
+      "task_bank_content_fingerprint_equal": false
+    }
+  ],
+  "passed": true,
+  "raw_episode_seed_reuse_pairs": [
+    "failure_training::final_evaluation"
+  ],
+  "read_only": true,
+  "schema_version": "reim-multitask-bank-separation-audit-v1",
+  "separation_definition": {
+    "materialized_sampling_unit": [
+      "task_name",
+      "task_payload_sha256",
+      "episode_seed"
+    ],
+    "raw_episode_seed_note": "An RNG integer reused with a disjoint native task payload is reported but is not a repeated sampling unit.",
+    "reserved_bank": "SHA-256(Task.data) over all 50 variants/task"
+  },
+  "stages": {
+    "demonstrations": {
+      "audit_descriptor_sha256": "86b4ae2a960c364532d2a403815e88d4a3a936de5de9e8c6e3198559907465a5",
+      "benchmark_seed": 20261010,
+      "embedded_fingerprint_sha256": null,
+      "materialized_records": 500,
+      "materialized_task_payloads": 495,
+      "reserved_task_payloads": 500,
+      "source_paths": [
+        "datasets/mt10/demonstrations/manifest.json"
+      ],
+      "source_sha256": [
+        "a0173b92bed04f620ef40710621e31b7db339dd4a1cb9e7856d33f732fefee88"
+      ],
+      "task_bank_content_sha256": "5008b3227052ee53e32b4bfb9ab37ed4cca219fc78e2dcbbb8879454f0209e6c",
+      "unique_episode_seeds": 500
+    },
+    "failure_training": {
+      "audit_descriptor_sha256": "70685b9640b491e8ff32d333ea247a7986ced822a39af24a34e6abd74bca6cac",
+      "benchmark_seed": 20262010,
+      "embedded_fingerprint_sha256": "a9ccd66565f927bbdc1bec40f62d4dd64ac47552f33a75372c3af14bb5e13235",
+      "materialized_records": 500,
+      "materialized_task_payloads": 500,
+      "reserved_task_payloads": 500,
+      "source_paths": [
+        "datasets/mt10/failures/manifest.json"
+      ],
+      "source_sha256": [
+        "9c097ec10bf0214ec4022866013ed748a609b8c5fb55076fe2054caa7934ae94"
+      ],
+      "task_bank_content_sha256": "91a8a4cbd33b21eea531427f5f20e3a7e74d62948729a55d60b1a659740fc99e",
+      "unique_episode_seeds": 500
+    },
+    "failure_validation": {
+      "audit_descriptor_sha256": "4713d2e2420ac7da8bce1fc476ee6d00b23cbdddb2e8f7fcdf5743a9f577fc4c",
+      "benchmark_seed": 20264010,
+      "embedded_fingerprint_sha256": "85c3c36be0d96e3432fd728d4f33e23d961118db1a956a028f062b854a609b05",
+      "materialized_records": 200,
+      "materialized_task_payloads": 200,
+      "reserved_task_payloads": 500,
+      "source_paths": [
+        "datasets/mt10/failures_validation/manifest.json"
+      ],
+      "source_sha256": [
+        "2e5fe44a4b7762a3bcd0fd96ff69709ceb215c7deb3649650b23e9625d3a78a5"
+      ],
+      "task_bank_content_sha256": "e310a842d0ed49cf27d93acfe793598708366772d845c1931dfb58a8a32c3765",
+      "unique_episode_seeds": 200
+    },
+    "final_evaluation": {
+      "audit_descriptor_sha256": "556b40690989bb0a2b93fabc316a4ebed01f6e3a216c1a92844bfb3f47410e6f",
+      "benchmark_seed": 20266010,
+      "embedded_fingerprint_sha256": "79eda4dba6e3733523d0f49a685b35ef25425362fe7e15a133be70c69dfc3deb",
+      "materialized_records": 500,
+      "materialized_task_payloads": 500,
+      "reserved_task_payloads": 500,
+      "source_paths": [
+        "results/tables/confirmation_202660xx/mt10_confirm_official_clean_episodes.csv.run.json",
+        "results/tables/confirmation_202660xx/mt10_confirm_official_clean_episodes.csv"
+      ],
+      "source_sha256": [
+        "46c151e55fb4d29c3fa96912c15baeb7a339b6754525f2a4ae59165bd8b7b898",
+        "bde54a76d9267fb0f218e67f69080216cfafe15bd943f8309f3a32e2d46ad772"
+      ],
+      "task_bank_content_sha256": "8b56f2be5497cdd97a6d0095838792c32bcdf003d59f8a9f0f25e64c8a115d84",
+      "unique_episode_seeds": 500
+    },
+    "recovery_training": {
+      "audit_descriptor_sha256": "e94544d22007b805f2735a94255a44678336b8378740110697dd1657995843b4",
+      "benchmark_seed": 20263010,
+      "embedded_fingerprint_sha256": "bf29af92d62c30621e9dd4dc8987b678a77e47bde36909c51b5da1db3984e619",
+      "materialized_records": 500,
+      "materialized_task_payloads": 494,
+      "reserved_task_payloads": 500,
+      "source_paths": [
+        "datasets/mt10/recovery/manifest.json"
+      ],
+      "source_sha256": [
+        "c56222de84f17ce7d56b8ddbb795fd1a2bafc4cdcea2b05b0b8f07cfaee0307f"
+      ],
+      "task_bank_content_sha256": "b31beedda751f8ddb9a85ab27e1e45b5aa2246dea35a210f696b4f4200e7f2d8",
+      "unique_episode_seeds": 500
+    }
+  }
+}

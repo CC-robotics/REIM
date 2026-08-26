@@ -1,0 +1,67 @@
+{
+  "protocol": {
+    "action_std_scale": 0.4,
+    "benchmark": "MT10",
+    "benchmark_seed": 20266010,
+    "bootstrap_samples": 5000,
+    "checkpoint_sha256": {
+      "act": "e4493b456460c6641c1f2b28217effcfbda8487e2766cbd24d6be0a31fa59334",
+      "detector": "54da6920f97952ca3f3a72b507f1281408e9660cb8ce9e91e56950c5a04a2450",
+      "mlp_bc": "420b7b39f02c4238cf07f34e94293a3bb82a1e3f3db70ff763ac27bba1a92778",
+      "recovery": "90069f6c680ab025244c2689760137485b3dd25b9b54e3eb929f0d98d20f7c46"
+    },
+    "condition": "robustness_noise_30",
+    "detector_threshold": 0.73,
+    "episode_seed_base": 42,
+    "episodes_per_task": 50,
+    "evaluation_schema_version": "reim-multitask-evaluation-v2",
+    "execution_device": "cuda",
+    "heuristic_min_steps": 30,
+    "heuristic_tolerance": 0.01,
+    "heuristic_window": 20,
+    "intervention_cooldown": 10,
+    "max_episode_steps": 500,
+    "metaworld_version": "3.1.1",
+    "methods": [
+      "mlp_bc",
+      "act",
+      "heuristic_recovery",
+      "reim"
+    ],
+    "min_recovery_steps": 5,
+    "noise_level": 0.3,
+    "object_position_noise": false,
+    "observation_std_scale": 0.025,
+    "recovery_budget": 250,
+    "release_patience": 10,
+    "release_threshold": 0.05,
+    "task_bank_sha256": "18d01edadba3d059cce298bf1d09df7896794dc6a4866158f501c017fc6ad46b",
+    "task_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "task_vocabulary": [
+      "reach-v3",
+      "push-v3",
+      "pick-place-v3",
+      "door-open-v3",
+      "drawer-open-v3",
+      "drawer-close-v3",
+      "button-press-topdown-v3",
+      "peg-insert-side-v3",
+      "window-open-v3",
+      "window-close-v3"
+    ],
+    "task_vocabulary_sha256": "527870db7868566e8a84c43dc2cb9d8b739ad75c5bdb916294747814c957686e"
+  },
+  "run_fingerprint": "c71e602572d075cdf579034d0122c64ea52df33314a10bda368fbfa4043c7149",
+  "schema_version": "reim-multitask-evaluation-run-v1"
+}
