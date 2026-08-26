@@ -689,6 +689,83 @@ so the evidence supports selective simulated failure prevention and recovery,
 not general post-drop repair, visual perception, sim-to-real transfer, or a
 physical Sawyer claim.
 
+\appendix
+
+\section{Multi-Seed Stability of the Supervised Recovery Gate}
+\label{app:multiseed}
+
+To probe whether the multi-task findings hinge on one lucky training seed, we
+trained the supervised MT10 recovery gate on three seeds (42, 43, 44) and
+evaluated each on the same MT10 bank (20265010, 50 episodes per task).
+Table~\ref{tab:mt10-seed-stability} and Fig.~\ref{fig:mt10-seed-stability}
+show that seed-to-seed variation is small relative to the disturbance
+conditioning itself: under clean conditions the supervised gate tracks the
+heuristic within one point, while at 40\% disturbance its advantage over the
+heuristic gate is consistent across seeds. This analysis concerns the
+current supervised recovery gate; the earlier PPO recovery negative control
+remains excluded from this paper.
+
+\input{TableA1_mt10_seed_stability.tex}
+
+\begin{figure}[t]
+  \centering
+  \PaperGraphic{FigureA1_mt10_seed_stability}{0.98\columnwidth}{%
+  MT10 seed stability of the supervised recovery gate.}
+  \caption{MT10 multi-seed stability of the supervised recovery gate.
+  Bars give the task-macro success mean over three training seeds
+  (42/43/44) with $\pm 1$ s.d. whiskers; dots are the per-seed values.
+  Evaluation uses bank 20265010 with 50 episodes per task per seed.}
+  \label{fig:mt10-seed-stability}
+\end{figure}
+
+\section{Recovery Training-Design Controls}
+\label{app:training-design}
+
+Table~\ref{tab:training-design} and Fig.~\ref{fig:training-design} audit five
+training-design choices for the earlier PPO recovery variant on 200 paired
+Meta-World development seeds at 20\% disturbance. Exact online trigger-state
+resets, expert actor warm start, and task-selected checkpoints each matter;
+removing the warm start collapses success, and an unselected 500k endpoint
+underperforms the selected checkpoint. These controls justify the training
+design but use a development protocol (200 paired episodes, one training
+seed), so they are reported here rather than in the main benchmark claims.
+
+\input{Table5_training_design.tex}
+
+\begin{figure*}[t]
+  \centering
+  \PaperGraphic{Figure7_training_design}{0.98\textwidth}{%
+  Training-design ablation: success, recovery behavior, and paired gain.}
+  \caption{Recovery training-design controls on the same 200 paired
+  Meta-World seeds at 20\% disturbance. (a) End-to-end success with 95\%
+  Wilson intervals; the dashed line marks the ACT reference. (b) Recovery
+  intervention outcome and intervened-episode rates. (c) Paired success
+  difference over ACT with 95\% bootstrap intervals. PPO controls receive at
+  least 500k environment steps; the actor-only row receives zero.}
+  \label{fig:training-design}
+\end{figure*}
+
+\section{Per-Episode Recovery Timelines}
+\label{app:recovery-timelines}
+
+Fig.~\ref{fig:recovery-timelines} shows representative per-episode timelines
+from the formal CRN evaluation bank (seeds from 8000042, 20\% disturbance),
+complementing the qualitative montage of Fig.~\ref{fig:operation} with quantitative traces of
+detector score, gate state, and recovery execution. Successful episodes show
+a triggered gate followed by a persistent recovery option that restores
+progress; failed episodes exhaust the recovery budget without re-grasp.
+
+\begin{figure*}[t]
+  \centering
+  \PaperGraphic{Figure4_recovery}{0.96\textwidth}{%
+  Per-episode detector and recovery timelines.}
+  \caption{Per-episode recovery timelines from the formal CRN bank
+  (20\% disturbance). Each column is one episode: the top row tracks the
+  detector risk score and gate events, and the bottom row shows recovery
+  execution. Episode captions report the recovery outcome.}
+  \label{fig:recovery-timelines}
+\end{figure*}
+
 \balance
 \bibliographystyle{IEEEtran}
 \bibliography{reim_refs}

@@ -810,15 +810,27 @@ def plot_recovery_examples(
             top.set_aspect("equal", adjustable="datalim")
             top.legend(frameon=False, fontsize=6.8, loc="best")
         controller_status = (
-            "task completed during learned recovery"
+            "recovery completed the task"
             if int(trace.get("recovery_successes", 0)) > 0
-            else "recovery intervention exhausted or unresolved"
+            else "recovery exhausted"
         )
         task_status = "task success" if bool(trace.get("success", False)) else "task failed"
         top.set_title(
-            f"Episode {trace.get('episode', index)}\n"
+            f"Episode {trace.get('episode', index)}",
+            fontsize=9.5,
+            fontweight="bold",
+            loc="left",
+            pad=10,
+        )
+        top.text(
+            0.0,
+            1.01,
             f"{controller_status}; {task_status}",
-            fontsize=8.5,
+            transform=top.transAxes,
+            ha="left",
+            va="bottom",
+            fontsize=7.0,
+            color=MID_GRAY,
         )
         _despine(top)
 

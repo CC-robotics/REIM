@@ -1,0 +1,25 @@
+\begin{table}[t]
+  \centering
+  \caption{MT10 multi-seed stability of the supervised recovery gate
+  (bank 20265010, 50 episodes per task per seed). Rescued/Harmed count
+  episodes where the method flips the paired MT-ACT outcome.
+  Seed-to-seed variation is small relative to the noise-0.4 gap over
+  the heuristic gate.}
+  \label{tab:mt10-seed-stability}
+  \small
+  \setlength{\tabcolsep}{3.4pt}
+  \begin{tabular}{llcccc}
+    \toprule
+    Noise & Method & Seed 42 & Seed 43 & Seed 44 & Mean $\pm$ s.d. \\
+    \midrule
+    clean & MT-REIM & 97.0\% & 96.6\% & 96.2\% & 96.6 $\pm$ 0.4\% \\
+    clean & Heuristic gate & 96.6\% & 95.8\% & 97.6\% & 96.7 $\pm$ 0.9\% \\
+    \midrule
+    0.1 & MT-REIM & 45.6\% & 43.0\% & 43.8\% & 44.1 $\pm$ 1.3\% \\
+    0.1 & Heuristic gate & 47.8\% & 41.4\% & 45.0\% & 44.7 $\pm$ 3.2\% \\
+    \midrule
+    0.4 & MT-REIM & 61.4\% & 55.6\% & 65.4\% & 60.8 $\pm$ 4.9\% \\
+    0.4 & Heuristic gate & 45.0\% & 38.8\% & 38.6\% & 40.8 $\pm$ 3.6\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}

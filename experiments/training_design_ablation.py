@@ -665,8 +665,8 @@ def _plot(path: Path, payload: Mapping[str, Any]) -> None:
     labels = [
         "Full\nselected",
         "Approx.\nstarts",
-        "No actor\nwarm start",
-        "Actor warm\nstart only",
+        "No warm\nstart",
+        "Warm start\nonly",
         "500k\nendpoint",
     ]
     successes = np.asarray(
@@ -693,7 +693,7 @@ def _plot(path: Path, payload: Mapping[str, Any]) -> None:
     gain_high = np.asarray(
         [row["paired_gain_vs_act_bootstrap_95_ci"][1] for row in conditions]
     )
-    colors = ["#087F8C", "#F28E2B", "#9AA4AE", "#D6A34A", "#486581"]
+    colors = ["#2563EB", "#D97706", "#94A3B8", "#059669", "#0F172A"]
     x = np.arange(len(labels))
 
     plt.rcParams.update(
@@ -702,11 +702,14 @@ def _plot(path: Path, payload: Mapping[str, Any]) -> None:
             "font.size": 8.5,
             "axes.titlesize": 9.5,
             "axes.labelsize": 8.5,
+            "axes.edgecolor": "#CBD5E1",
+            "xtick.color": "#334155",
+            "ytick.color": "#334155",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
         }
     )
-    figure, axes = plt.subplots(1, 3, figsize=(8.9, 2.55))
+    figure, axes = plt.subplots(1, 3, figsize=(10.2, 2.9))
     axes[0].bar(
         x,
         successes,
@@ -734,14 +737,14 @@ def _plot(path: Path, payload: Mapping[str, Any]) -> None:
         x - width / 2,
         recovery,
         width=width,
-        color="#087F8C",
+        color="#2563EB",
         label="Intervention outcome",
     )
     axes[1].bar(
         x + width / 2,
         interventions,
         width=width,
-        color="#F28E2B",
+        color="#D97706",
         label="Episodes intervened",
     )
     axes[1].set_title("(b) Recovery behavior")
@@ -755,18 +758,18 @@ def _plot(path: Path, payload: Mapping[str, Any]) -> None:
         yerr=np.vstack((gains - gain_low, gain_high - gains)),
         fmt="o",
         markersize=5.5,
-        color="#087F8C",
-        ecolor="#486581",
+        color="#2563EB",
+        ecolor="#94A3B8",
         capsize=3,
         linewidth=1.1,
     )
-    axes[2].axhline(0.0, color="#343A40", linewidth=0.9, linestyle="--")
+    axes[2].axhline(0.0, color="#0F172A", linewidth=0.9, linestyle="--")
     axes[2].set_title("(c) Paired gain over ACT")
     axes[2].set_ylabel("Success difference (pp) ↑")
 
     for axis in axes:
-        axis.set_xticks(x, labels)
-        axis.grid(axis="y", color="#E3E8EC", linewidth=0.75)
+        axis.set_xticks(x, labels, fontsize=7.5)
+        axis.grid(axis="y", color="#E9EEF3", linewidth=0.75)
         axis.set_axisbelow(True)
         axis.spines[["top", "right"]].set_visible(False)
     figure.text(

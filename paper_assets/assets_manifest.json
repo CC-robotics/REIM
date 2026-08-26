@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-26T12:17:14.791524+00:00",
+  "generated_at_utc": "2026-08-26T14:01:03.346048+00:00",
   "backend": "metaworld",
   "profile": "full",
   "benchmark_eligible": true,
@@ -21,9 +21,9 @@
       "sha256": "39e1bf7483089958871fc1081fbefb772399b054afdffc27bdb38ab5bf4ff556",
       "bytes": 1051
     },
-    "results/recovery_traces.json": {
-      "sha256": "01ea49b1d4dea4eb8c772d73882dd6571cd119e078eab1b8fd64ed82f3ab8f15",
-      "bytes": 2388761
+    "results/traces/formal_crn/robustness_n20.json": {
+      "sha256": "b6f30b6c68ccdfafc7dfd8ed339c3508b117ed135c4d3404430b40e1515dcfc4",
+      "bytes": 307567
     }
   },
   "outputs": {
@@ -64,8 +64,8 @@
     },
     "recovery_examples": {
       "path": "results/figures/recovery_examples.png",
-      "sha256": "74044ef27542b6f712fd9528e41d9bb657d4df6c898718d39a4633173ab3c5ab",
-      "bytes": 393032
+      "sha256": "5dadd6a39d57c060c479701b5e601b9fe3be4cd7b74d1efa0f9e4ed64df680a7",
+      "bytes": 407887
     },
     "paper_confusion": {
       "path": "paper_assets/Figure3_detector.png",
@@ -74,8 +74,8 @@
     },
     "paper_recovery_examples": {
       "path": "paper_assets/Figure4_recovery.png",
-      "sha256": "74044ef27542b6f712fd9528e41d9bb657d4df6c898718d39a4633173ab3c5ab",
-      "bytes": 393032
+      "sha256": "5dadd6a39d57c060c479701b5e601b9fe3be4cd7b74d1efa0f9e4ed64df680a7",
+      "bytes": 407887
     },
     "paper_ablation": {
       "path": "paper_assets/Figure5_ablation.png",
