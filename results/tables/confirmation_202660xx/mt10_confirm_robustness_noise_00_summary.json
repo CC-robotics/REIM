@@ -1378,7 +1378,7 @@
   "robustness_extension": false,
   "run_fingerprint": "aaeddd838dca966df2ad21d06806de604277f0eb147266abe415e2da53907ce8",
   "run_sidecar": "results/tables/confirmation_202660xx/mt10_confirm_robustness_noise_00_episodes.csv.run.json",
-  "run_sidecar_sha256": "37bb0d6f7858f31cf19ad38d9648e96a10c851b16a96ce4c458827f2e20972e2",
+  "run_sidecar_sha256": "e7994b0100d68827af7a19969cb5e7a5fafe0be9deee2ea25a1169b2098ac0b9",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,
   "task_bank_sha256": "18d01edadba3d059cce298bf1d09df7896794dc6a4866158f501c017fc6ad46b",

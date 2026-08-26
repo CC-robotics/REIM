@@ -5689,7 +5689,7 @@
   "robustness_extension": false,
   "run_fingerprint": "ce2fd1e496d6b2d2a5810d52a53eb0486cd7d1f87c98c15d9b4507b9fc76e9bc",
   "run_sidecar": "results/tables/confirmation_202660xx/mt50_confirm_official_clean_episodes.csv.run.json",
-  "run_sidecar_sha256": "a924426c6082c235767f945c8d7ea7f3ada8ad0d7fc07ba5ed2d06d0c957962c",
+  "run_sidecar_sha256": "e14a62ad281516a214f72ac6512d79e6d119c6fba6ee7b7627cf9188e4bcbb5e",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,
   "task_bank_sha256": "5e303ba06e5e2aab16436ad893bca98c6e9454758243ea7d3dc5366b3d416ddd",

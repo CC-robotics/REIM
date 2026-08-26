@@ -269,26 +269,45 @@ def _plot(
     rows: list[dict[str, Any]],
     matched_gate_audit: dict[str, Any],
 ) -> None:
+    # Flat-vector style aligned with the Figure 1/2 paper design language:
+    # white page, slate text, light horizontal grid only, generous type sizes.
+    C_INK = "#0F172A"
+    C_GRAY = "#64748B"
+    C_GRID = "#E9EEF3"
+    C_ORANGE = "#D97706"
+    C_BLUE = "#2563EB"
+    C_GREEN = "#059669"
+    plt.rcParams.update(
+        {
+            "font.family": "DejaVu Sans",
+            "axes.edgecolor": "#CBD5E1",
+            "axes.labelcolor": C_INK,
+            "text.color": C_INK,
+            "xtick.color": C_GRAY,
+            "ytick.color": C_GRAY,
+        }
+    )
     success = 100.0 * np.asarray([row["Success Rate"] for row in rows])
     burden = 100.0 * np.asarray([row["Intervention Rate"] for row in rows])
     thresholds = [float(row["Threshold"]) for row in rows]
-    figure, axis = plt.subplots(figsize=(4.6, 3.35))
+    figure, axis = plt.subplots(figsize=(5.2, 3.7))
     axis.plot(
         burden,
         success,
-        color="#D97935",
-        linewidth=2.0,
+        color=C_ORANGE,
+        linewidth=2.4,
         marker="D",
-        markersize=5.5,
+        markersize=7,
         markeredgecolor="white",
-        markeredgewidth=0.6,
+        markeredgewidth=0.9,
+        zorder=3,
     )
     annotation_layout = {
-        0.100: ((-4, 8), "right"),
-        0.125: ((-42, 7), "right"),
-        0.150: ((8, 7), "left"),
-        0.175: ((8, 7), "left"),
-        0.200: ((8, -19), "left"),
+        0.100: ((-4, 11), "right"),
+        0.125: ((8, -20), "left"),
+        0.150: ((10, -20), "left"),
+        0.175: ((-10, -22), "right"),
+        0.200: ((10, -22), "left"),
     }
     for x_value, y_value, threshold in zip(
         burden, success, thresholds, strict=True
@@ -299,16 +318,17 @@ def _plot(
             (x_value, y_value),
             xytext=offset,
             textcoords="offset points",
-            fontsize=8,
+            fontsize=10,
+            color=C_GRAY,
             ha=alignment,
         )
     axis.scatter(
         [burden[-1]],
         [success[-1]],
-        s=75,
+        s=140,
         facecolors="none",
-        edgecolors="#356D9B",
-        linewidths=1.5,
+        edgecolors=C_BLUE,
+        linewidths=2.2,
         label=r"Frozen primary gate ($\tau=0.20$)",
         zorder=4,
     )
@@ -318,11 +338,11 @@ def _plot(
     axis.scatter(
         [heuristic_x],
         [heuristic_y],
-        s=66,
+        s=110,
         marker="X",
-        color="#2E8B74",
+        color=C_GREEN,
         edgecolors="white",
-        linewidths=0.7,
+        linewidths=1.0,
         label="Heuristic gate",
         zorder=5,
     )
@@ -341,40 +361,57 @@ def _plot(
         xytext=(heuristic_x, heuristic_y + 0.25),
         arrowprops={
             "arrowstyle": "->",
-            "color": "#2E8B74",
-            "linewidth": 1.3,
+            "color": C_GREEN,
+            "linewidth": 1.6,
             "linestyle": "--",
         },
         zorder=3,
     )
     axis.text(
-        matched_x + 1.0,
+        matched_x + 1.2,
         0.5 * (matched_y + heuristic_y),
         (
             f"+{float(matched['paired_delta_percentage_points']):.1f} pp\n"
             f"$p={float(matched['exact_two_sided_mcnemar_binomial_p']):.3f}$"
         ),
-        color="#2E8B74",
-        fontsize=7.4,
+        color=C_GREEN,
+        fontsize=9.5,
+        fontweight="bold",
         va="center",
+        bbox={
+            "boxstyle": "round,pad=0.35",
+            "facecolor": "#ECFDF5",
+            "edgecolor": C_GREEN,
+            "linewidth": 0.9,
+        },
     )
     axis.set(
         xlabel="Episodes with recovery intervention (%)",
         ylabel="Task success (%)",
-        title="Post-freeze gate sensitivity",
         xlim=(59, 101.5),
         ylim=(83.5, 98.9),
     )
-    axis.grid(axis="both", color="#E3E8EC", linewidth=0.8)
+    axis.set_title(
+        "Post-freeze gate sensitivity",
+        fontsize=13,
+        fontweight="bold",
+        color=C_INK,
+        pad=10,
+    )
+    axis.tick_params(labelsize=10)
+    for label in (axis.xaxis.label, axis.yaxis.label):
+        label.set_fontsize(11)
+    axis.grid(axis="y", color=C_GRID, linewidth=1.0)
+    axis.set_axisbelow(True)
     axis.spines[["top", "right"]].set_visible(False)
-    axis.legend(frameon=False, fontsize=7.2, loc="upper left")
+    axis.legend(frameon=False, fontsize=9.5, loc="upper left")
     figure.text(
         0.5,
         0.005,
         "Separate paired Meta-World diagnostic • n=200 • not used for selection",
         ha="center",
-        fontsize=7,
-        color="#73808C",
+        fontsize=8.5,
+        color=C_GRAY,
     )
     figure.tight_layout(rect=(0.0, 0.06, 1.0, 1.0))
     path.parent.mkdir(parents=True, exist_ok=True)

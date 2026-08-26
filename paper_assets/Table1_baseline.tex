@@ -1,46 +1,17 @@
-\begin{table*}[t]
-  \centering
-  \caption{Paired comparison on the simulated Meta-World
-  \REIMTask{} task. Every method uses the same \PlannedMainEpisodes{} seeds.
-  Success and intervention outcomes are percentages with \ConfidenceLevel{}
-  intervals. For Heuristic Recovery/REIM, recovery is task completion while
-  recovery has control, divided by intervention count; Random Reset reports post-reset
-  completion per reset and is not directly comparable.}
-  \label{tab:final-baseline}
-  \small
-  \setlength{\tabcolsep}{5pt}
-  \begin{tabular}{lcccc}
-    \toprule
-    Method & Task success $\uparrow$ & Intervention outcome $\uparrow$ &
-    Intervention rate & Steps $\downarrow$ \\
-    \midrule
-    ACT &
-    \FinalACTSuccess{} \FinalACTSuccessCI &
-    \FinalACTRecovery{} &
-    \FinalACTIntervention{} &
-    \FinalACTSteps{} \\
-    ACT + Random Reset &
-    \FinalResetSuccess{} \FinalResetSuccessCI &
-    \FinalResetRecovery{} \FinalResetRecoveryCI &
-    \FinalResetIntervention{} &
-    \FinalResetSteps{} \\
-    ACT + Heuristic Recovery &
-    \FinalRLRecoverySuccess{} \FinalRLRecoverySuccessCI &
-    \FinalRLRecoveryRate{} \FinalRLRecoveryRateCI &
-    \FinalRLRecoveryIntervention{} &
-    \FinalRLRecoverySteps{} \\
-    REIM (ours) &
-    \FinalREIMSuccess{} \FinalREIMSuccessCI &
-    \FinalREIMRecovery{} \FinalREIMRecoveryCI &
-    \FinalREIMIntervention{} &
-    \FinalREIMSteps{} \\
-    \bottomrule
-  \end{tabular}
-  \vspace{1mm}\parbox{0.96\textwidth}{\footnotesize
-  Paired REIM gain over ACT: \FinalREIMGain{}
-  (\ConfidenceLevel{} CI \FinalREIMGainCI);
-  \FinalREIMRescuedEpisodes{} ACT failures are rescued and
-  \FinalREIMHarmedEpisodes{} ACT successes are harmed. REIM intervenes in
-  \FinalREIMFewerIntervenedEpisodes{} fewer episodes than heuristic-gated recovery
-  (\FinalREIMInterventionReductionVsRL{} relative reduction).}
-\end{table*}
+\begin{table}[t]
+\centering
+\small
+\caption{Policy comparison on Meta-World PickPlace • full protocol • n=1000 episodes/condition. Rates are percentages. Task-success intervals are Wilson 95\% CIs; intervention ratios use episode bootstrap 95\% CIs.}
+\label{tab:baseline}
+\begin{tabular}{lccc}
+\toprule
+Method & Success $\uparrow$ & Intervention outcome$^\ast$ & Steps $\downarrow$ \\
+\midrule
+ACT & 73.4 [70.6, 76.0] & -- & 93.3 \\
+ACT + Random Reset & 81.3 [78.8, 83.6] & 74.5 [71.3, 77.6] & 93.3 \\
+ACT + Heuristic Recovery & 87.7 [85.5, 89.6] & 83.3 [80.6, 85.9] & 72.8 \\
+REIM & 90.4 [88.4, 92.1] & 85.3 [82.5, 88.0] & 69.3 \\
+\bottomrule
+\end{tabular}
+\vspace{1mm}\parbox{0.98\linewidth}{\footnotesize $^\ast$Random Reset: post-reset task success per reset; Heuristic Recovery/REIM: task success reached while the recovery controller is active, per intervention. These rates have different semantics and are not compared directly.}
+\end{table}

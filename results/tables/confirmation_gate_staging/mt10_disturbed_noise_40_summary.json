@@ -1382,7 +1382,7 @@
   "robustness_extension": true,
   "run_fingerprint": "16995aaa276986f1253650efa0a849e177deecce54aacf408709f5986109b2e3",
   "run_sidecar": "results/tables/confirmation_gate_staging/mt10_disturbed_noise_40_episodes.csv.run.json",
-  "run_sidecar_sha256": "c8c4de808776d7e19823f649673fd77837f3d1a1e2b23c428e57d6c69202fed2",
+  "run_sidecar_sha256": "b07ae6ba9130bfdd6e24c84f8d51728dab41bb3d2c72b538cd77bf2bf6003193",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,
   "task_bank_sha256": "18d01edadba3d059cce298bf1d09df7896794dc6a4866158f501c017fc6ad46b",

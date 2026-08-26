@@ -1043,11 +1043,13 @@ def _write_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
 
 
 def _plot_robustness(suites: Sequence[SuiteEvidence], output: Path) -> None:
+    # Flat paper palette shared with Figure 1/2/4: ACT blue, heuristic green,
+    # REIM amber, MLP BC slate.
     colors = {
-        "mlp_bc": "#737B85",
-        "act": "#2457A6",
-        "heuristic_recovery": "#D48A1F",
-        "reim": "#17805C",
+        "mlp_bc": "#94A3B8",
+        "act": "#2563EB",
+        "heuristic_recovery": "#059669",
+        "reim": "#D97706",
     }
     markers = {
         "mlp_bc": "o",
@@ -1064,16 +1066,21 @@ def _plot_robustness(suites: Sequence[SuiteEvidence], output: Path) -> None:
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
-            "font.size": 8.0,
-            "axes.titlesize": 9.0,
-            "axes.labelsize": 8.0,
-            "legend.fontsize": 7.0,
-            "axes.linewidth": 0.7,
+            "font.size": 9.0,
+            "axes.titlesize": 11.0,
+            "axes.labelsize": 9.5,
+            "legend.fontsize": 8.0,
+            "axes.linewidth": 0.9,
+            "axes.edgecolor": "#CBD5E1",
+            "axes.labelcolor": "#0F172A",
+            "text.color": "#0F172A",
+            "xtick.color": "#64748B",
+            "ytick.color": "#64748B",
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
         }
     )
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.75), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.95), sharey=True)
     for ax, suite in zip(axes, suites, strict=True):
         x = np.asarray([item.noise_level * 100.0 for item in suite.robustness])
         for method in CANONICAL_METHODS:
@@ -1101,19 +1108,22 @@ def _plot_robustness(suites: Sequence[SuiteEvidence], output: Path) -> None:
                 color=colors[method],
                 linestyle=linestyles[method],
                 marker=markers[method],
-                markersize=4.0,
-                linewidth=1.45 if method == "reim" else 1.05,
-                capsize=2.0,
-                capthick=0.75,
+                markersize=4.6,
+                markeredgecolor="white",
+                markeredgewidth=0.5,
+                linewidth=2.0 if method == "reim" else 1.3,
+                capsize=2.2,
+                capthick=0.9,
                 label=SHORT_LABELS[method],
                 zorder=4 if method == "reim" else 3,
             )
-        ax.set_title(suite.benchmark)
+        ax.set_title(suite.benchmark, fontweight="bold", pad=6)
         ax.set_xlabel("Injected noise level (%)")
         ax.set_xticks([0, 10, 20, 30, 40])
         ax.set_xlim(-2, 42)
         ax.set_ylim(-2, 102)
-        ax.grid(axis="y", color="#D9DEE5", linewidth=0.55, alpha=0.8)
+        ax.grid(axis="y", color="#E9EEF3", linewidth=0.9)
+        ax.set_axisbelow(True)
         ax.spines[["top", "right"]].set_visible(False)
     axes[0].set_ylabel("Task-macro success (%)")
     handles, labels = axes[1].get_legend_handles_labels()
@@ -1122,7 +1132,7 @@ def _plot_robustness(suites: Sequence[SuiteEvidence], output: Path) -> None:
         labels,
         ncol=4,
         loc="upper center",
-        bbox_to_anchor=(0.5, 1.015),
+        bbox_to_anchor=(0.5, 1.02),
         frameon=False,
         columnspacing=1.15,
         handlelength=2.3,
@@ -1134,8 +1144,8 @@ def _plot_robustness(suites: Sequence[SuiteEvidence], output: Path) -> None:
         "not official Meta-World scores",
         ha="center",
         va="bottom",
-        fontsize=7.0,
-        color="#3F4650",
+        fontsize=7.6,
+        color="#64748B",
     )
     fig.tight_layout(rect=(0.0, 0.065, 1.0, 0.89), w_pad=1.4)
     output.parent.mkdir(parents=True, exist_ok=True)

@@ -5702,7 +5702,7 @@
   "robustness_extension": true,
   "run_fingerprint": "25ff59b81d7599443372c3894a5f6fb33890e1bdc64fff41a245aa88fc2df82b",
   "run_sidecar": "results/tables/confirmation_gate_staging/mt50_disturbed_noise_40_episodes.csv.run.json",
-  "run_sidecar_sha256": "e0088b55fb8759a8524a5ddd9dd2d458ba5819b547251dfa779899a1d1f40c19",
+  "run_sidecar_sha256": "855c13cdcaefd913b2dbde893858b7ff7e0b49c217bb9cd51210a66295254c91",
   "schema_version": "reim-multitask-evaluation-v2",
   "seed": 42,
   "task_bank_sha256": "5e303ba06e5e2aab16436ad893bca98c6e9454758243ea7d3dc5366b3d416ddd",
