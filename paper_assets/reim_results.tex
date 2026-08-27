@@ -701,9 +701,12 @@ Table~\ref{tab:mt10-seed-stability} and Fig.~\ref{fig:mt10-seed-stability}
 show that seed-to-seed variation is small relative to the disturbance
 conditioning itself: under clean conditions the supervised gate tracks the
 heuristic within one point, while at 40\% disturbance its advantage over the
-heuristic gate is consistent across seeds. This analysis concerns the
-current supervised recovery gate; the earlier PPO recovery negative control
-remains excluded from this paper.
+heuristic gate is consistent across seeds. The paired-vs-ACT rescued/harmed
+counts (mean $\pm$ s.d. over the three seeds) corroborate this: at 40\%
+disturbance REIM rescues 282.3 $\pm$ 24.5 episodes and harms 1.3 $\pm$ 1.2,
+versus the heuristic gate rescuing 181.3 $\pm$ 17.9 and harming 0.3 $\pm$ 0.6.
+This analysis concerns the current supervised recovery gate; the earlier PPO
+recovery negative control remains excluded from this paper.
 
 \input{TableA1_mt10_seed_stability.tex}
 
@@ -722,8 +725,9 @@ remains excluded from this paper.
 \label{app:training-design}
 
 Table~\ref{tab:training-design} and Fig.~\ref{fig:training-design} audit five
-training-design choices for the earlier PPO recovery variant on 200 paired
-Meta-World development seeds at 20\% disturbance. Exact online trigger-state
+training-design choices for the recovery actor on 200 paired Meta-World
+development seeds at 20\% disturbance, contrasting the supervised REIM
+imitation baseline with PPO-based controls. Exact online trigger-state
 resets, expert actor warm start, and task-selected checkpoints each matter;
 removing the warm start collapses success, and an unselected 500k endpoint
 underperforms the selected checkpoint. These controls justify the training
