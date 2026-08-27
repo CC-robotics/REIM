@@ -99,13 +99,13 @@
     },
     "paper_table_1": {
       "path": "paper_assets/Table1_baseline.tex",
-      "sha256": "d1cea5e2d2f6d1f9510399c03af9434f83d93ae14718509ce528617112f7a00f",
-      "bytes": 975
+      "sha256": "c1e36f5b3b3518ec7ed1f2cb88a6df0081410216e495cae8feb6b519705aa0dd",
+      "bytes": 1856
     },
     "paper_table_2": {
       "path": "paper_assets/Table2_ablation.tex",
-      "sha256": "be6887a9b2dcdc0541e1cb3a1a909ce98466cfa472c3efa196ef11b135909572",
-      "bytes": 778
+      "sha256": "53ce9a6335125aeac2a1cb8a2f6066c00e5934c7d711bca4a926af6c35870698",
+      "bytes": 668
     }
   },
   "figure_design": {
