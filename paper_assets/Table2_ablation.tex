@@ -1,16 +1,19 @@
 \begin{table}[t]
-\centering
-\small
-\caption{REIM component ablation on Meta-World PickPlace • full protocol • n=1000 episodes/condition. Rates are percentages. Task-success intervals are Wilson 95\% CIs.}
-\label{tab:ablation}
-\begin{tabular}{lcc}
-\toprule
-Configuration & Success $\uparrow$ & Intervention outcome$^\ast$ \\
-\midrule
-ACT (no recovery) & 73.4 [70.6, 76.0] & -- \\
-Heuristic gate + recovery & 87.7 [85.5, 89.6] & 83.3 [80.6, 85.9] \\
-REIM (LSTM gate) & 90.4 [88.4, 92.1] & 85.3 [82.5, 88.0] \\
-\bottomrule
-\end{tabular}
-\vspace{1mm}\parbox{0.98\linewidth}{\footnotesize $^\ast$Heuristic Recovery/REIM values are task completions while the recovery controller is active, per intervention; methods without an intervention report --.}
+  \centering
+  \caption{Recovery and gate ablation under the paired protocol of
+  Table~\ref{tab:final-baseline}. The heuristic and LSTM rows use the same
+  trigger-aligned recovery actor, isolating the arbitration rule.}
+  \label{tab:final-ablation}
+  \small
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{lcc}
+    \toprule
+    Configuration & Success $\uparrow$ & Intervention \\
+    \midrule
+    ACT (no recovery) & \AblationASuccess & -- \\
+    Heuristic gate + recovery & \AblationCSuccess &
+      \FinalRLRecoveryIntervention \\
+    REIM (LSTM gate) & \AblationDSuccess & \FinalREIMIntervention \\
+    \bottomrule
+  \end{tabular}
 \end{table}

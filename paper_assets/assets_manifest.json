@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-26T14:01:03.346048+00:00",
+  "generated_at_utc": "2026-08-27T08:54:52.450477+00:00",
   "backend": "metaworld",
   "profile": "full",
   "benchmark_eligible": true,
@@ -29,18 +29,18 @@
   "outputs": {
     "framework": {
       "path": "results/figures/framework_architecture.png",
-      "sha256": "4f449094c54f26e1a74d5fc6c6ce817bdf2013c25c8f5f9f50061589474376a0",
-      "bytes": 1449778
+      "sha256": "9df4c98a4b90eb9f42bdf816018fefe5aeb226d10b715602049e4b471cd6c421",
+      "bytes": 1447731
     },
     "paper_figure_1": {
       "path": "paper_assets/Figure1_final_framework.png",
-      "sha256": "4f449094c54f26e1a74d5fc6c6ce817bdf2013c25c8f5f9f50061589474376a0",
-      "bytes": 1449778
+      "sha256": "9df4c98a4b90eb9f42bdf816018fefe5aeb226d10b715602049e4b471cd6c421",
+      "bytes": 1447731
     },
     "legacy_figure_1": {
       "path": "paper_assets/Figure1_framework.png",
-      "sha256": "4f449094c54f26e1a74d5fc6c6ce817bdf2013c25c8f5f9f50061589474376a0",
-      "bytes": 1449778
+      "sha256": "9df4c98a4b90eb9f42bdf816018fefe5aeb226d10b715602049e4b471cd6c421",
+      "bytes": 1447731
     },
     "success": {
       "path": "results/figures/success_comparison.png",
@@ -99,8 +99,8 @@
     },
     "paper_table_1": {
       "path": "paper_assets/Table1_baseline.tex",
-      "sha256": "fb29a971765ef20030ed04b0eb658e40e6ab3a0e3cab8618aa46a94473021d37",
-      "bytes": 971
+      "sha256": "d1cea5e2d2f6d1f9510399c03af9434f83d93ae14718509ce528617112f7a00f",
+      "bytes": 975
     },
     "paper_table_2": {
       "path": "paper_assets/Table2_ablation.tex",

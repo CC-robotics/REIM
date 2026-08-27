@@ -37,7 +37,7 @@
     "results/tables/robustness.csv": "1bc3ccce258a921a362e71cd06b1430d21d14913cdb2bb2b6700faa0587f0734",
     "results/tables/robustness_episodes.csv": "f807bc3ab2566a83cf3685881e1aa30adb2ef85e5965af772fe701e127708ada",
     "results/tables/detector_metrics.json": "39e1bf7483089958871fc1081fbefb772399b054afdffc27bdb38ab5bf4ff556",
-    "results/figures/recovery_operation_sequence.json": "e87d9b1073b4b19bae38080de8dc9c8a1ddea75ed822907b3b2b61cd7d0ff8cd",
+    "results/figures/recovery_operation_sequence.json": "828365a219f87ba79086647117877a6a62ebb933bd7587f50aad130610617ec7",
     "results/tables/gate_matched_comparison.json": "f73fc58fc949729bb8434d20270417a3a0ba9e07f7ce12dcf302c6c004118e06",
     "results/tables/comparison.csv": "f2b50f92fe6d1cffdc2c8e21150bdd696c01861c15810d1c4a64f1c4114ee2b2"
   }

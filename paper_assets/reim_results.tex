@@ -514,7 +514,11 @@ within-task episode-bootstrap interval. The paired MT-REIM--MT-ACT task-macro di
 \MTTenBenchmark{} and \MTFiftyREIMDeltaVsACT{} (CI
 \MTFiftyREIMDeltaVsACTCI) on \MTFiftyBenchmark{}. Nonzero-disturbance results
 are reported separately as a robustness extension and are not described as
-official clean benchmark scores.
+official clean benchmark scores. These noise levels use the same absolute
+scales as the single-task protocol ($\sigma_a = 0.4\lambda$, $\sigma_o =
+0.025\lambda$ at level $\lambda$) but omit object-position displacements;
+MT-ACT's sharp degradation at $\lambda = 0.1$ therefore reflects the shared
+task-conditioned policy's sensitivity rather than a scale mismatch.
 
 \begin{figure*}[t]
   \centering

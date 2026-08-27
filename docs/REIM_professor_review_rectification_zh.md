@@ -225,7 +225,7 @@
 - 扰动下 ACT/MLP 崩坏至个位数；noise 0.1 启发式领先；noise 0.2 两者统计持平（50.8 vs 50.6、36.4 vs 36.0）；noise ≥ 0.3 REIM 明显领先。
 - **noise 0.0 与 official clean 逐方法完全一致**（如 REIM 97.4% / 92.3%），验证零噪声扰动协议的等价性。
 - **noise_00 补齐说明**：出版门要求 robustness 覆盖 0.0–0.4 五档，初版确认库缺 noise_00 两个单元（MT10 2,000 回合、MT50 10,000 回合），已由 `scripts/run_confirmation_noise00_supplement.ps1` 于 2026-08-26 补跑完成（零噪声扰动协议）。两个单元的 summary / episodes.csv / run sidecar 已按 `{mt10|mt50}_disturbed_noise_00_*` 命名并入 `results/tables/confirmation_gate_staging/`，summary 内路径字段已归一化为仓库相对路径（sha256 未动）。
-- **出版门已基于确认库重开**：`paper_assets/multitask_results.tex`、`multitask_clean_statistics.csv`、`multitask_robustness_statistics.csv`、`Figure_multitask_robustness.png/pdf`、`multitask_results_manifest.json` 全部原子覆写；README 主表与 `scripts/verify_readme_multitask_numbers.py` 数据源已切到确认库口径。终验三件套全绿：README 数字校验通过、manifest 哈希 19,184 条全绿、绝对路径归一化 0 残留。
+- **出版门已基于确认库重开**：`paper_assets/multitask_results.tex`、`multitask_clean_statistics.csv`、`multitask_robustness_statistics.csv`、`Figure_multitask_robustness.png/pdf`、`multitask_results_manifest.json` 全部原子覆写；README 主表与 `scripts/verify_readme_multitask_numbers.py` 数据源已切到确认库口径。终验三件套全绿：README 数字校验通过、manifest 哈希 19,184 条全绿、绝对路径归一化 0 残留（`datasets/**/manifest.json` 的哈希链溯源路径有意保留，除外）。
 
 ---
 

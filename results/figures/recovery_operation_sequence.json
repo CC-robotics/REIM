@@ -143,12 +143,12 @@
       "bytes": 250372
     },
     "results/figures/recovery_operation_sequence.png": {
-      "sha256": "7aa83104772ecbc7952f9ed7de48ca232dd5414bc11bc972a2e93c7b368156b7",
-      "bytes": 820341
+      "sha256": "6d490401113a53bb68a9d1f2adfa632f7177e8144d27f6f012cf61482a08626c",
+      "bytes": 1933927
     },
     "results/figures/recovery_operation_sequence.pdf": {
-      "sha256": "a1345e3c27d8f6ddabe68166a5b25da37a48b0b6ebe508d51c46918ed7aabf1f",
-      "bytes": 194046
+      "sha256": "abd076c68cb48866aa5888fd39c4f49e6e70cbfdccb8b250c3b11b28f996b73c",
+      "bytes": 218962
     },
     "results/figures/recovery_operation_sequence_act_failure_trace.json": {
       "sha256": "fd292505a02e61919dc07d11e349813deb5ea13c9c90bb6920222e50c58b4f14",
@@ -159,12 +159,12 @@
       "bytes": 70774
     },
     "paper_assets/Figure5_operation_sequence.png": {
-      "sha256": "7aa83104772ecbc7952f9ed7de48ca232dd5414bc11bc972a2e93c7b368156b7",
-      "bytes": 820341
+      "sha256": "6d490401113a53bb68a9d1f2adfa632f7177e8144d27f6f012cf61482a08626c",
+      "bytes": 1933927
     },
     "paper_assets/Figure5_operation_sequence.pdf": {
-      "sha256": "a1345e3c27d8f6ddabe68166a5b25da37a48b0b6ebe508d51c46918ed7aabf1f",
-      "bytes": 194046
+      "sha256": "f050d5315d12cff3ef2ccf3a8b93607ec44a5675e20443f1123de8c84e00be98",
+      "bytes": 218962
     }
   }
 }

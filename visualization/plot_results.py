@@ -1035,7 +1035,7 @@ def export_baseline_latex(
             )
         )
         steps = _number(row, "Average Steps", minimum=0.0)
-        body.append(f"{method} & {success} & {recovery} & {steps:.1f} \\\\")
+        body.append(f"{method} & {success} & {recovery} & {steps:.2f} \\\\")
     content = "\n".join(
         [
             r"\begin{table}[t]",

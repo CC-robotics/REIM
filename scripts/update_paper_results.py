@@ -995,7 +995,7 @@ def _row_macros(prefix: str, row: Mapping[str, Any]) -> dict[str, str]:
             _float(row, "Success CI Lower"), _float(row, "Success CI Upper")
         ),
         f"Final{prefix}Intervention": _percentage(intervened / episodes),
-        f"Final{prefix}Steps": f"{_float(row, 'Average Steps'):.1f}",
+        f"Final{prefix}Steps": f"{_float(row, 'Average Steps'):.2f}",
     }
     if attempts:
         values[f"Final{prefix}Recovery"] = _percentage(
@@ -1098,7 +1098,7 @@ def _build_macro_values(
             if attempts
             else r"\NotApplicable"
         )
-        values[f"Ablation{variant}Steps"] = f"{_float(row, 'Average Steps'):.1f}"
+        values[f"Ablation{variant}Steps"] = f"{_float(row, 'Average Steps'):.2f}"
 
     for method, prefix in (
         ("ACT", "FinalACT"),
