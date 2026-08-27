@@ -281,7 +281,7 @@ def create_top_tier_framework_figure(
     )
     ax.text(
         5.025, 7.35,
-        "Prospective Failure Estimator\n$p_t = P(\\text{fail} \\in [t, t+10] \\mid s_{t-9:t})$",
+        "Recurrent Failure-Risk Monitor\n$p_t = P(\\text{fail} \\in [t, t+10] \\mid s_{t-9:t})$",
         fontsize=6.5, weight="bold", color=C_AMBER_TEXT, ha="center", va="center", zorder=5
     )
     trig_box = FancyBboxPatch(
@@ -301,7 +301,7 @@ def create_top_tier_framework_figure(
     )
     ax.text(
         5.025, 5.85,
-        "• Pre-grasp early warning\n• 98.9% triggered before object lift\n• Identifies recoverable boundary",
+        "• Pre-grasp risk triggers\n• 98.9% triggered before object lift\n• Identifies recoverable boundary",
         fontsize=6.1, color="#475569", ha="center", va="center", zorder=5
     )
     ax.text(
@@ -522,12 +522,12 @@ def create_top_tier_framework_figure(
     )
     ax.text(
         5.45, 1.82,
-        "Causal Recurrent Risk Estimator",
+        "Causal Recurrent Risk Monitor",
         fontsize=6.5, weight="bold", color=C_AMBER_TEXT, ha="center", zorder=5
     )
     ax.text(
         5.45, 1.45,
-        "• Sliding window $[s_{t-9}, \\dots, s_t]$\n• Prospective failure risk estimation\n• Strictly causal (no future observations)",
+        "• Sliding window $[s_{t-9}, \\dots, s_t]$\n• Failure risk within the next 10 steps\n• Strictly causal (no future observations)",
         fontsize=5.8, color="#92400E", ha="center", va="center", zorder=5
     )
     ax.text(

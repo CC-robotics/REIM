@@ -444,9 +444,9 @@ than \FinalRLRecoveryIntervention{} of episodes (655 versus 731 of 1,000).
 This corresponds to \FinalREIMFewerIntervenedEpisodes{} fewer intervened
 episodes and a
 \FinalREIMInterventionReductionVsRL{} relative burden reduction. Thus the
-frozen LSTM gate Pareto-dominates this simulator-privileged heuristic in the
-primary CRN benchmark; the paired gate audit below tests whether this persists
-at matched burden.
+frozen LSTM gate outperforms this simulator-privileged heuristic in the
+primary CRN benchmark; the paired gate audit below tests whether the advantage
+persists at matched burden.
 
 From no disturbance to the strongest condition, REIM changes from
 \FinalREIMSuccessAtZeroNoise{} to \FinalREIMSuccessAtFortyNoise{}, while ACT
@@ -684,6 +684,10 @@ $p=\GateTauSeventeenFiveP$.
 A shared task-conditioned instantiation additionally defines a known-task
 MT10/MT50 breadth test whose official-clean evidence is kept separate from the
 task-universal disturbance extension.
+On the clean known-task conditions the learned gate is statistically level
+with the semantic heuristic and the heuristic is slightly ahead, so the gate's
+advantage appears at higher disturbance rather than as a universal improvement
+over the heuristic.
 The captured distribution is approximately 99\% pre-grasp/early correction,
 so the evidence supports selective simulated failure prevention and recovery,
 not general post-drop repair, visual perception, sim-to-real transfer, or a
