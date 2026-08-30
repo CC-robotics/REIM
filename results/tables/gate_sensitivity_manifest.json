@@ -9,7 +9,8 @@
     0.125,
     0.15,
     0.175,
-    0.2
+    0.2,
+    0.6
   ],
   "crn_episode_specifications_identical": true,
   "episode_bank_sha256": "bce931c8f7f4b2ca6d96ac63f5e3bd3c7b1a2d9a694728801ff6b1a12baf8802",
@@ -24,15 +25,17 @@
     "results\\tables\\gate_calibration_tau0175.csv": "a4d0eb71539dd6e3f80cd686e4d9ea2a2c5676b716b75e7ec2826f4eaeac3ffb",
     "results\\tables\\gate_calibration_tau0175_episodes.csv": "1253dc77cf135f0a7bfaac4f4d549eefad557f49b9458d4af43f55f558ad6f57",
     "results\\tables\\gate_calibration_tau020.csv": "7394813c002e4717a98819f291f96028d60c4adc01725f32678a95aa8bc51621",
-    "results\\tables\\gate_calibration_tau020_episodes.csv": "f55240326f58743a4341204ce8cb8cbaa67f3d089dd50bc86a389080c816687f"
+    "results\\tables\\gate_calibration_tau020_episodes.csv": "f55240326f58743a4341204ce8cb8cbaa67f3d089dd50bc86a389080c816687f",
+    "results\\tables\\gate_calibration_tau060.csv": "942956d41a90cb8a41d9ac93de6dce2bc983a33c968cc73452180524fcd6f920",
+    "results\\tables\\gate_calibration_tau060_episodes.csv": "9d5b1f9b2d994fe9ab4f406d674d2fe4e4a46004e394b65a755b2c9b3a3a63fa"
   },
   "matched_gate_audit": {
     "path": "results\\tables\\gate_matched_comparison.json",
     "sha256": "f73fc58fc949729bb8434d20270417a3a0ba9e07f7ce12dcf302c6c004118e06"
   },
   "outputs": {
-    "results\\tables\\gate_sensitivity.csv": "2ba0ce1e68e519d82c552ba9e3bd9523f7d3f4e013a667c181b68994ef13f5aa",
-    "results\\figures\\gate_sensitivity.png": "eb838daf00f51da6fed95e445c95aec4b5b58e31a7125b4ca46cd4fde7fe88cf",
-    "results\\figures\\gate_sensitivity.pdf": "78e4b3de31c06f8c3aa0e27a57c0d7beea05227dc05c2f4ebb0526c7161c8f4f"
+    "results\\tables\\gate_sensitivity.csv": "f7bb525f5a45e6f500c31c1c7a365e51b366b571b2b742baf84fca556f6490b0",
+    "results\\figures\\gate_sensitivity.png": "4cb2aca1f3cdb2d9c35a13b02f224df110b9ab3b81193c1192f05d61c6df519d",
+    "results\\figures\\gate_sensitivity.pdf": "dbd26c69be7336b3175b5db6b63b5e061f7ec1500c9f52f7308010fff74d9103"
   }
 }

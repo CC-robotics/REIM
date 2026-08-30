@@ -30,6 +30,7 @@ THRESHOLD_FILES = {
     0.150: "gate_calibration_tau015.csv",
     0.175: "gate_calibration_tau0175.csv",
     0.200: "gate_calibration_tau020.csv",
+    0.600: "gate_calibration_tau060.csv",
 }
 
 
@@ -308,6 +309,7 @@ def _plot(
         0.150: ((10, -20), "left"),
         0.175: ((-10, -22), "right"),
         0.200: ((10, -22), "left"),
+        0.600: ((10, 8), "left"),
     }
     for x_value, y_value, threshold in zip(
         burden, success, thresholds, strict=True
@@ -322,9 +324,10 @@ def _plot(
             color=C_GRAY,
             ha=alignment,
         )
+    frozen_index = thresholds.index(0.2)
     axis.scatter(
-        [burden[-1]],
-        [success[-1]],
+        [burden[frozen_index]],
+        [success[frozen_index]],
         s=140,
         facecolors="none",
         edgecolors=C_BLUE,
@@ -388,8 +391,8 @@ def _plot(
     axis.set(
         xlabel="Episodes with recovery intervention (%)",
         ylabel="Task success (%)",
-        xlim=(59, 101.5),
-        ylim=(83.5, 98.9),
+        xlim=(18, 101.5),
+        ylim=(73, 98.9),
     )
     axis.set_title(
         "Post-freeze gate sensitivity",

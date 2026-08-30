@@ -472,6 +472,11 @@ $\tau_{\mathrm{on}}=0.175$, its intervention rate
 \GateTauSeventeenFiveGainVsHeuristicCI, $p=\GateTauSeventeenFiveP$). This
 post-freeze burden-matched comparison supports the learned gate's utility but
 is not substituted for the primary benchmark or used for threshold selection.
+At the high-threshold end ($\tau_{\mathrm{on}} = 0.60$), success drops to
+77.0\% and the post-intervention recovery rate collapses to 2.1\%: the
+detector rarely fires before the episode has already deteriorated, so the
+recovery option arrives too late to help. The sweep therefore supports the
+frozen 0.20 operating point rather than a higher trigger.
 
 \begin{figure*}[t]
   \centering
@@ -491,14 +496,15 @@ is not substituted for the primary benchmark or used for threshold selection.
 \begin{figure}[t]
   \centering
   \PaperGraphic{Figure4_gate_sensitivity}{0.98\columnwidth}{%
-  Success--intervention sensitivity across five LSTM thresholds.}
+  Success--intervention sensitivity across six LSTM thresholds.}
   \caption{Post-freeze gate sensitivity on a separate set of 200 paired
   Meta-World seeds at 20\% disturbance. Each point is labeled by
   $\tau_{\mathrm{on}}$; the green cross is the semantic heuristic evaluated on
   the same serialized CRN bank. The circled 0.20 operating point remains the
-  frozen primary gate, while the dashed comparison at 0.175 exposes matched
-  intervention burden. This diagnostic was not used for model or threshold
-  selection.}
+  frozen primary gate, the dashed comparison at 0.175 exposes matched
+  intervention burden, and the $\tau_{\mathrm{on}} = 0.60$ endpoint shows that
+  very late triggers forfeit most of the recovery benefit. This diagnostic
+  was not used for model or threshold selection.}
   \label{fig:gate-sensitivity}
 \end{figure}
 
