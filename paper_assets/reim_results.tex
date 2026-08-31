@@ -5,7 +5,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{graphicx}
-\usepackage{float}
+\usepackage{placeins}
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
@@ -628,7 +628,7 @@ episodes. Full REIM reaches \AblationDSuccess{} while intervening in only
 separate burden-matched audit in Fig.~\ref{fig:gate-sensitivity} makes the gate
 comparison under nearly equal intervention rates.
 
-\begin{figure}[H]
+\begin{figure}[t]
   \centering
   \PaperGraphic{Figure3_final_ablation}{0.98\columnwidth}{%
   Recovery and gate ablation on paired simulated episodes.}
@@ -785,6 +785,7 @@ progress; failed episodes exhaust the recovery budget without re-grasp.
   \label{fig:recovery-timelines}
 \end{figure*}
 
+\FloatBarrier
 \balance
 \bibliographystyle{IEEEtran}
 \bibliography{reim_refs}
