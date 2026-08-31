@@ -16,9 +16,9 @@ ablation, and qualitative operation sequence. A separate shared-policy MT10/MT50
 protocol tests breadth across known task families. Its official-clean condition
 is kept separate from a task-universal action/observation-noise extension. The
 multi-task paper-results gate has passed for the frozen configuration
-(detector threshold 0.73/0.71, release 0.05, patience 10, confirmation bank
-20266010/20266050), so the audited MT10/MT50 numbers are reported below and
-in the compiled manuscript.
+(detector threshold 0.65/0.64, precision-floor 0.60 calibration, release
+0.05, patience 10, confirmation bank 20266010/20266050), so the audited
+MT10/MT50 numbers are reported below and in the compiled manuscript.
 
 The repository contains data collection, resumable training, closed-loop
 evaluation, robustness and ablation studies, plots, LaTeX tables, checkpoints,
