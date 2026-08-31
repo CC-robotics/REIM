@@ -31,7 +31,7 @@ function Run-Cell($bench, $benchseed, $thr, $condition, $noise) {
     --log-file "results/logs/confirmation_202660xx/${tag}.log" --resume
 }
 
-Run-Cell "MT10" 20266010 0.73 "robustness_noise_00" 0.0
-Run-Cell "MT50" 20266050 0.71 "robustness_noise_00" 0.0
+Run-Cell "MT10" 20266010 0.65 "robustness_noise_00" 0.0
+Run-Cell "MT50" 20266050 0.64 "robustness_noise_00" 0.0
 
 Write-Host "NOISE-00 SUPPLEMENT DONE"

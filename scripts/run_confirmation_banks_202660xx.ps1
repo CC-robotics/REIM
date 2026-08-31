@@ -4,10 +4,10 @@
 #
 # Frozen configuration (no more parameter changes):
 #   - release 0.05 / patience 10 (robustness-first operating point)
-#   - detector threshold per precision-floor 0.65 caliber:
-#       MT10 canonical horizon=25 -> 0.73 ; MT50 -> 0.71
-#     (floor-0.60 numbers are all archived; if the professor picks 0.60,
-#      change the two thresholds back to 0.65/0.64 and re-run)
+#   - detector threshold per precision-floor 0.60 caliber (2026-08-30, per
+#     professor's instruction "标定那个可以改为0.60"):
+#       MT10 canonical horizon=25 -> 0.65 ; MT50 -> 0.64
+#     (floor-0.65 results archived in confirmation_202660xx_floor065/)
 #   - 4 methods (mlp_bc / act / heuristic_recovery / reim) x 5 conditions
 #     x 50 episodes per task
 #   - MT10: 10,000 episodes; MT50: 50,000 episodes (tens of GPU-hours)
@@ -46,18 +46,18 @@ function Run-Cell($bench, $benchseed, $thr, $condition, $noise) {
     --log-file "results/logs/confirmation_202660xx/${tag}.log" --resume
 }
 
-# MT10 confirmation bank 20266010 (threshold 0.73)
-Run-Cell "MT10" 20266010 0.73 "official_clean" 0.0
-Run-Cell "MT10" 20266010 0.73 "robustness_noise_10" 0.1
-Run-Cell "MT10" 20266010 0.73 "robustness_noise_20" 0.2
-Run-Cell "MT10" 20266010 0.73 "robustness_noise_30" 0.3
-Run-Cell "MT10" 20266010 0.73 "robustness_noise_40" 0.4
+# MT10 confirmation bank 20266010 (threshold 0.65, precision-floor 0.60)
+Run-Cell "MT10" 20266010 0.65 "official_clean" 0.0
+Run-Cell "MT10" 20266010 0.65 "robustness_noise_10" 0.1
+Run-Cell "MT10" 20266010 0.65 "robustness_noise_20" 0.2
+Run-Cell "MT10" 20266010 0.65 "robustness_noise_30" 0.3
+Run-Cell "MT10" 20266010 0.65 "robustness_noise_40" 0.4
 
-# MT50 confirmation bank 20266050 (threshold 0.71)
-Run-Cell "MT50" 20266050 0.71 "official_clean" 0.0
-Run-Cell "MT50" 20266050 0.71 "robustness_noise_10" 0.1
-Run-Cell "MT50" 20266050 0.71 "robustness_noise_20" 0.2
-Run-Cell "MT50" 20266050 0.71 "robustness_noise_30" 0.3
-Run-Cell "MT50" 20266050 0.71 "robustness_noise_40" 0.4
+# MT50 confirmation bank 20266050 (threshold 0.64, precision-floor 0.60)
+Run-Cell "MT50" 20266050 0.64 "official_clean" 0.0
+Run-Cell "MT50" 20266050 0.64 "robustness_noise_10" 0.1
+Run-Cell "MT50" 20266050 0.64 "robustness_noise_20" 0.2
+Run-Cell "MT50" 20266050 0.64 "robustness_noise_30" 0.3
+Run-Cell "MT50" 20266050 0.64 "robustness_noise_40" 0.4
 
 Write-Host "ALL 10 CONFIRMATION CELLS DONE"

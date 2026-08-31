@@ -539,34 +539,40 @@ task-vocabulary/task-bank provenance. Numbers below are task-macro success
 from
 `results/tables/confirmation_202660xx/mt{10,50}_confirm_{official_clean,robustness_noise_*}_summary.json`
 (confirmation bank seed 20266010 MT10 / 20266050 MT50, 50 episodes per task,
-frozen detector threshold 0.73 MT10 / 0.71 MT50, release 0.05, patience 10);
-the same values populate `paper_assets/multitask_results.tex`.
+frozen detector threshold 0.65 MT10 / 0.64 MT50 -- precision-floor 0.60
+calibration per canonical horizon 25; the earlier precision-floor 0.65
+calibration (thresholds 0.73/0.71) is archived under
+`results/tables/confirmation_202660xx_floor065/` -- release 0.05,
+patience 10); the same values populate `paper_assets/multitask_results.tex`.
 
 Official clean condition:
 
 | Benchmark | MT-MLP BC | MT-ACT | Heuristic recovery | MT-REIM |
 |---|---:|---:|---:|---:|
-| MT10 | 94.2% | 97.4% | **98.0%** (23.4% interv.) | 97.4% (36.4% interv.) |
-| MT50 | 81.5% | 91.6% | **94.0%** (17.8% interv.) | 92.3% (20.2% interv.) |
+| MT10 | 94.2% | 97.4% | **98.0%** (23.4% interv.) | 97.6% (46.0% interv.) |
+| MT50 | 81.5% | 91.6% | **94.0%** (17.8% interv.) | 92.2% (28.6% interv.) |
 
 Robustness extension (task-universal action/observation noise; non-official):
 
 | Noise | MT10 REIM | MT10 ACT | MT10 Heuristic | MT50 REIM | MT50 ACT | MT50 Heuristic |
 |---|---:|---:|---:|---:|---:|---:|
-| 0.0 | 97.4% | 97.4% | **98.0%** | 92.3% | 91.6% | **94.0%** |
-| 0.1 | 35.8% | 5.2% | **49.8%** | 28.3% | 1.8% | **35.8%** |
-| 0.2 | **50.8%** | 6.0% | 50.6% | **36.4%** | 1.7% | 36.0% |
-| 0.3 | **57.2%** | 5.8% | 49.0% | **42.4%** | 1.7% | 35.0% |
-| 0.4 | **59.4%** | 6.0% | 46.4% | **46.4%** | 2.0% | 34.0% |
+| 0.0 | 97.6% | 97.4% | **98.0%** | 92.2% | 91.6% | **94.0%** |
+| 0.1 | 45.4% | 5.2% | **49.8%** | 34.9% | 1.8% | **35.8%** |
+| 0.2 | **53.0%** | 6.0% | 50.6% | **41.3%** | 1.7% | 36.0% |
+| 0.3 | **58.4%** | 5.8% | 49.0% | **46.9%** | 1.7% | 35.0% |
+| 0.4 | **63.0%** | 6.0% | 46.4% | **49.5%** | 2.0% | 34.0% |
 
 On clean tasks the heuristic gate edges out REIM on the confirmation bank
-(MT10 98.0% vs 97.4%; MT50 94.0% vs 92.3%), while REIM matches MT-ACT on
-MT10 (97.4%) and stays significantly ahead of MT-ACT on MT50 (+0.6 pp,
-95% CI [+0.2, +1.1]). Under noise the ACT policy collapses to single digits.
-At noise 0.1 the heuristic gate leads; at noise 0.2 REIM is statistically
-level with it; from noise 0.3 upward REIM leads both baselines (MT10 57.2%
-vs 49.0% and MT50 42.4% vs 35.0% at 0.3; MT10 59.4% vs 46.4% and MT50
-46.4% vs 34.0% at 0.4).
+(MT10 98.0% vs 97.6%; MT50 94.0% vs 92.2%), while REIM is narrowly ahead of
+MT-ACT on MT10 (+0.2 pp, 95% CI [+0.0, +0.6]) and stays significantly ahead
+of MT-ACT on MT50 (+0.6 pp, 95% CI [+0.0, +1.2]). Under noise the ACT policy
+collapses to single digits. At noise 0.1 the heuristic gate leads on MT10
+(49.8% vs 45.4%) and is statistically indistinguishable from REIM on MT50
+(35.8% vs 34.9%); at noise 0.2 REIM is statistically level with the
+heuristic gate on MT10 (53.0% vs 50.6%) but already leads significantly on
+MT50 (41.3% vs 36.0%); from noise 0.3 upward REIM leads both baselines on
+both benchmarks (MT10 58.4% vs 49.0% and MT50 46.9% vs 35.0% at 0.3; MT10
+63.0% vs 46.4% and MT50 49.5% vs 34.0% at 0.4).
 
 Recovery occupancy (share of episode steps spent in recovery) is reported as a
 first-class metric alongside success, from the gate-generated
@@ -576,11 +582,11 @@ first-class metric alongside success, from the gate-generated
 
 | Noise | MT10 REIM occ. | MT10 Heuristic occ. | MT50 REIM occ. | MT50 Heuristic occ. |
 |---|---:|---:|---:|---:|
-| clean | 14.3% | 14.2% | 11.0% | 10.6% |
-| 0.1 | 26.9% | 49.3% | 36.9% | 60.9% |
-| 0.2 | 46.2% | 48.8% | 49.2% | 60.8% |
-| 0.3 | 55.7% | 48.4% | 56.6% | 60.3% |
-| 0.4 | 61.7% | 47.7% | 62.7% | 60.0% |
+| clean | 18.7% | 14.2% | 16.8% | 10.6% |
+| 0.1 | 37.4% | 49.3% | 45.1% | 60.9% |
+| 0.2 | 52.6% | 48.8% | 55.4% | 60.8% |
+| 0.3 | 60.7% | 48.4% | 61.8% | 60.3% |
+| 0.4 | 69.2% | 47.7% | 67.4% | 60.0% |
 
 The robustness gain comes with a measurable occupancy cost; per-condition
 segment and rescued/harmed counts are reported alongside success in the

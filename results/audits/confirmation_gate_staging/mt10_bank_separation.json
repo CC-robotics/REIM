@@ -240,9 +240,9 @@
       "unique_episode_seeds": 200
     },
     "final_evaluation": {
-      "audit_descriptor_sha256": "556b40690989bb0a2b93fabc316a4ebed01f6e3a216c1a92844bfb3f47410e6f",
+      "audit_descriptor_sha256": "1400a078881e46674fa2dddda2dd49e96e76a3e6e6da54e8997a6c94da27ac22",
       "benchmark_seed": 20266010,
-      "embedded_fingerprint_sha256": "79eda4dba6e3733523d0f49a685b35ef25425362fe7e15a133be70c69dfc3deb",
+      "embedded_fingerprint_sha256": "ebc4d2febf64d80e0f442a70a9dec192a8feb7eef9d6e0a50ecb288cf5be3837",
       "materialized_records": 500,
       "materialized_task_payloads": 500,
       "reserved_task_payloads": 500,
@@ -251,8 +251,8 @@
         "results/tables/confirmation_gate_staging/mt10_clean_episodes.csv"
       ],
       "source_sha256": [
-        "d305055d2fa4e2b3f5b8f018b6040a184654adb463743c7d96db22dc92762b16",
-        "bde54a76d9267fb0f218e67f69080216cfafe15bd943f8309f3a32e2d46ad772"
+        "8ad95ca52e3c107bce4c35424eabbb14a7e98f456491811ab2ea583577c212cd",
+        "1bcd3ee83655b3df0e26bbda6151d782a392fb38dfb71f3778f3d5c3f562a2a8"
       ],
       "task_bank_content_sha256": "8b56f2be5497cdd97a6d0095838792c32bcdf003d59f8a9f0f25e64c8a115d84",
       "unique_episode_seeds": 500

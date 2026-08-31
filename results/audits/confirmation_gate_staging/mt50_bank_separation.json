@@ -240,9 +240,9 @@
       "unique_episode_seeds": 1000
     },
     "final_evaluation": {
-      "audit_descriptor_sha256": "9b5c01880227262330ff4f0481d8e9bfdc6e0d1c121e51789e6a9c410ddc01f3",
+      "audit_descriptor_sha256": "d8a7716b6febe37f62aa17da95b8bdb18e64abb1a9066b4e9dc38e23e5566e1f",
       "benchmark_seed": 20266050,
-      "embedded_fingerprint_sha256": "ce2fd1e496d6b2d2a5810d52a53eb0486cd7d1f87c98c15d9b4507b9fc76e9bc",
+      "embedded_fingerprint_sha256": "bb5bd44b399afe7f8e8b5b75b4ad1ff850421bdd077983ebe75355c0ea97b0d5",
       "materialized_records": 2500,
       "materialized_task_payloads": 2500,
       "reserved_task_payloads": 2500,
@@ -251,8 +251,8 @@
         "results/tables/confirmation_gate_staging/mt50_clean_episodes.csv"
       ],
       "source_sha256": [
-        "e14a62ad281516a214f72ac6512d79e6d119c6fba6ee7b7627cf9188e4bcbb5e",
-        "307e245c8632ccb26a9e7fd16670a860c3a8bff82de60ff515cecb1490a6ecec"
+        "57cb9d87d24e9f42d8af32fa3ac8b79654c5902cf97a767cf84ef63dccbad163",
+        "1629d1314a59a2fdee68d2e4401eff3798899eec7b16a860dad59cfb087d357f"
       ],
       "task_bank_content_sha256": "08455e6ef4e0756039cd8c2af03813bda1eaf7d3a88d75b43f4d489dca90df78",
       "unique_episode_seeds": 2500

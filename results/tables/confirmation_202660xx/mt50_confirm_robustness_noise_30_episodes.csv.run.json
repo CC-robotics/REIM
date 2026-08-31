@@ -11,7 +11,7 @@
       "recovery": "35b1235ef7cbeb1fd5b2165714c56de90cfe4d4e5ae028710bde4c277c4c8ba3"
     },
     "condition": "robustness_noise_30",
-    "detector_threshold": 0.71,
+    "detector_threshold": 0.64,
     "episode_seed_base": 42,
     "episodes_per_task": 50,
     "evaluation_schema_version": "reim-multitask-evaluation-v2",
@@ -142,6 +142,6 @@
     ],
     "task_vocabulary_sha256": "d2cf28d3fa903c33d8863c57714eab276f8f67612053041b9f51197fcfeec475"
   },
-  "run_fingerprint": "7d17a20f8a6d544693739d4fa0a51bf15723b8df9cbf24a6a8b7065c64b1c6cc",
+  "run_fingerprint": "5da10e35fb0f4fcf2016886d5c4910363ba986dcaa507d61a36d834f84d23249",
   "schema_version": "reim-multitask-evaluation-run-v1"
 }

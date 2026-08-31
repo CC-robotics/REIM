@@ -93,9 +93,9 @@ for label in ["clean", "0.1", "0.2", "0.3", "0.4"]:
     if row is None:
         errors.append(f"occupancy row {label}: expected values {vals} not found together")
 
-# 3b) occupancy spot-check (confirmation MT10 noise 0.4: REIM 61.7%, heuristic 47.7%)
+# 3b) occupancy spot-check (confirmation MT10 noise 0.4: REIM 69.2%, heuristic 47.7%)
 spot = dict(zip(["reim", "heuristic_recovery"], _occ("0.4")[:2]))
-for who, expect in [("reim", 61.7), ("heuristic_recovery", 47.7)]:
+for who, expect in [("reim", 69.2), ("heuristic_recovery", 47.7)]:
     v = float(spot[who].rstrip("%"))
     if abs(v - expect) > 0.05 or f"{expect:.1f}%" not in section:
         errors.append(f"occupancy {who}: csv={v:.2f}% vs README={expect:.1f}%")
