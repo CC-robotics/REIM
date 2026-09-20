@@ -59,6 +59,62 @@ def _atomic_torch_save(payload: dict[str, Any], path: Path) -> None:
     temporary.replace(path)
 
 
+def _streaming_state_statistics(
+    windows: np.ndarray,
+    lengths: np.ndarray,
+    indices: np.ndarray,
+    *,
+    chunk_size: int = 8192,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute valid-state normalization without materializing all rows.
+
+    MT50 contains millions of valid history rows.  The previous advanced
+    indexing expression created a multi-gigabyte float32 copy and ``std``
+    then requested another float64 copy.  This uses Chan's parallel variance
+    update over bounded chunks while preserving float64 accumulation.
+    """
+
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be positive")
+    selected = np.asarray(indices, dtype=np.int64).reshape(-1)
+    if len(selected) == 0:
+        raise ValueError("normalization requires at least one training window")
+    feature_dim = int(windows.shape[-1])
+    sequence_length = int(windows.shape[1])
+    count = 0
+    mean = np.zeros(feature_dim, dtype=np.float64)
+    m2 = np.zeros(feature_dim, dtype=np.float64)
+
+    time_indices = np.arange(sequence_length)[None, :]
+    for start in range(0, len(selected), chunk_size):
+        batch_indices = selected[start : start + chunk_size]
+        batch_windows = windows[batch_indices]
+        batch_mask = time_indices < lengths[batch_indices, None]
+        values = np.asarray(batch_windows[batch_mask], dtype=np.float64)
+        batch_count = int(len(values))
+        if batch_count == 0:
+            continue
+        batch_mean = values.mean(axis=0, dtype=np.float64)
+        centered = values - batch_mean
+        batch_m2 = np.einsum("ij,ij->j", centered, centered, dtype=np.float64)
+        if count == 0:
+            mean = batch_mean
+            m2 = batch_m2
+            count = batch_count
+            continue
+        delta = batch_mean - mean
+        combined = count + batch_count
+        mean += delta * (batch_count / combined)
+        m2 += batch_m2 + delta * delta * (count * batch_count / combined)
+        count = combined
+    if count == 0:
+        raise ValueError("normalization found no valid state rows")
+    variance = np.maximum(m2 / count, 0.0)
+    return mean.astype(np.float32), np.maximum(
+        np.sqrt(variance).astype(np.float32), 1e-6
+    )
+
+
 def classification_metrics(
     labels: np.ndarray,
     probabilities: np.ndarray,
@@ -287,12 +343,10 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         seed,
         labels=data.labels,
     )
-    time_indices = np.arange(sequence_length)[None, :]
-    valid_mask = time_indices < data.lengths[train_indices, None]
-    valid_states = data.windows[train_indices][valid_mask]
-    state_mean = valid_states.mean(axis=0, dtype=np.float64).astype(np.float32)
-    state_std = np.maximum(
-        valid_states.std(axis=0, dtype=np.float64).astype(np.float32), 1e-6
+    state_mean, state_std = _streaming_state_statistics(
+        data.windows,
+        data.lengths,
+        train_indices,
     )
 
     def make_dataset(indices: np.ndarray) -> TensorDataset:

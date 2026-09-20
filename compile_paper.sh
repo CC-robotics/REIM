@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-# Compile the measured REIM paper assets into paper_assets/reim_results.pdf.
+# Compile the current IEEE manuscript and publish the named submission PDF.
 
 set -Eeuo pipefail
 
 PROJECT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-SOURCE="$PROJECT_DIR/paper_assets/reim_results.tex"
-OUTPUT="$PROJECT_DIR/paper_assets/reim_results.pdf"
+SOURCE_DIR="$PROJECT_DIR/manuscript"
+SOURCE="$SOURCE_DIR/main.tex"
+BUILD_PDF="$SOURCE_DIR/main.pdf"
+OUTPUT_DIR="$PROJECT_DIR/output/pdf"
+OUTPUT="$OUTPUT_DIR/REIM_main_four_seed.pdf"
 TECTONIC_VERSION="0.16.9"
 TECTONIC_SHA256="60b13a0826ae7ad9ce34b4a2df06bff2cfcfa6dda8a915477c0cbb84e1a4a902"
 LOCAL_ENGINE="$PROJECT_DIR/.tools/tectonic/tectonic"
+LOCAL_ENGINE_WINDOWS="$PROJECT_DIR/.tools/tectonic/tectonic.exe"
 
 [[ -f "$SOURCE" ]] || {
   printf 'Missing %s; generate paper assets first.\n' "$SOURCE" >&2
@@ -19,6 +23,8 @@ if command -v tectonic >/dev/null 2>&1; then
   ENGINE="$(command -v tectonic)"
 elif [[ -x "$LOCAL_ENGINE" ]]; then
   ENGINE="$LOCAL_ENGINE"
+elif [[ -x "$LOCAL_ENGINE_WINDOWS" ]]; then
+  ENGINE="$LOCAL_ENGINE_WINDOWS"
 else
   [[ "$(uname -s)" == "Linux" && "$(uname -m)" == "x86_64" ]] || {
     printf 'Install Tectonic manually for this platform.\n' >&2
@@ -37,11 +43,13 @@ else
 fi
 
 (
-  cd "$PROJECT_DIR/paper_assets"
-  "$ENGINE" --keep-logs reim_results.tex
+  cd "$SOURCE_DIR"
+  "$ENGINE" --keep-logs main.tex
 )
-[[ -s "$OUTPUT" ]] || {
-  printf 'LaTeX compilation did not produce %s\n' "$OUTPUT" >&2
+[[ -s "$BUILD_PDF" ]] || {
+  printf 'LaTeX compilation did not produce %s\n' "$BUILD_PDF" >&2
   exit 1
 }
+mkdir -p "$OUTPUT_DIR"
+cp "$BUILD_PDF" "$OUTPUT"
 printf 'Compiled %s\n' "$OUTPUT"

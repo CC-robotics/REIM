@@ -1,6 +1,6 @@
 # REIM
 
-**Recovery-Enhanced Imitation Learning for Robust Embodied Robot
+**Recovery-Enhanced Imitation Learning for Robust Multi-Task Robot
 Manipulation**
 
 REIM is an end-to-end research implementation for studying failure-aware
@@ -334,10 +334,10 @@ robustness extension, not official Meta-World scores. Fresh-task retry is kept
 outside the primary multi-task comparison.
 
 Partial checkpoints or training curves are engineering artifacts, not paper
-evidence. `paper_assets/Table_multitask_clean.tex` is populated through
-`paper_assets/multitask_results.tex`, which sets `\REIMMultiTaskResultstrue`
-only after the independent publication gate validated the complete MT10 and
-MT50 clean and disturbed episode records (input manifest
+evidence. The current figure builders read the frozen MT10 and MT50
+confirmation records directly, while `manuscript/evidence_map.md` records the
+source artifact for each reported claim. The publication gate validated the
+complete clean and disturbed episode records (input manifest
 `d803829126c99866430cdc262c4aa97491a2ab7b345d85e63a2a307097212834`).
 
 ### Isolated multitask smoke run (CI)
@@ -543,7 +543,7 @@ frozen detector threshold 0.65 MT10 / 0.64 MT50 -- precision-floor 0.60
 calibration per canonical horizon 25; the earlier precision-floor 0.65
 calibration (thresholds 0.73/0.71) is archived under
 `results/tables/confirmation_202660xx_floor065/` -- release 0.05,
-patience 10); the same values populate `paper_assets/multitask_results.tex`.
+patience 10); the same values populate the current paper figures and tables.
 
 Official clean condition:
 
@@ -648,54 +648,37 @@ every seed.
 
 ## Paper assets
 
-`visualization/plot_results.py` creates:
+The seven-page IEEE draft uses four numbered figures:
 
-- `results/figures/framework_architecture.png`
-- `results/figures/success_comparison.png`
-- `results/figures/robustness.png`
-- `results/figures/confusion_matrix.png`
-- `results/figures/recovery_examples.png`
-- `results/figures/ablation.png`
-- `results/figures/gate_sensitivity.png`
-- `results/figures/recovery_operation_sequence.png`
-- `paper_assets/Table1_baseline.tex`
-- `paper_assets/Table2_ablation.tex`
-- `paper_assets/Table3_component_diagnostics.tex`
-- `paper_assets/Table_multitask_clean.tex` (populated via
-  `paper_assets/multitask_results.tex` after the publication gate passed)
-- `paper_assets/Figure1_final_framework.png`
-- `paper_assets/Figure2_final_results.png`
-- `paper_assets/Figure3_detector.png`
-- `paper_assets/Figure3_final_ablation.png`
-- `paper_assets/Figure4_gate_sensitivity.png`
-- `paper_assets/Figure5_operation_sequence.png`
+- `Figure1_v12_overview`: motivation, runtime framework, representative tasks,
+  and the measured MT10/MT50 strong-noise comparison.
+- `Figure2_multitask_robustness`: common MT10/MT50 perturbation sweep.
+- `Figure3_paired_effects`: aggregate success plus paired rescued/harmed
+  episodes under strong perturbation.
+- `Figure4_per_task_analysis`: per-task REIM-versus-heuristic comparison.
 
-Tables use `booktabs`, explicit metric directions, consistent precision, and
-minimal rules. The framework figure uses a closed-loop embodied-AI layout:
-perception/state, ACT action chunking, environment feedback, risk gating,
-recovery, and return to nominal control.
+Each figure is stored as PDF, PNG, and SVG in `paper_assets/` and has a matching
+`build_figure*.py` script. The scripts read frozen confirmation artifacts rather
+than hard-coded illustrative values. Figure 1 uses actual simulator frames; it
+does not depict physical Sawyer hardware.
 
-The multi-task table is structurally present but expands to no LaTeX output
-while `\ifREIMMultiTaskResults` is false. This prevents placeholder macros from
-appearing in the PDF.
-
-`Figure5_operation_sequence` contains frames rendered from one actual
-Meta-World/MuJoCo rollout in this repository: paired ACT failure, LSTM trigger,
-supervised-recovery grasp/lift, transport, and task completion. It is a
-simulator operation sequence, not a photograph of physical Sawyer hardware.
-
-Compile the measured report after generating the plots and tables:
+Compile the current manuscript after generating the figures:
 
 ```bash
 ./compile_paper.sh
 ```
 
-The script uses an installed Tectonic binary or downloads a pinned,
-checksum-verified local Tectonic 0.16.9 release. It compiles
-`paper_assets/reim_results.tex` to:
+On Windows PowerShell, use:
+
+```powershell
+.\compile_paper.ps1
+```
+
+The scripts use an installed Tectonic binary or the repository-local executable
+and compile `manuscript/main.tex` to:
 
 ```text
-paper_assets/reim_results.pdf
+output/pdf/REIM_main_four_seed.pdf
 ```
 
 The full `./run_all.sh` protocol performs this compilation automatically after

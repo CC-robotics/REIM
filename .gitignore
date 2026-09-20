@@ -40,6 +40,38 @@ paper_assets/*.run.xml
 paper_assets/*.synctex.gz
 paper_assets/_minted-*/
 
+# Local manuscript notes and explanatory copies (not submission artifacts)
+manuscript/annotated_copy_zh.tex
+manuscript/annotated_copy_zh.pdf
+manuscript/annotated_copy_zh.log
+manuscript/meeting_brief_zh.md
+output/pdf/REIM_annotated_explained_zh.pdf
+manuscript/main.pdf
+manuscript/unresolved_items.md
+
+# Local manuscript build logs and review previews
+manuscript/*.aux
+manuscript/*.blg
+manuscript/*.log
+_preview_f1_final.png
+tmp/
+
+# Local reading copies and regenerable experiment diagnostics
+_refs/
+results/figures/_frames_backup_az150/
+results/figures/mt50_seed*_detector_confusion.png
+results/figures/mt50_seed*_detector_training.png
+results/figures/mt50_seed*_recovery_training.png
+
+# Per-shard evaluation outputs duplicate the merged local episode banks.
+results/tables/mt50_seed*shard*
+
+# Full per-episode MT50 seed banks and run sidecars stay local. The repository
+# publishes condition summaries, training summaries, and the four-seed table.
+results/tables/mt50_seed*_episodes.csv
+results/tables/mt50_seed*_episodes.csv.run.json
+results/tables/mt50_seed*confirm*_summary.json
+
 # Publish only the frozen models used by the paper. Epoch-by-epoch ACT
 # checkpoints and legacy PPO controls are reproducible but not repository assets.
 checkpoints/*

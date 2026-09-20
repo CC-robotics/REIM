@@ -275,12 +275,20 @@ def _validate_checkpoints(
     *,
     summary_path: Path,
     context: str,
+    allow_method_subset: bool = False,
 ) -> dict[str, dict[str, str]]:
     checkpoint_hashes = protocol.get("checkpoint_sha256")
     records = summary.get("checkpoints")
     if not isinstance(checkpoint_hashes, Mapping) or not isinstance(records, Mapping):
         raise EvaluationShardMergeError(f"{context} lacks checkpoint provenance")
-    expected_names = {"mlp_bc", "act", "detector", "recovery"}
+    if allow_method_subset:
+        # The evaluator requires ACT, detector, and recovery paths for every
+        # run. MLP BC is loaded and recorded only when that method is selected.
+        expected_names = {"act", "detector", "recovery"}
+        if "mlp_bc" in tuple(protocol.get("methods") or ()):
+            expected_names.add("mlp_bc")
+    else:
+        expected_names = {"mlp_bc", "act", "detector", "recovery"}
     if set(checkpoint_hashes) != expected_names or set(records) != expected_names:
         raise EvaluationShardMergeError(
             f"{context} checkpoint set must be exactly {sorted(expected_names)}"
@@ -441,7 +449,12 @@ def _recompute_statistics(
     return aggregates, paired
 
 
-def _validate_shard(summary_path: Path, csv_path: Path) -> ShardEvidence:
+def _validate_shard(
+    summary_path: Path,
+    csv_path: Path,
+    *,
+    allow_method_subset: bool = False,
+) -> ShardEvidence:
     summary_path, summary = _load_json(summary_path, "shard summary")
     csv_path, rows = _load_csv(csv_path, "shard episode CSV")
     context = summary_path.name
@@ -513,7 +526,21 @@ def _validate_shard(summary_path: Path, csv_path: Path) -> ShardEvidence:
         raise EvaluationShardMergeError(
             f"{context} task_ids must be unique and sorted"
         )
-    if tuple(protocol.get("methods") or ()) != tuple(evaluator.DEFAULT_OFFICIAL_METHODS):
+    methods = tuple(protocol.get("methods") or ())
+    canonical_methods = tuple(evaluator.DEFAULT_OFFICIAL_METHODS)
+    if allow_method_subset:
+        canonical_subsequence = tuple(
+            method for method in canonical_methods if method in methods
+        )
+        if (
+            not methods
+            or len(set(methods)) != len(methods)
+            or canonical_subsequence != methods
+        ):
+            raise EvaluationShardMergeError(
+                f"{context} methods must be a non-empty canonical method subset"
+            )
+    elif methods != canonical_methods:
         raise EvaluationShardMergeError(
             f"{context} methods must be the canonical publication method set"
         )
@@ -541,6 +568,7 @@ def _validate_shard(summary_path: Path, csv_path: Path) -> ShardEvidence:
         protocol,
         summary_path=summary_path,
         context=context,
+        allow_method_subset=allow_method_subset,
     )
     completed = _validate_rows(
         rows,
@@ -648,12 +676,20 @@ def merge_evaluation_shards(
     output_csv: Path,
     output_summary: Path,
     overwrite: bool = False,
+    allow_method_subset: bool = False,
 ) -> dict[str, Any]:
     """Validate and merge ``(summary, CSV)`` shard pairs."""
 
     if len(shards) < 2:
         raise EvaluationShardMergeError("at least two evaluation shards are required")
-    evidence = [_validate_shard(Path(summary), Path(csv_path)) for summary, csv_path in shards]
+    evidence = [
+        _validate_shard(
+            Path(summary),
+            Path(csv_path),
+            allow_method_subset=allow_method_subset,
+        )
+        for summary, csv_path in shards
+    ]
     reference = evidence[0]
     benchmark = str(reference.protocol["benchmark"])
     task_count = SUITE_TASK_COUNT[benchmark]
@@ -762,6 +798,7 @@ def merge_evaluation_shards(
         reference.protocol,
         summary_path=reference.summary_path,
         context=reference.summary_path.name,
+        allow_method_subset=allow_method_subset,
     )
     merge_sources = [
         {
@@ -849,6 +886,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-csv", required=True)
     parser.add_argument("--output-summary", required=True)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument(
+        "--allow-method-subset",
+        action="store_true",
+        help=(
+            "permit a non-empty canonical method subset for diagnostic merges; "
+            "the default still requires the full publication method set"
+        ),
+    )
     return parser
 
 
@@ -859,6 +904,7 @@ def main() -> None:
         output_csv=Path(args.output_csv),
         output_summary=Path(args.output_summary),
         overwrite=args.overwrite,
+        allow_method_subset=args.allow_method_subset,
     )
     print(
         json.dumps(
