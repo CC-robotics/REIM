@@ -30,7 +30,8 @@ This file maps every central manuscript claim to local, inspectable evidence. Th
 | Largest task-level positive and negative deltas named in Results | the same episode CSVs, grouped by `task_name` and `method` |
 | Detector precision, recall, ECE, and frozen controller settings in Table II | `results/tables/mt10_detector_threshold.json`; `results/tables/mt50_detector_threshold.json`; `results/tables/confirmation_202660xx/*episodes.csv.run.json` |
 | Clean and strong-noise intervention/recovery-occupancy results reported in Results | `paper_assets/multitask_robustness_statistics.csv` |
-| MT10 seeds 42/43/44 and matched MT50 REIM/heuristic seeds 42/43/44/45 in Table III | `results/tables/mt10_multiseed_summary.csv`; `results/tables/mt50_four_seed_summary.csv`; audited MT50 per-seed REIM and heuristic episode CSVs/summaries under `results/tables/mt50_seed*_confirm_*` and `results/tables/mt50_seed*_heuristic_confirm_*` |
+| MT10 seeds 42/43/44 and matched MT50 REIM/heuristic seeds 42/43/44/45 in Table IV | `results/tables/mt10_multiseed_summary.csv`; `results/tables/mt50_four_seed_summary.csv`; audited MT50 per-seed REIM and heuristic episode CSVs/summaries under `results/tables/mt50_seed*_confirm_*` and `results/tables/mt50_seed*_heuristic_confirm_*` |
+| Validation-selected occupancy-matched heuristic controls (20 episodes/task; tolerance 0.06 for MT10, 0.02 for MT50) and confirmation comparisons | `results/diagnostics/occupancy_match_20260921/mt10_matched_confirmation_comparison.json`; `results/diagnostics/occupancy_match_20260921/mt50_matched_confirmation_comparison.json`; `results/diagnostics/occupancy_match_20260921/mt50_validation20_tol002_selection.json`; `results/diagnostics/occupancy_match_20260921/mt50_validation20_tol002_shard*_episodes.csv`; `scripts/analyze_occupancy_matched_confirmation.py` |
 
 ## Figures used
 

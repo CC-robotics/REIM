@@ -123,8 +123,8 @@ def main() -> None:
     stats = load_and_verify()
     configure_style()
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.16, 2.60), sharex=True, sharey=True)
-    fig.subplots_adjust(left=0.085, right=0.985, bottom=0.20, top=0.78, wspace=0.18)
+    fig, axes = plt.subplots(2, 1, figsize=(3.50, 4.25), sharex=True, sharey=True)
+    fig.subplots_adjust(left=0.19, right=0.97, bottom=0.11, top=0.83, hspace=0.30)
 
     for ax, suite, task_count in zip(axes, SUITES, (10, 50)):
         for method, visual in METHODS.items():
@@ -163,19 +163,20 @@ def main() -> None:
         ax.spines[["top", "right"]].set_visible(False)
         ax.tick_params(colors=MID)
 
-    axes[0].set_ylabel("Task-macro success (%)")
-    fig.supxlabel(r"Noise level $\lambda$", y=0.065, fontsize=9.0)
+    axes[0].tick_params(labelbottom=False)
+    fig.supxlabel(r"Noise level $\lambda$", y=0.025, fontsize=9.0)
+    fig.supylabel("Task-macro success (%)", x=0.025, fontsize=9.0)
 
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
         labels,
         loc="upper center",
-        bbox_to_anchor=(0.54, 0.97),
-        ncol=4,
+        bbox_to_anchor=(0.5, 0.985),
+        ncol=2,
         frameon=False,
         handlelength=2.0,
-        columnspacing=1.35,
+        columnspacing=1.0,
         handletextpad=0.45,
     )
     fig.savefig(OUT.with_suffix(".png"), dpi=400, facecolor="white")

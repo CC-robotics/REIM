@@ -1,10 +1,8 @@
-"""Build Figure 3 from the frozen MT10/MT50 confirmation banks.
+"""Build the single-column paired-outcome Figure 3.
 
-Panel (a) shows task-macro success at the strongest evaluated perturbation.
-Panel (b) shows paired episode outcomes for MT-REIM versus the heuristic-gated
-learned-recovery controller.  No values are entered manually: point estimates,
-paired counts, protocol fields, and sample sizes are verified against the
-publication-facing CSV/JSON artifacts before export.
+The aggregate success comparison already appears in Figure 1(c). This figure
+therefore focuses on the non-redundant paired rescued/harmed decomposition.
+All values are recomputed from the frozen MT10/MT50 confirmation banks.
 """
 
 from __future__ import annotations
@@ -132,22 +130,13 @@ def main() -> None:
     stats, paired = load_and_verify()
     style()
 
-    fig = plt.figure(figsize=(7.16, 2.70), constrained_layout=False)
-    gs = fig.add_gridspec(
-        1,
-        2,
-        width_ratios=(1.38, 1.0),
-        left=0.170,
-        right=0.985,
-        top=0.82,
-        bottom=0.22,
-        wspace=0.34,
-    )
+    fig = plt.figure(figsize=(3.50, 3.50), facecolor="white")
 
-    # Panel (a): direct MT10/MT50 comparison with uncertainty.
-    ax = fig.add_subplot(gs[0, 0])
+    # Panel (a): formal success comparison with uncertainty. Figure 1(c)
+    # remains a deliberately simplified headline view with only two methods.
+    ax = fig.add_axes([0.34, 0.57, 0.63, 0.31])
     y_base = np.arange(len(METHODS))[::-1]
-    offsets = {"MT10": 0.205, "MT50": -0.205}
+    offsets = {"MT10": 0.17, "MT50": -0.17}
     suite_style = {
         "MT10": (COLORS["mt10"], "o"),
         "MT50": (COLORS["mt50"], "D"),
@@ -158,7 +147,7 @@ def main() -> None:
         xerr_lo: list[float] = []
         xerr_hi: list[float] = []
         ys: list[float] = []
-        for y, (method, _) in zip(y_base, METHODS):
+        for y_value, (method, _) in zip(y_base, METHODS):
             row = stats.loc[
                 (stats["benchmark"] == suite) & (stats["method"] == method)
             ].iloc[0]
@@ -168,47 +157,57 @@ def main() -> None:
             xs.append(value)
             xerr_lo.append(value - lower)
             xerr_hi.append(upper - value)
-            ys.append(y + offsets[suite])
+            ys.append(y_value + offsets[suite])
         ax.errorbar(
             xs,
             ys,
             xerr=[xerr_lo, xerr_hi],
             fmt=marker,
-            markersize=5.0,
+            markersize=4.6,
             markerfacecolor="white" if suite == "MT10" else color,
             markeredgecolor=color,
-            markeredgewidth=1.25,
+            markeredgewidth=1.2,
             ecolor=color,
-            elinewidth=1.05,
-            capsize=2.0,
+            elinewidth=1.0,
+            capsize=1.8,
             linestyle="none",
             label=suite,
             zorder=3,
         )
-        for x, y in zip(xs, ys):
-            ax.text(x + 1.1, y, f"{x:.1f}", va="center", ha="left", color=color, fontsize=8.3)
+        for x_value, y_value, upper_error in zip(xs, ys, xerr_hi):
+            label_x = min(x_value + upper_error + 1.4, 68.4)
+            ax.text(
+                label_x,
+                y_value,
+                f"{x_value:.1f}",
+                va="center",
+                ha="left",
+                color=color,
+                fontsize=7.8,
+            )
 
     ax.set_yticks(y_base, [label for _, label in METHODS])
     ax.set_xlim(0, 70)
     ax.set_xticks(np.arange(0, 71, 10))
     ax.set_xlabel("Task-macro success (%)")
-    ax.set_title(r"(a)  Success at noise level $\lambda=0.40$", loc="left", fontweight="bold")
+    ax.set_title(r"(a) Success at $\lambda=0.40$", loc="left", fontweight="bold")
     ax.grid(axis="x", color=COLORS["grid"], linewidth=0.55, zorder=0)
     ax.spines[["top", "right", "left"]].set_visible(False)
-    ax.tick_params(axis="y", length=0, pad=5)
+    ax.tick_params(axis="y", length=0, pad=4)
     ax.tick_params(axis="x", colors=COLORS["mid"])
     ax.legend(
         loc="upper right",
-        bbox_to_anchor=(1.0, 1.01),
+        bbox_to_anchor=(1.01, 1.03),
         ncol=2,
         frameon=False,
         borderpad=0.1,
-        handletextpad=0.35,
-        columnspacing=0.9,
+        handletextpad=0.3,
+        columnspacing=0.7,
+        fontsize=8.0,
     )
 
-    # Panel (b): paired episode outcomes, normalized because suite sizes differ.
-    ax = fig.add_subplot(gs[0, 1])
+    # Panel (b): paired outcomes normalized because suite sizes differ.
+    ax = fig.add_axes([0.25, 0.11, 0.72, 0.25])
     y = np.array([1.0, 0.0])
     rescued = np.array([float(paired[s]["rescued_pct"]) for s in SUITES])
     harmed = -np.array([float(paired[s]["harmed_pct"]) for s in SUITES])
@@ -246,7 +245,7 @@ def main() -> None:
     ax.set_xticks([-10, 0, 10, 20])
     ax.set_xticklabels(["10", "0", "10", "20"])
     ax.set_xlabel("Harmed  ←  paired episodes (%)  →  Rescued")
-    ax.set_title("(b)  Paired changes vs. heuristic gate", loc="left", fontweight="bold")
+    ax.set_title("(b) Paired changes vs. heuristic", loc="left", fontweight="bold")
     ax.grid(axis="x", color=COLORS["grid"], linewidth=0.55, zorder=0)
     ax.spines[["top", "right", "left"]].set_visible(False)
     ax.tick_params(axis="y", length=0, pad=5)

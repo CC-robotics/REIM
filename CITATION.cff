@@ -6,4 +6,7 @@ version: 0.1.0
 date-released: 2026-07-26
 license: MIT
 authors:
-  - family-names: "REIM Research Team"
+  - family-names: "Zhang"
+    given-names: "Junkai"
+    affiliation: "University of Wisconsin--Madison"
+    email: "jzhang3257@wsic.edu"

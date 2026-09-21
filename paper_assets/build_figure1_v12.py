@@ -260,11 +260,11 @@ def main() -> None:
         {
             "font.family": "serif",
             "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
-            "font.size": 7.2,
-            "axes.labelsize": 7.0,
-            "axes.titlesize": 7.6,
-            "xtick.labelsize": 6.7,
-            "ytick.labelsize": 6.5,
+            "font.size": 8.0,
+            "axes.labelsize": 8.0,
+            "axes.titlesize": 8.5,
+            "xtick.labelsize": 7.6,
+            "ytick.labelsize": 7.6,
             "pdf.fonttype": 42,
             "ps.fonttype": 42,
             "svg.fonttype": "none",
@@ -288,9 +288,9 @@ def main() -> None:
     # (a) PickPlace case study: one disturbance, two outcomes.
     # ------------------------------------------------------------------
     ax.text(0.025, 0.916, "(a) Problem (Motivation)", transform=ax.transAxes,
-            fontsize=8.8, fontweight="bold", color=COLORS["purple"], va="center")
+            fontsize=9.5, fontweight="bold", color=COLORS["purple"], va="center")
     ax.text(0.025, 0.858, "PickPlace example · separate protocol", transform=ax.transAxes,
-            fontsize=7.2, color=COLORS["muted"], va="center")
+            fontsize=7.7, color=COLORS["muted"], va="center")
 
     rounded_box(ax, 0.023, 0.263, 0.246, 0.570, fc="none", ec=COLORS["line"],
                 lw=0.75, radius=0.010, linestyle=(0, (4, 3)), zorder=1)
@@ -317,15 +317,15 @@ def main() -> None:
     )
 
     ax.text(0.081, 0.427, "4.8 cm object shift", transform=ax.transAxes, ha="center",
-            fontsize=6.6, color=COLORS["muted"])
+            fontsize=7.4, color=COLORS["muted"])
     ax.text(0.146, 0.776, "ACT", transform=ax.transAxes, ha="center",
-            fontsize=7.0, fontweight="bold", color=COLORS["blue"])
+            fontsize=7.8, fontweight="bold", color=COLORS["blue"])
     ax.text(0.214, 0.590, "ACT timeout", transform=ax.transAxes, ha="center",
-            fontsize=6.8, fontweight="bold", color=COLORS["red"])
+            fontsize=7.5, fontweight="bold", color=COLORS["red"])
     ax.text(0.214, 0.546, "REIM", transform=ax.transAxes, ha="center",
-            fontsize=7.0, fontweight="bold", color=COLORS["green"])
+            fontsize=7.8, fontweight="bold", color=COLORS["green"])
     ax.text(0.214, 0.292, "re-grasp + transport", transform=ax.transAxes, ha="center",
-            fontsize=6.8, fontweight="bold", color=COLORS["green"])
+            fontsize=7.5, fontweight="bold", color=COLORS["green"])
 
     arrow(ax, (0.136, 0.620), (0.158, 0.735), color=COLORS["red"], lw=1.0)
     arrow(ax, (0.136, 0.555), (0.158, 0.420), color=COLORS["green"], lw=1.0)
@@ -341,40 +341,36 @@ def main() -> None:
     ax.plot([0.132, 0.132], [0.175, 0.238], transform=ax.transAxes,
             color=COLORS["red"], lw=0.8, zorder=4)
     ax.text(0.132, 0.244, "shift", transform=ax.transAxes, ha="center", va="bottom",
-            fontsize=6.3, color=COLORS["red"])
-    ax.text(0.025, 0.091, "A displaced object can invalidate\nthe nominal action chunk.",
-            transform=ax.transAxes, fontsize=7.0, color=COLORS["ink"],
+            fontsize=7.2, color=COLORS["red"])
+    ax.text(0.025, 0.047, "A displaced object can invalidate\nthe nominal action chunk.",
+            transform=ax.transAxes, fontsize=7.8, color=COLORS["ink"],
             ha="left", va="bottom", linespacing=1.25)
-    ax.text(0.025, 0.063, "one paired seed · qualitative only", transform=ax.transAxes,
-            fontsize=5.9, color=COLORS["muted"], ha="left", va="bottom")
 
     # ------------------------------------------------------------------
     # (b) Runtime framework and training provenance.
     # ------------------------------------------------------------------
     ax.text(0.305, 0.916, "(b) REIM Framework", transform=ax.transAxes,
-            fontsize=8.8, fontweight="bold", color=COLORS["purple"], va="center")
+            fontsize=9.5, fontweight="bold", color=COLORS["purple"], va="center")
     ax.text(0.305, 0.863, "MT10/MT50 arbitration and trigger-aligned supervision",
-            transform=ax.transAxes, fontsize=7.0, color=COLORS["muted"], va="center")
+            transform=ax.transAxes, fontsize=7.6, color=COLORS["muted"], va="center")
 
     rounded_box(ax, 0.302, 0.358, 0.383, 0.475, fc="none", ec=COLORS["line"],
                 lw=0.75, radius=0.010, linestyle=(0, (4, 3)), zorder=1)
     rounded_box(ax, 0.302, 0.061, 0.383, 0.270, fc="none", ec=COLORS["line"],
                 lw=0.75, radius=0.010, linestyle=(0, (4, 3)), zorder=1)
 
-    ax.text(0.344, 0.746, "illustrative state", transform=ax.transAxes, ha="center", va="center",
-            fontsize=6.2, color=COLORS["muted"])
     add_image(fig, [0.310, 0.594, 0.068, 0.137],
               FRAMES / "05_reim_trigger_seed8300042_t009.png")
-    ax.text(0.344, 0.574, "$o_t$ + one-hot", transform=ax.transAxes, ha="center", va="center",
-            fontsize=6.0, color=COLORS["ink"], fontweight="bold")
+    ax.text(0.344, 0.574, "$x_t=[o_t;e_k]$", transform=ax.transAxes, ha="center", va="center",
+            fontsize=7.4, color=COLORS["ink"], fontweight="bold")
     rounded_box(ax, 0.405, 0.714, 0.104, 0.092, "ACT\n$\\pi_{ACT}$",
-                fc=COLORS["blue_fill"], ec=COLORS["blue"], fontsize=7.2, weight="bold")
+                fc=COLORS["blue_fill"], ec=COLORS["blue"], fontsize=8.0, weight="bold")
     rounded_box(ax, 0.405, 0.580, 0.104, 0.092, "Risk detector\n$p_t$",
-                fc=COLORS["yellow_fill"], ec=COLORS["yellow"], fontsize=7.0, weight="bold")
+                fc=COLORS["yellow_fill"], ec=COLORS["yellow"], fontsize=7.8, weight="bold")
     rounded_box(ax, 0.405, 0.446, 0.104, 0.092, "Recovery BC\n$\\pi_R$",
-                fc=COLORS["orange_fill"], ec=COLORS["orange"], fontsize=7.0, weight="bold")
+                fc=COLORS["orange_fill"], ec=COLORS["orange"], fontsize=7.8, weight="bold")
 
-    # Observation fans out to all three task-conditioned modules.
+    # The conditioned state fans out cleanly to all three runtime modules.
     arrow(ax, (0.378, 0.675), (0.402, 0.758), connectionstyle="arc3,rad=-0.15")
     arrow(ax, (0.378, 0.652), (0.402, 0.626))
     arrow(ax, (0.378, 0.625), (0.402, 0.492), connectionstyle="arc3,rad=0.15")
@@ -382,71 +378,68 @@ def main() -> None:
     rounded_box(ax, 0.535, 0.476, 0.118, 0.330, "", fc=COLORS["lavender_fill"],
                 ec=COLORS["purple"], lw=0.9, radius=0.010)
     ax.text(0.594, 0.768, "Hysteretic switch", transform=ax.transAxes,
-            ha="center", va="center", fontsize=7.3, fontweight="bold", color=COLORS["ink"])
+            ha="center", va="center", fontsize=8.0, fontweight="bold", color=COLORS["ink"])
     ax.add_patch(Rectangle((0.551, 0.716), 0.086, 0.028, transform=ax.transAxes,
                            facecolor=COLORS["blue_fill"], edgecolor="none", zorder=4))
     ax.text(0.594, 0.730, "ACT state", transform=ax.transAxes, ha="center", va="center",
-            fontsize=6.3, color=COLORS["blue"], fontweight="bold", zorder=5)
+            fontsize=7.2, color=COLORS["blue"], fontweight="bold", zorder=5)
     ax.text(0.594, 0.684, "trigger:  $p_t \\geq \\tau_{on}$", transform=ax.transAxes,
-            ha="center", va="center", fontsize=6.8, color=COLORS["ink"])
+            ha="center", va="center", fontsize=7.5, color=COLORS["ink"])
     ax.text(0.594, 0.646, "hold:  ≥ 5 steps", transform=ax.transAxes,
-            ha="center", va="center", fontsize=6.8, color=COLORS["ink"])
+            ha="center", va="center", fontsize=7.5, color=COLORS["ink"])
     ax.text(0.594, 0.608, "release:  $p_t \\leq .05$", transform=ax.transAxes,
-            ha="center", va="center", fontsize=6.6, color=COLORS["ink"])
+            ha="center", va="center", fontsize=7.3, color=COLORS["ink"])
     ax.text(0.594, 0.575, "for 10 steps", transform=ax.transAxes,
-            ha="center", va="center", fontsize=6.4, color=COLORS["muted"])
+            ha="center", va="center", fontsize=7.1, color=COLORS["muted"])
     ax.text(0.594, 0.541, "cooldown: 10 steps", transform=ax.transAxes,
-            ha="center", va="center", fontsize=6.8, color=COLORS["ink"])
+            ha="center", va="center", fontsize=7.5, color=COLORS["ink"])
     ax.add_patch(Rectangle((0.551, 0.499), 0.086, 0.028, transform=ax.transAxes,
                            facecolor=COLORS["orange_fill"], edgecolor="none", zorder=4))
     ax.text(0.594, 0.513, "Recovery state", transform=ax.transAxes, ha="center", va="center",
-            fontsize=6.2, color=COLORS["orange"], fontweight="bold", zorder=5)
+            fontsize=7.2, color=COLORS["orange"], fontweight="bold", zorder=5)
 
     arrow(ax, (0.509, 0.760), (0.532, 0.760), color=COLORS["blue"])
     arrow(ax, (0.509, 0.626), (0.532, 0.650), color=COLORS["yellow"])
     arrow(ax, (0.509, 0.492), (0.532, 0.515), color=COLORS["orange"])
 
     rounded_box(ax, 0.666, 0.594, 0.022, 0.120, "$a_t$", fc=COLORS["green_fill"],
-                ec=COLORS["green"], fontsize=7.4, weight="bold")
+                ec=COLORS["green"], fontsize=8.0, weight="bold")
     arrow(ax, (0.656, 0.654), (0.663, 0.654), color=COLORS["green"])
-    # Feedback loop underneath the runtime modules.
-    ax.plot([0.677, 0.677, 0.391], [0.586, 0.417, 0.417], transform=ax.transAxes,
-            color=COLORS["muted"], lw=0.75, zorder=2)
-    arrow(ax, (0.391, 0.417), (0.391, 0.587), color=COLORS["muted"], lw=0.75)
-    ax.text(0.665, 0.427, "environment", transform=ax.transAxes, ha="right", va="bottom",
-            fontsize=6.2, color=COLORS["muted"])
+    # Executed action enters the environment; the next observation returns to
+    # the state junction along a separate, unobstructed feedback path.
+    rounded_box(ax, 0.580, 0.382, 0.097, 0.055, "Environment",
+                fc="#F1F2F2", ec=COLORS["muted"], fontsize=7.2,
+                weight="bold", lw=0.7, radius=0.008)
+    arrow(ax, (0.677, 0.591), (0.668, 0.440), color=COLORS["green"], lw=0.85)
+    ax.plot([0.580, 0.304, 0.304], [0.409, 0.409, 0.652],
+            transform=ax.transAxes, color=COLORS["muted"], lw=0.75, zorder=2)
+    arrow(ax, (0.304, 0.652), (0.309, 0.652), color=COLORS["muted"], lw=0.75)
+    ax.text(0.475, 0.419, "$o_{t+1}$", transform=ax.transAxes,
+            ha="center", va="bottom", fontsize=7.2, color=COLORS["muted"])
 
-    tau10 = protocols["mt10"]["detector_threshold"]
-    tau50 = protocols["mt50"]["detector_threshold"]
-    ax.text(0.594, 0.384, f"$\\tau_{{on}}$ = {tau10:.2f} (MT10), {tau50:.2f} (MT50)",
-            transform=ax.transAxes, ha="center", va="center", fontsize=6.5,
-            color=COLORS["muted"])
-
-    ax.text(0.307, 0.308, "Offline recovery training", transform=ax.transAxes,
-            fontsize=7.0, fontweight="bold", color=COLORS["purple"], va="center")
-    ax.text(0.674, 0.308, "illustrative frames", transform=ax.transAxes,
-            fontsize=5.6, color=COLORS["muted"], va="center", ha="right")
+    ax.text(0.307, 0.308, "Offline recovery training (illustrative pair)", transform=ax.transAxes,
+            fontsize=7.8, fontweight="bold", color=COLORS["purple"], va="center")
     add_image(fig, [0.312, 0.118, 0.082, 0.165],
               FRAMES / "05_reim_trigger_seed8300042_t009.png")
     add_image(fig, [0.430, 0.118, 0.082, 0.165],
               FRAMES / "07_reim_transport_seed8300042_t051.png")
-    ax.text(0.353, 0.096, "trigger-aligned state", transform=ax.transAxes,
-            ha="center", va="center", fontsize=5.8, color=COLORS["muted"])
-    ax.text(0.471, 0.096, "successful continuation", transform=ax.transAxes,
-            ha="center", va="center", fontsize=5.8, color=COLORS["muted"])
+    ax.text(0.353, 0.096, "trigger state", transform=ax.transAxes,
+            ha="center", va="center", fontsize=7.4, color=COLORS["muted"])
+    ax.text(0.471, 0.096, "expert continuation", transform=ax.transAxes,
+            ha="center", va="center", fontsize=7.4, color=COLORS["muted"])
     ax.text(0.411, 0.200, "+", transform=ax.transAxes, ha="center", va="center",
             fontsize=10, color=COLORS["muted"])
     arrow(ax, (0.516, 0.200), (0.553, 0.200), color=COLORS["muted"])
     rounded_box(ax, 0.557, 0.135, 0.116, 0.118, "Task-conditioned\nRecovery BC",
-                fc=COLORS["orange_fill"], ec=COLORS["orange"], fontsize=6.8, weight="bold")
+                fc=COLORS["orange_fill"], ec=COLORS["orange"], fontsize=7.6, weight="bold")
 
     # ------------------------------------------------------------------
     # (c) Task breadth and linked MT10/MT50 aggregate evidence.
     # ------------------------------------------------------------------
     ax.text(0.719, 0.916, "(c) Multi-task Results", transform=ax.transAxes,
-            fontsize=8.8, fontweight="bold", color=COLORS["purple"], va="center")
+            fontsize=9.5, fontweight="bold", color=COLORS["purple"], va="center")
     ax.text(0.719, 0.864, "Representative tasks and aggregate robustness", transform=ax.transAxes,
-            fontsize=7.0, color=COLORS["muted"], va="center")
+            fontsize=7.6, color=COLORS["muted"], va="center")
 
     rounded_box(ax, 0.716, 0.598, 0.262, 0.235, fc="none", ec=COLORS["line"],
                 lw=0.75, radius=0.010, linestyle=(0, (4, 3)), zorder=1)
@@ -460,17 +453,17 @@ def main() -> None:
     for x, (name, suite, path) in zip(x_positions, task_specs):
         add_image(fig, [x, 0.665, 0.078, 0.158], path)
         ax.text(x + 0.039, 0.641, name, transform=ax.transAxes, ha="center", va="center",
-                fontsize=6.1, color=COLORS["ink"])
+                fontsize=7.2, color=COLORS["ink"])
         ax.text(x + 0.039, 0.617, suite, transform=ax.transAxes, ha="center", va="center",
-                fontsize=5.9, color=COLORS["muted"])
+                fontsize=7.0, color=COLORS["muted"])
 
     noise_level = protocols["mt10"]["noise_level"]
     action_std = noise_level * protocols["mt10"]["action_std_scale"]
     observation_std = noise_level * protocols["mt10"]["observation_std_scale"]
     ax.text(0.847, 0.572, f"Suite success at noise level $\\lambda={noise_level:.2f}$",
             transform=ax.transAxes,
-            ha="center", va="center", fontsize=7.2, fontweight="bold", color=COLORS["purple"])
-    chart_ax = fig.add_axes([0.738, 0.195, 0.228, 0.310], zorder=3)
+            ha="center", va="center", fontsize=7.8, fontweight="bold", color=COLORS["purple"])
+    chart_ax = fig.add_axes([0.738, 0.180, 0.228, 0.285], zorder=3)
     suites = ["MT10", "MT50"]
     heuristic = [values["mt10"]["Heuristic"], values["mt50"]["Heuristic"]]
     reim = [values["mt10"]["REIM"], values["mt50"]["REIM"]]
@@ -494,14 +487,14 @@ def main() -> None:
             f"+{gain:.1f} pp",
             ha="center",
             va="bottom",
-            fontsize=5.8,
+            fontsize=7.0,
             color=COLORS["purple"],
             fontweight="bold",
         )
     chart_ax.set_ylim(0, 78)
     chart_ax.set_xlim(-0.55, 1.55)
     chart_ax.set_yticks([0, 20, 40, 60])
-    chart_ax.set_ylabel("Success rate (%)", labelpad=1)
+    chart_ax.set_ylabel("Task-macro success (%)", labelpad=1)
     chart_ax.set_xticks(xpos, suites)
     chart_ax.grid(axis="y", color=COLORS["grid"], lw=0.55, zorder=0)
     chart_ax.spines[["top", "right"]].set_visible(False)
@@ -516,7 +509,7 @@ def main() -> None:
         bbox_to_anchor=(0.5, 1.03),
         ncol=2,
         frameon=False,
-        fontsize=6.3,
+        fontsize=7.2,
         handlelength=1.5,
         columnspacing=1.0,
     )
@@ -527,15 +520,13 @@ def main() -> None:
             f"{height:.1f}",
             ha="center",
             va="bottom",
-            fontsize=6.2,
+            fontsize=7.2,
             color=color,
             fontweight="bold",
         )
 
     ax.text(0.847, 0.112, f"$\\sigma_a={action_std:.2f}$, $\\sigma_o={observation_std:.2f}$ · 50 episodes/task",
-            transform=ax.transAxes, ha="center", va="center", fontsize=6.1, color=COLORS["ink"])
-    ax.text(0.847, 0.077, "identical perturbations · separately trained models", transform=ax.transAxes,
-            ha="center", va="center", fontsize=6.2, color=COLORS["muted"])
+            transform=ax.transAxes, ha="center", va="center", fontsize=7.2, color=COLORS["ink"])
 
     # Output in a vector-first set plus a high-resolution preview.
     fig.savefig(OUT_STEM.with_suffix(".pdf"), bbox_inches=None, facecolor="white")

@@ -8,8 +8,6 @@
 \usepackage{xcolor}
 
 \graphicspath{{../paper_assets/}}
-\definecolor{todoRed}{RGB}{170,35,35}
-\newcommand{\todo}[1]{\textcolor{todoRed}{\textbf{[[TODO: #1]]}}}
 \newcommand{\method}{REIM}
 \newcommand{\risk}{p_t}
 \newcommand{\noise}{\lambda}
@@ -24,15 +22,15 @@
 Robust Multi-Task Robot Manipulation}
 
 \author{
-\IEEEauthorblockN{\todo{replace with verified author names}}
-\IEEEauthorblockA{\todo{replace with affiliations and contact email}}
+\IEEEauthorblockN{Junkai Zhang}
+\IEEEauthorblockA{University of Wisconsin--Madison \quad \texttt{jzhang3257@wsic.edu}}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Action-chunking policies can execute long, smooth manipulation sequences, but a small state or action deviation may move the robot outside the distribution represented by the current chunk. We present Recovery-Enhanced Imitation Learning (REIM), a runtime wrapper that combines a task-conditioned Action Chunking with Transformers policy, a causal LSTM risk monitor, and a task-conditioned recovery policy through hysteretic control arbitration. The monitor is trained on future behavioral-deviation events, while recovery supervision is collected from successful expert continuations at online trigger states. We evaluate separately trained models on the known-task, goal-observable Meta-World MT10 and MT50 suites. The clean protocol and a paired Gaussian-perturbation extension each use 50 episodes per task. At the strongest tested perturbation, REIM attains 63.0\% task-macro success on MT10 and 49.52\% on MT50, compared with 46.4\% and 33.96\% for the same learned recovery policy under a reward-stagnation gate. Clean success remains 97.6\% and 92.24\%, respectively. Paired outcomes and per-task analysis show that recovery is beneficial on most, but not all, task families; high intervention occupancy under strong perturbations remains an important limitation.
+Action-chunking policies execute smooth manipulation sequences but may continue an unsuitable chunk after the state departs from the demonstrations. We present Recovery-Enhanced Imitation Learning (REIM), which combines a task-conditioned Action Chunking with Transformers policy, a causal LSTM risk monitor, a supervised recovery policy, and hysteretic control arbitration. The monitor predicts near-term behavioral-deviation events, and recovery supervision comes from successful expert continuations at online trigger states. We evaluate separately trained models on the known-task, goal-observable Meta-World MT10 and MT50 suites using 50 episodes per task. At the strongest perturbation, three MT10 detector/recovery seeds average 60.8\% ± 4.9\% task-macro success versus 40.8\% ± 3.6\% for the seed-matched original heuristic gate; four MT50 seeds average 48.75\% ± 1.05\% versus 35.10\% ± 0.94\%. Clean reference-model success is 97.6\% and 92.24\%. A canonical reference-model occupancy-matched control shows that the trigger-specific effect is task-set dependent: the MT10 difference is -0.2 points [−3.6, 3.0], whereas MT50 retains +11.32 points [9.44, 13.16].
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -42,26 +40,25 @@ robot learning, imitation learning, recovery policy, runtime monitoring, multi-t
 \section{Introduction}
 \label{sec:introduction}
 
-Imitation learning can produce effective manipulation controllers without an explicit dynamics model, yet closed-loop deployment remains sensitive to covariate shift. A small execution error changes the next observation, which changes the next prediction, and the resulting state sequence may progressively depart from the demonstrations. Action chunking reduces high-frequency action inconsistency by predicting temporally extended commands, but it does not by itself decide when the nominal policy should stop controlling the robot. This distinction matters in long-horizon manipulation: continuing a locally inappropriate chunk can convert a recoverable deviation into a task failure.
+Imitation learning can produce effective manipulation controllers without an explicit dynamics model, yet closed-loop deployment remains sensitive to covariate shift~\cite{ross2011dagger,laskey2017dart,mandlekar2022robomimic}. Modern implicit, sequence, and diffusion policies better represent multimodal robot behavior~\cite{florence2022ibc,shafiullah2022bet,chi2023diffusion,zhao2023act}, but action generation alone does not decide when a nominal policy should relinquish control. In long-horizon manipulation, continuing a locally inappropriate chunk can convert a recoverable deviation into failure.
 
-Existing recovery systems often assume either a hand-designed trigger, an external safety signal, or a separate reinforcement-learning objective. These choices complicate a fair diagnosis of where improvement comes from. A recovery policy may be competent while its trigger is late; conversely, an aggressive trigger may invoke recovery almost continuously and harm nominal states. The central problem is therefore not only how to learn recovery actions, but how to arbitrate between nominal and recovery control using causal information available at runtime.
+Prior recovery systems use expert intervention, hand-designed triggers, external safety signals, or reinforcement-learning objectives~\cite{spencer2020interventions,thananjeyan2021recovery,johannink2019residual}. A recovery policy may be competent while its trigger is late; an aggressive trigger may instead interrupt nominal behavior. The central problem is therefore how to arbitrate between nominal and recovery control using causal information available at runtime.
 
 We introduce Recovery-Enhanced Imitation Learning (REIM), a supervised recovery architecture for known-task multi-task manipulation. As illustrated in Fig.~\ref{fig:overview}, a task-conditioned ACT policy supplies nominal action chunks, an LSTM consumes the most recent state history and estimates near-term behavioral-deviation risk, and a task-conditioned multilayer perceptron supplies recovery actions. A hysteretic state machine turns the continuous risk estimate into stable control decisions. Separate entry and release conditions prevent rapid switching, a minimum dwell time gives recovery an opportunity to act, and a cooldown period prevents immediate retriggering.
 
-The risk target is not terminal task success. Instead, it identifies whether a task-calibrated disagreement event will occur in the immediate future. Consequently, detector precision and end-to-end task success are different quantities: a monitor with moderate classification precision can still be useful when its mistakes are filtered by hysteresis and the downstream policy is trained on the states where intervention actually occurs. We evaluate this system on MT10 and MT50 with task identity exposed, following the goal-observable use of these suites. The two suites share the same disturbance definition and evaluation logic but use separately trained models; their absolute scores are therefore compared as evidence of scaling behavior, not as samples from one pooled policy.
+The risk target predicts whether a task-calibrated disagreement event will occur in the immediate future rather than predicting terminal success. Hysteresis converts this ranking signal into stable switches, while the recovery policy is trained on states where intervention occurs. We evaluate known-task models on MT10 and MT50 under the same disturbance and evaluation protocol. The suites use separately trained models, so their results test consistency across task-set breadth rather than scaling of one pooled policy.
 
 This work makes three contributions:
 \begin{itemize}
   \item a causal, task-conditioned risk monitor with validation-only operating-point selection and explicit hysteretic arbitration;
   \item a trigger-aligned supervised recovery dataset constructed from successful expert continuations at policy-induced states; and
-  \item a paired evaluation across MT10 and MT50 that reports clean performance, a common perturbation sweep, rescued and harmed episodes, and per-task heterogeneity.
+  \item a paired evaluation across MT10 and MT50 that reports clean performance, a common perturbation sweep, rescued and harmed episodes, per-task heterogeneity, and an occupancy-matched trigger control.
 \end{itemize}
-We deliberately avoid a state-of-the-art claim. The evidence supports robustness under the tested simulation protocol; it does not establish unseen-task generalization, calibrated failure probabilities, or real-robot reliability.
 
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{Figure1_v12_overview.pdf}
-  \caption{REIM overview. (a) A separate PickPlace example motivates recovery after ACT drift. (b) Task-conditioned nominal control, causal risk monitoring, and hysteretic arbitration. (c) Representative MT tasks and headline results at $\noise=0.40$; MT10 and MT50 models are trained separately.}
+  \caption{REIM overview. (a) A separate PickPlace example motivates recovery after ACT drift. (b) Task-conditioned nominal control, causal risk monitoring, and hysteretic arbitration. (c) Representative MT tasks and reference-model results at $\noise=0.40$; MT10 and MT50 models are trained separately.}
   \label{fig:overview}
 \end{figure*}
 
@@ -69,10 +66,10 @@ We deliberately avoid a state-of-the-art claim. The evidence supports robustness
 \label{sec:related}
 
 \subsection{Imitation Learning and Action Chunking}
-Behavioral cloning directly fits expert state--action pairs but can accumulate errors when the learned policy visits states absent from the demonstrations. Dataset aggregation addresses this mismatch by querying an expert at states induced by the learner~\cite{ross2011dagger}. ACT instead predicts fixed-length action chunks with a conditional variational Transformer and temporally ensembles overlapping predictions~\cite{zhao2023act}. REIM uses ACT as the nominal controller. Its recovery collection is related to dataset aggregation because supervision is obtained at policy-induced trigger states, although the present pipeline does not iteratively retrain the nominal policy.
+Dataset aggregation and noise injection address covariate shift by collecting supervision near learner-induced states~\cite{ross2011dagger,laskey2017dart}, while offline manipulation studies emphasize demonstration quality and validation protocol~\cite{mandlekar2022robomimic}. Implicit BC, Behavior Transformers, and diffusion policies model multimodal actions~\cite{florence2022ibc,shafiullah2022bet,chi2023diffusion}; ACT predicts and temporally ensembles action chunks~\cite{zhao2023act}, and MimicPlay uses hierarchical plans for long-horizon control~\cite{wang2023mimicplay}. REIM complements these policy models with trigger-aligned recovery rather than retraining the nominal policy.
 
-\subsection{Runtime Monitoring and Recovery}
-Runtime monitors can detect inconsistency or stalled progress without changing the base policy~\cite{agia2025sentinel}. Learned recovery has also been studied through safe reinforcement learning, residual control, meta-reasoning, and local policy chaining~\cite{thananjeyan2021recovery,johannink2019residual,vats2023metareskill,vats2024recoverychaining}. REIM differs in scope: both the recovery policy and the risk monitor are trained by supervised learning, and the learned gate is compared with a reward-stagnation gate while holding the recovery policy fixed. This isolates the contribution of arbitration from the existence of a recovery controller.
+\subsection{Multi-Task Learning, Monitoring, and Recovery}
+PerAct and VIMA learn task-conditioned manipulation policies from structured or multimodal prompts, while MT-Opt scales shared robot learning through multi-task data~\cite{shridhar2023peract,jiang2023vima,kalashnikov2021mtopt}. Runtime monitors detect inconsistent policy behavior~\cite{agia2025sentinel}; recovery has been learned through safe RL, residual control, meta-reasoning, and local policy chaining~\cite{thananjeyan2021recovery,johannink2019residual,vats2023metareskill,vats2024recoverychaining}. REIM instead trains both monitor and recovery policy by supervision and compares learned arbitration with reward-stagnation arbitration while holding the recovery policy fixed.
 
 \section{Method}
 \label{sec:method}
@@ -88,7 +85,7 @@ so MT10 and MT50 use 49- and 89-dimensional policy inputs. An episode succeeds w
 The nominal controller is a state-based ACT policy~\cite{zhao2023act}. Given $x_t$, it predicts a chunk of 20 four-dimensional actions. Training minimizes an $\ell_1$ reconstruction loss plus the ACT latent KL term. Overlapping predictions are combined using exponential temporal ensembling. We train distinct ACT models for MT10 and MT50 because the task vocabularies and input dimensions differ. Both use three encoder layers, four decoder layers, eight attention heads, and KL weight 10; hidden/latent dimensions are 256/32 for MT10 and 384/48 for MT50.
 
 \subsection{Causal Near-Term Risk Monitor}
-The monitor receives only the latest $L=10$ conditioned states. A one-layer LSTM maps $x_{t-L+1:t}$ to a hidden representation, followed by a two-layer classifier and sigmoid output
+The monitor receives only the latest $L=10$ conditioned states. A one-layer LSTM~\cite{hochreiter1997lstm} maps $x_{t-L+1:t}$ to a hidden representation, followed by a two-layer classifier and sigmoid output
 \begin{equation}
   \risk=\sigma\!\left(D(x_{t-L+1:t})\right).
 \end{equation}
@@ -96,12 +93,14 @@ Because no future observation is used at inference, the monitor is causal.
 
 Risk labels are derived from action disagreement rather than terminal success alone. For each task, the 90th percentile of $\ell_1$ disagreement between ACT and the scripted expert is fitted on the failure-training bank. A step is a risk event when its disagreement reaches that task-specific threshold. Failed rollouts also mark their final 25 steps as events. The binary target at time $t$ is positive if an event occurs within the next 10 steps. Task thresholds fitted on the training bank are frozen for validation and final evaluation.
 
-The detector is optimized with weighted binary cross entropy. Deployment thresholds are selected only on the independent validation bank subject to task-macro precision of at least 0.60; the selected operating points are $\tau_{\mathrm{on}}=0.65$ for MT10 and $0.64$ for MT50. These validation metrics are not task success rates and should not be read as such.
+The detector is optimized with weighted binary cross entropy. Among validation thresholds with task-macro precision of at least 0.60, we select the highest task-macro F1, yielding $\tau_{\mathrm{on}}=0.65$ for MT10 and $0.64$ for MT50. These metrics characterize event detection rather than task success.
 
 \subsection{Trigger-Aligned Recovery Policy}
 Recovery data are collected by running the nominal ACT policy and monitoring risk online. A deliberately broad collection threshold of 0.20 captures candidate recovery starts. Once triggered, a scripted task expert controls the continuation. Only successful continuations are retained, yielding 50 trigger-aligned trajectories per task. This creates recovery supervision at states encountered by the learned nominal controller rather than only at states from clean demonstrations.
 
-The recovery controller is a deterministic task-conditioned MLP with hidden dimensions $512$--$512$--$256$ and Tanh activations. It is trained with Smooth-$\ell_1$ action loss, state noise augmentation of standard deviation 0.005, and task-balanced sampling. MT10 contains 500 recovery trajectories (30,807 training and 7,973 validation steps); MT50 contains 2,500 trajectories (159,581 training and 39,746 validation steps). As with ACT, a separate recovery model is trained for each suite.
+The recovery controller is a deterministic task-conditioned MLP with hidden dimensions $512$--$512$--$256$ and Tanh activations. It uses Smooth-$\ell_1$ action loss, state-noise augmentation of standard deviation 0.005, and task-balanced sampling. MT10 contains 500 recovery trajectories (30,807 training and 7,973 validation steps); MT50 contains 2,500 trajectories (159,581 training and 39,746 validation steps). A separate recovery model is trained for each suite.
+
+All supervised models use AdamW and retain the lowest validation-loss checkpoint. ACT and MLP BC use batch size 512 with learning rates $10^{-4}$ and $3\times10^{-4}$; ACT is capped at 120/100 epochs for MT10/MT50 and MLP BC at 120. The detector uses learning rate $5\times10^{-4}$, 40 epochs, and batch size 1024/1536; recovery uses learning rate $10^{-3}$, batch size 1024, and 60 epochs. Early-stopping patience is 20--25 epochs for nominal policies, 10 for the detector, and 12 for recovery.
 
 \subsection{Hysteretic Control Arbitration}
 The controller enters recovery when $\risk\geq\tau_{\mathrm{on}}$ and no cooldown is active. It remains in recovery for at least five steps. Thereafter, it releases control only after $\risk\leq0.05$ for ten consecutive steps. A ten-step cooldown follows release, and a single intervention is capped at 250 recovery steps. Formally, the principal transitions are
@@ -110,11 +109,7 @@ The controller enters recovery when $\risk\geq\tau_{\mathrm{on}}$ and no cooldow
  z_t=R &\rightarrow N &&\text{if } n_R\geq5 \text{ and } n_{\mathrm{safe}}\geq10.
 \end{align}
 The thresholds implement hysteresis: evidence required to enter recovery is intentionally much stronger than evidence required to remain nominal after a sustained safe period. ACT's temporal state is reset whenever control returns from recovery.
-
-\subsection{Why Collection and Deployment Thresholds Differ}
-The recovery collection threshold and deployment threshold serve different statistical purposes. During collection, the objective is coverage: the recovery learner should see a broad range of states near the boundary of nominal behavior. A lower threshold of 0.20 therefore favors recall and lets the expert demonstrate how to continue before a deviation becomes terminal. At deployment, the objective is control selection: an unnecessary switch can interrupt a successful ACT chunk. The higher suite-specific thresholds are consequently chosen under a precision constraint. This separation is fixed before final evaluation and should not be interpreted as tuning the recovery policy on test outcomes.
-
-The same distinction explains why the monitor is trained on near-term deviation rather than episode-level failure. A terminal label assigns one outcome to hundreds of preceding states, many of which may be nominal, and gives little temporal guidance about when to switch. The event target localizes supervision around task-relative disagreement and propagates it only ten steps backward. The resulting score is an operational ranking signal. Hysteresis then converts that signal into a decision using temporal persistence rather than assuming that each score is a calibrated failure probability.
+The broad 0.20 collection threshold prioritizes recovery-data coverage, whereas the higher deployment thresholds prioritize control selection and are frozen before confirmation evaluation.
 
 \section{Experimental Protocol}
 \label{sec:protocol}
@@ -149,9 +144,11 @@ Final task-macro units & 10 & 50 \\
 \end{table}
 
 \subsection{Methods Compared}
-We compare four controllers. \emph{MT-MLP BC} is a two-layer $256$--$256$ behavioral-cloning policy. \emph{MT-ACT} is the nominal action-chunking controller. \emph{Heuristic+recovery} uses the same learned recovery policy as REIM but triggers when reward variation over a 20-step window falls below 0.01 after step 30. \emph{REIM} replaces this heuristic with the learned risk monitor and hysteretic state machine. Holding $\pi_R$ fixed between the last two methods makes their difference an arbitration comparison.
+We compare four controllers. \emph{MT-MLP BC} is a two-layer $256$--$256$ policy trained on the same demonstrations as \emph{MT-ACT}, the nominal action-chunking controller. \emph{Heuristic+Recovery} uses the same learned recovery policy as REIM but triggers when simulator reward variation over a 20-step window falls below 0.01 after step 30. \emph{REIM} replaces this reward-variation trigger with the learned monitor and hysteretic state machine while holding $\pi_R$ fixed.
 
 Table~\ref{tab:gate} summarizes the validation-selected detector operating points and the controller settings frozen before confirmation evaluation. The precision, recall, and expected calibration error (ECE) entries characterize near-term risk-event classification on the validation bank; they are not task-success metrics.
+
+For an occupancy-matched control, validation selected heuristic tolerances of 0.06 (MT10) and 0.02 (MT50), using 20 episodes per task in both suites, to match canonical REIM occupancy at $\noise=0.40$; confirmation reused the same task variants, episode seeds, and recovery policy.
 
 \begin{table}[t]
 \centering
@@ -183,9 +180,9 @@ Official-clean evaluation uses unmodified benchmark execution. Robustness is eva
  \epsilon^a_t\sim\mathcal{N}(0,(0.4\noise)^2I_4),\qquad
  \epsilon^o_t\sim\mathcal{N}(0,(0.025\noise)^2I_{39}),
 \end{equation}
-with $\noise\in\{0,0.10,0.20,0.30,0.40\}$. Actions are clipped to the environment range after perturbation. Object positions are never teleported in this multi-task protocol. At $\noise=0.40$, the action and observation standard deviations are 0.16 and 0.01. This sweep is a REIM robustness extension, not an official Meta-World score.
+with $\noise\in\{0,0.10,0.20,0.30,0.40\}$. Actions are clipped to the environment range after perturbation. Object positions are never teleported in this multi-task protocol. At $\noise=0.40$, the action and observation standard deviations are 0.16 and 0.01. We report this sweep as a robustness extension to the benchmark.
 
-The primary metric is task-macro success: success is averaged within each task and then equally across tasks. We report 95\% within-task episode-bootstrap intervals using 5,000 bootstrap samples. Paired rescued and harmed counts use the same task variant, episode seed, and noise realization for the two compared methods. Recovery occupancy is the fraction of executed steps controlled by $\pi_R$.
+The primary metric is task-macro success: success is averaged within each task and then equally across tasks. For 95\% intervals, we resample episodes within each task 5,000 times and recompute the macro mean. These intervals quantify episode-level uncertainty conditional on fixed model parameters; Table~\ref{tab:seeds} separately reports variation across detector/recovery training seeds. Paired comparisons resample matched episode differences within task using the same task variant, seed, and noise realization. Recovery occupancy is the fraction of executed steps controlled by $\pi_R$.
 
 For paired comparison against the heuristic gate, let $s_i^R$ and $s_i^H$ be binary outcomes for matched episode $i$. We report rescued episodes when $(s_i^R,s_i^H)=(1,0)$ and harmed episodes when $(s_i^R,s_i^H)=(0,1)$. Their normalized difference equals the paired success-rate change,
 \begin{equation}
@@ -198,52 +195,64 @@ This decomposition retains the direction of every discordant episode and prevent
 \label{sec:results}
 
 \subsection{Clean Performance Is Largely Preserved}
-At $\noise=0$, MT-ACT obtains 97.4\% success on MT10 and 91.64\% on MT50. REIM obtains 97.6\% [96.2, 98.8] and 92.24\% [91.4, 93.04], respectively. Thus adding the learned gate and recovery controller changes clean success by only $+0.2$ and $+0.6$ percentage points relative to ACT. The heuristic gate is slightly higher on clean execution---98.0\% on MT10 and 94.0\% on MT50---so the data do not support a claim that REIM is the best clean controller. REIM still intervenes in 46.0\% of MT10 and 28.64\% of MT50 clean episodes, with mean recovery occupancies of 18.70\% and 16.83\%; the detector is therefore not inactive on nominal rollouts.
+At $\noise=0$, MT-ACT obtains 97.4\% success on MT10 and 91.64\% on MT50; REIM obtains 97.6\% [96.2, 98.8] and 92.24\% [91.4, 93.04]. The point differences are +0.2 and +0.6 points. Heuristic+Recovery is higher at 98.0\% and 94.0\%, whereas REIM's advantage emerges under stronger perturbations. On clean episodes, REIM intervenes in 46.0\%/28.64\% of MT10/MT50 episodes but occupies only 18.70\%/16.83\% of executed steps.
 
 \subsection{A Common Perturbation Sweep Links MT10 and MT50}
-Figure~\ref{fig:robustness} places MT10 and MT50 under the same perturbation definition and evaluation budget. The trend is consistent across suites. At $\noise=0.10$, the heuristic gate is modestly better: 49.8\% versus 45.4\% on MT10 and 35.84\% versus 34.88\% on MT50. At $\noise=0.20$, REIM reaches 53.0\% and 41.28\%, compared with 50.6\% and 35.96\% for the heuristic. The gap then increases. At $\noise=0.30$, the respective REIM advantages are 9.4 and 11.88 points; at $\noise=0.40$, they are 16.6 and 15.56 points.
+Figure~\ref{fig:robustness} applies one perturbation definition and budget to fixed reference models from both suites. At $\noise=0.10$, Heuristic+Recovery has the higher point estimate (49.8\% versus 45.4\% on MT10; 35.84\% versus 34.88\% on MT50). REIM has higher point estimates from $\noise=0.20$ onward and reaches advantages of 16.6 and 15.56 points at $\noise=0.40$, while ACT falls to 6.0\% and 2.04\%. REIM success rises with disturbance strength as control shifts toward recovery: occupancy increases from 37.35\% to 69.21\% on MT10 and from 45.09\% to 67.40\% on MT50 between $\noise=0.10$ and $0.40$. The trend reflects the closed-loop switching response.
 
-MT-ACT and MT-MLP BC fall to single-digit success once perturbations are introduced. At $\noise=0.40$, ACT reaches 6.0\% on MT10 and 2.04\% on MT50. This sharp degradation indicates that the tested noise moves execution outside the tolerance of both nominal policies. The recovery comparisons are therefore the informative part of the high-noise regime.
-
-\begin{figure*}[t]
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\textwidth]{Figure2_multitask_robustness.pdf}
-  \caption{Task-macro success across the shared MT10/MT50 perturbation sweep. Error bars are 95\% within-task bootstrap intervals over 50 episodes per task. Perturbed conditions are a non-official robustness extension.}
+  \includegraphics[width=\columnwidth]{Figure2_multitask_robustness.pdf}
+  \caption{Reference-model task-macro success under shared MT10/MT50 perturbations; 95\% within-task bootstrap intervals, 50 episodes per task.}
   \label{fig:robustness}
-\end{figure*}
+\end{figure}
 
 \subsection{Strong Perturbations: Net Gains with Two-Sided Effects}
-Figure~\ref{fig:strong} expands the strongest tested condition. REIM reaches 63.0\% [60.2, 65.6] on MT10 and 49.52\% [48.16, 50.92] on MT50. The heuristic gate reaches 46.4\% [43.2, 49.8] and 33.96\% [32.52, 35.44]. The common recovery policy is therefore not sufficient to explain the difference; how recovery is invoked matters.
+Figure~\ref{fig:strong}(a) gives the reference-model comparison at $\noise=0.40$. REIM reaches 63.0\% [60.2, 65.6] on MT10 and 49.52\% [48.16, 50.92] on MT50, versus 46.4\% [43.2, 49.8] and 33.96\% [32.52, 35.44] for Heuristic+Recovery. Because $\pi_R$ is shared, the difference is attributable to the arbitration configuration, including when and how long recovery is used.
 
-The paired decomposition reveals both benefit and harm. On MT10, REIM rescues 115 of 500 episodes (23.0\%) that the heuristic loses, while harming 32 (6.4\%) that the heuristic solves, for a net gain of 16.6 points. On MT50, it rescues 610 of 2,500 episodes (24.4\%) and harms 221 (8.84\%), for a net gain of 15.56 points. Reporting only aggregate success would hide these adverse switches. It would also hide control cost: at $\noise=0.40$, REIM intervenes in 93.4\% of MT10 and 98.68\% of MT50 episodes, with mean recovery occupancies of 69.21\% and 67.40\%, respectively.
+The paired decomposition in Fig.~\ref{fig:strong}(b) shows 115 rescued and 32 harmed MT10 episodes, a net $+16.60$ points (paired 95\% CI [12.80, 20.60]). MT50 has 610 rescued and 221 harmed episodes, a net $+15.56$ points [13.68, 17.44]. These gains accompany intervention rates of 93.4\% and 98.68\% and occupancies of 69.21\% and 67.40\%.
 
-\begin{figure*}[t]
+The occupancy-matched confirmation separates usage from trigger selection. Table~\ref{tab:occ-match} summarizes the canonical seed-42 comparison; the learned trigger adds value at the broader task-set scale, but not on MT10 under this protocol.
+
+\begin{table}[!t]
+\centering
+\caption{Canonical seed-42 occupancy-matched confirmation at $\noise=0.40$ (percentages).}
+\label{tab:occ-match}
+\scriptsize
+\setlength{\tabcolsep}{2.0pt}
+\begin{tabular}{lrrr}
+\toprule
+Suite & Success R/H & Occ. R/H & Delta [95\% CI] (pp) \\
+\midrule
+MT10 & 63.0/63.2 & 69.21/67.46 & -0.20 [-3.60, +3.00] \\
+MT50 & 49.52/38.20 & 67.40/67.68 & +11.32 [+9.44, +13.16] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\textwidth]{Figure3_paired_effects.pdf}
-  \caption{Results at $\noise=0.40$. (a) Task-macro success with 95\% bootstrap intervals. (b) Paired REIM outcomes relative to heuristic-gated recovery; rescued and harmed are normalized by the suite episode count.}
+  \includegraphics[width=\columnwidth]{Figure3_paired_effects.pdf}
+  \caption{Strong-perturbation results for the original fixed heuristic gate. (a) Success with 95\% bootstrap intervals. (b) Paired rescued/harmed outcomes normalized by the number of paired episodes. The occupancy-matched confirmation is reported in the text.}
   \label{fig:strong}
-\end{figure*}
+\end{figure}
 
 \subsection{Benefits Vary Across Task Families}
-Figure~\ref{fig:per-task} compares the learned and heuristic gates per task. REIM improves 7 of 10 MT10 tasks and 32 of 50 MT50 tasks, ties on 3 MT50 tasks, and is worse on the remaining 3 and 15 tasks. Both shared and MT50-specific task families appear on either side of the diagonal. The improvement therefore does not arise from one small subset of tasks, but neither is it universal.
+Figure~\ref{fig:per-task} shows that REIM improves 7/10 MT10 tasks and 32/50 MT50 tasks, ties 3 MT50 tasks, and is worse on the remaining 3 and 15 tasks. Both shared and MT50-specific families appear on either side of the diagonal, so the aggregate gain is distributed but not universal.
 
-The largest positive differences are highly structured. Door-open improves by 82 points in both suites; button-press-topdown improves by 34 points on MT10 and 72 on MT50; and window-close improves by 34 and 70 points. Conversely, MT10 drawer-close and push decline by 14 and 10 points, while MT50 stick-push, coffee-pull, and coffee-push decline by 50, 28, and 26 points. The repeated gains on task families present in both suites support the cross-suite consistency of the learned trigger. The large negative MT50 cases also show why a suite mean cannot substitute for task-level reporting.
+Door-open improves by 82 points in both suites, while MT50 stick-push, coffee-pull, and coffee-push decline by 50, 28, and 26 points. The negative cases are consistent with mistimed switching or recovery states poorly covered by successful continuations; the present experiment does not separate these mechanisms.
 
-The negative cases are consistent with two failure modes. First, a moderate-precision detector may trigger recovery in a state where the nominal chunk would have completed the task. Second, the task-conditioned recovery MLP may not represent every contact mode equally well, especially when the perturbation changes the state faster than the successful continuation data. These interpretations are hypotheses supported by the paired pattern, not separately identified causal effects.
-
-\begin{figure*}[t]
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=0.88\textwidth]{Figure4_per_task_analysis.pdf}
-  \caption{Per-task REIM versus heuristic-gated recovery at $\noise=0.40$. Each point is a 50-episode task mean; points above the diagonal favor REIM. Hollow MT50 markers denote task families shared with MT10.}
+  \includegraphics[width=\columnwidth]{Figure4_per_task_analysis.pdf}
+  \caption{Per-task success at $\noise=0.40$ (50 episodes per task). Above-diagonal points favor REIM; hollow MT50 markers denote shared tasks.}
   \label{fig:per-task}
-\end{figure*}
+\end{figure}
 
 \subsection{Component Training-Seed Stability}
-We additionally vary the detector and recovery optimization seed while keeping the ACT checkpoint fixed. The MT10 study uses seeds 42--44 on its independent 50-episode-per-task bank. The MT50 study uses seeds 42--45 on the main confirmation bank; its recovery-collection bank and deployment threshold are fixed. For each MT50 seed, REIM and the heuristic gate use the same seed-specific recovery checkpoint, so their difference isolates arbitration at deployment. Table~\ref{tab:seeds} reports means and sample standard deviations without pooling the two study banks. Under $\noise=0.40$, all four MT50 REIM seeds reach 47.24--49.52\% success, while their matched heuristic controllers reach 33.96--36.00\%; the paired advantage is 12.52--15.56 points (mean 13.65). At $\noise=0.10$, however, MT50 seed variation is larger and every REIM seed remains below its matched heuristic, reinforcing that the learned gate is not advantageous at the lightest perturbation.
-
 \begin{table}[!b]
 \centering
-\caption{Component training-seed stability: task-macro success (\%).}
+  \caption{Component training-seed stability: task-macro success (mean $\pm$ SD, \%).}
 \label{tab:seeds}
 \footnotesize
 \setlength{\tabcolsep}{3.0pt}
@@ -262,20 +271,21 @@ MT50 (4 seeds) & 0 & $92.36\pm0.35$ & $93.46\pm0.62$ \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:seeds} varies detector and recovery optimization seeds while fixing ACT, recovery-collection banks, thresholds, and 50-episode-per-task evaluation banks. REIM exceeds its same-seed original heuristic baseline for every MT10 and MT50 seed at $\noise=0.40$; the mean advantages are 20.0 and 13.65 points. At $\noise=0.10$, both suite means remain below the heuristic, confirming that the gain is specific to stronger perturbations.
+
 \section{Discussion and Limitations}
 \label{sec:discussion}
 
-The experiments show that learned risk arbitration is most useful when perturbations push nominal policies far outside their training distribution. REIM increasingly outperforms reward-stagnation gating as disturbance strength grows, and this pattern holds across MT10 and MT50 and across component-training seeds. The detector's value lies in coupling early risk estimates to a recovery policy through temporally constrained arbitration rather than treating risk classification as an endpoint. Hysteresis turns the score into stable control decisions, while paired analysis identifies where mistimed interventions still reduce performance. The central opportunity is therefore to retain the strong-noise gains while lowering unnecessary recovery occupancy.
+The results show that learned arbitration is most useful after perturbations move nominal policies beyond their demonstrated state distribution. Unlike dataset-aggregation and noise-injection methods that alter nominal-policy training~\cite{ross2011dagger,laskey2017dart}, or RL-based recovery methods that optimize fallback behavior~\cite{thananjeyan2021recovery,vats2024recoverychaining}, REIM keeps both policies fixed at test time and changes runtime control selection. The original operating point improves strong-noise success across both suites, while the occupancy-matched test shows a trigger-specific gain on MT50 but not MT10.
 
-The present evidence is limited to known-task Meta-World simulation, separately trained MT10 and MT50 models, and Gaussian state--action perturbations. It does not establish unseen-task or real-robot transfer, and successful expert continuations may not cover every contact-rich recovery state. Structured disturbances, occupancy-matched comparisons, and physical-robot evaluation are the most direct extensions of this study.
+The occupancy-matched control removes the recovery-usage confound at $\noise=0.40$ and reveals a task-set-dependent trigger effect. Results remain limited to known-task Meta-World simulation, separately trained suites, Gaussian state--action noise, and successful expert continuations. Structured disturbances and physical-robot evaluation are next.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-REIM combines action-chunking imitation, causal near-term risk monitoring, supervised recovery, and hysteretic arbitration in one multi-task manipulation controller. Across matched MT10 and MT50 perturbation sweeps, it preserves clean performance and improves strong-noise success over both nominal policies and a heuristic gate using the same recovery controller. Paired and per-task analyses show why an aggregate gain is not the whole story: interventions both rescue and harm episodes, and their effect varies by task. The next empirical step is to reduce unnecessary intervention while testing structured disturbances and real-robot execution.
+REIM combines action-chunking imitation, causal near-term risk monitoring, supervised recovery, and hysteretic arbitration in one multi-task controller. It preserves clean performance and improves strong-noise success over nominal policies and the original heuristic gate. Occupancy matching shows a trigger gain on MT50 but not MT10; paired and per-task analyses expose rescued, harmed, and task-dependent outcomes.
 
 \bibliographystyle{IEEEtran}
-\IEEEtriggeratref{3}
 \bibliography{../paper_assets/reim_refs}
 
 \end{document}

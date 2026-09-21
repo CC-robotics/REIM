@@ -1,0 +1,19 @@
+{
+  "benchmark": "MT50",
+  "condition": "robustness_noise_40",
+  "benchmark_seed": 20264050,
+  "episodes_per_task": 20,
+  "tolerance": 0.02,
+  "reim": {
+    "episodes": 1000,
+    "task_macro_success": 0.492,
+    "mean_episode_recovery_occupancy": 0.6757008199500852
+  },
+  "heuristic": {
+    "episodes": 1000,
+    "task_macro_success": 0.374,
+    "mean_episode_recovery_occupancy": 0.6759842328812974
+  },
+  "occupancy_difference_percentage_points": 0.0283412931212,
+  "selection_rule": "Re-evaluate the previously selected tolerance 0.02 on the standard 20-episode-per-task validation bank before using it for confirmation."
+}

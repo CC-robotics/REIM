@@ -43,6 +43,15 @@ from evaluation.multitask_metrics import (
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _portable_path_key(path: Path) -> str:
+    """Return a repository-relative key when possible, else an absolute key."""
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(PROJECT_ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(resolved).replace("\\", "/")
 EVALUATION_SCHEMA = "reim-multitask-evaluation-v2"
 RUN_SIDECAR_SCHEMA = "reim-multitask-evaluation-run-v1"
 AUDIT_SCHEMA = "reim-multitask-bank-separation-audit-v1"
@@ -1166,7 +1175,7 @@ def _input_manifest(
         for item in suite.robustness:
             paths.extend((item.summary_path, item.episode_path))
         for path in paths:
-            key = str(path.resolve().relative_to(PROJECT_ROOT)).replace("\\", "/")
+            key = _portable_path_key(path)
             inputs[key] = {"sha256": _sha256(path), "bytes": path.stat().st_size}
     return {
         "schema_version": "reim-multitask-paper-inputs-v1",
@@ -1189,7 +1198,7 @@ def _input_manifest(
 
 
 def _output_record(path: Path) -> dict[str, Any]:
-    rel = str(path.resolve().relative_to(PROJECT_ROOT)).replace("\\", "/")
+    rel = _portable_path_key(path)
     return {"path": rel, "sha256": _sha256(path), "bytes": path.stat().st_size}
 
 

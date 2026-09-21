@@ -79,6 +79,7 @@ def _rows(
                             intervention and success_by_method[method]
                         ),
                         "steps": 50 + variant,
+                        "recovery_steps_total": intervention * (10 + variant),
                         "paired_episode_id": paired_id,
                         "episode_seed": 10_000 + task_id * 100 + variant,
                         "task_payload_sha256": payload,
@@ -376,19 +377,14 @@ def test_tampered_summary_or_audit_never_creates_outputs(
     assert not assets.exists()
 
 
-def test_paper_source_is_closed_by_default_and_labels_extension() -> None:
+def test_current_manuscript_is_the_closed_paper_source() -> None:
     root = Path(__file__).resolve().parents[1]
-    macros = (root / "paper_assets" / "reim_macros.tex").read_text(
+    manuscript = (root / "manuscript" / "main.tex").read_text(
         encoding="utf-8"
     )
-    manuscript = (root / "paper_assets" / "reim_results.tex").read_text(
-        encoding="utf-8"
-    )
-    table = (root / "paper_assets" / "Table_multitask_clean.tex").read_text(
-        encoding="utf-8"
-    )
-    assert r"\REIMMultiTaskResultsfalse" in macros
-    assert r"\InputIfFileExists{multitask_results.tex}" in macros
-    assert "Non-official REIM robustness extension" in manuscript
-    assert "paired, task-stratified" in table
-    assert "95\\% within-task" in table
+    assert r"\bibliography{../paper_assets/reim_refs}" in manuscript
+    assert r"Figure1_v12_overview.pdf" in manuscript
+    assert r"Figure2_multitask_robustness.pdf" in manuscript
+    assert r"Figure3_paired_effects.pdf" in manuscript
+    assert r"Figure4_per_task_analysis.pdf" in manuscript
+    assert not (root / "paper_assets" / "reim_results.tex").exists()

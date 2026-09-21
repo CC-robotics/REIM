@@ -118,8 +118,8 @@ def main() -> None:
     shared = set(mt10["task_name"])
     configure_style()
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.16, 3.05), sharex=True, sharey=True)
-    fig.subplots_adjust(left=0.095, right=0.985, bottom=0.16, top=0.80, wspace=0.22)
+    fig, axes = plt.subplots(2, 1, figsize=(3.50, 4.65), sharex=True, sharey=True)
+    fig.subplots_adjust(left=0.19, right=0.97, bottom=0.12, top=0.86, hspace=0.18)
 
     # Light regions communicate direction while the 1:1 line remains decisive.
     x = np.linspace(0, 100, 201)
@@ -178,7 +178,7 @@ def main() -> None:
         handles,
         labels,
         loc="upper center",
-        bbox_to_anchor=(0.745, 0.945),
+        bbox_to_anchor=(0.5, 0.985),
         ncol=2,
         frameon=False,
         fontsize=8.0,
@@ -205,7 +205,7 @@ def main() -> None:
     for name, (tx, ty, ha) in label_positions_50.items():
         annotate_at(axes[1], mt50.loc[mt50["task_name"] == name].iloc[0], tx, ty, ha)
 
-    fig.supxlabel("Heuristic-gated recovery success (%)", y=0.055, fontsize=9.0)
+    fig.supxlabel("Heuristic-gated recovery success (%)", y=0.025, fontsize=9.0)
     fig.supylabel("REIM success (%)", x=0.025, fontsize=9.0)
 
     fig.savefig(OUT.with_suffix(".png"), dpi=400, facecolor="white")

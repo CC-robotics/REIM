@@ -1,0 +1,32 @@
+{
+  "reference": {
+    "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\tables\\confirmation_202660xx\\mt10_confirm_robustness_noise_40_episodes.csv",
+    "method": "MT-REIM",
+    "episodes": 500,
+    "task_macro_success": 0.63,
+    "mean_episode_recovery_occupancy": 0.6921344178884319
+  },
+  "candidate": {
+    "path": "C:\\Users\\Kyrie Zhang\\Desktop\\REIM\\results\\diagnostics\\occupancy_match_20260921\\mt10_confirmation_heuristic_occ_match_episodes.csv",
+    "method": "MT-ACT + Heuristic-Gated Learned Recovery",
+    "episodes": 500,
+    "task_macro_success": 0.632,
+    "mean_episode_recovery_occupancy": 0.6746220868565436
+  },
+  "paired": {
+    "rescued": 46,
+    "harmed": 45,
+    "delta_task_macro_success": 0.0020000000000000018,
+    "delta_percentage_points": 0.20000000000000018,
+    "bootstrap_95_ci": [
+      -0.030000000000000027,
+      0.035999999999999976
+    ],
+    "bootstrap_95_ci_percentage_points": [
+      -3.0000000000000027,
+      3.599999999999998
+    ],
+    "bootstrap_samples": 5000,
+    "bootstrap_seed": 20260921
+  }
+}
