@@ -23,14 +23,14 @@ Robust Multi-Task Robot Manipulation}
 
 \author{
 \IEEEauthorblockN{Junkai Zhang}
-\IEEEauthorblockA{University of Wisconsin--Madison \quad \texttt{jzhang3257@wsic.edu}}
+\IEEEauthorblockA{University of Wisconsin--Madison \quad \texttt{jzhang3257@wisc.edu}}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Action-chunking policies execute smooth manipulation sequences but may continue an unsuitable chunk after the state departs from the demonstrations. We present Recovery-Enhanced Imitation Learning (REIM), which combines a task-conditioned Action Chunking with Transformers policy, a causal LSTM risk monitor, a supervised recovery policy, and hysteretic control arbitration. The monitor predicts near-term behavioral-deviation events, and recovery supervision comes from successful expert continuations at online trigger states. We evaluate separately trained models on the known-task, goal-observable Meta-World MT10 and MT50 suites using 50 episodes per task. At the strongest perturbation, three MT10 detector/recovery seeds average 60.8\% ± 4.9\% task-macro success versus 40.8\% ± 3.6\% for the seed-matched original heuristic gate; four MT50 seeds average 48.75\% ± 1.05\% versus 35.10\% ± 0.94\%. Clean reference-model success is 97.6\% and 92.24\%. A canonical reference-model occupancy-matched control shows that the trigger-specific effect is task-set dependent: the MT10 difference is -0.2 points [−3.6, 3.0], whereas MT50 retains +11.32 points [9.44, 13.16].
+Action-chunking policies execute smooth manipulation sequences but may continue an unsuitable chunk after the state departs from the demonstrations. We present Recovery-Enhanced Imitation Learning (REIM), which combines a task-conditioned Action Chunking with Transformers policy, a causal LSTM risk monitor, a supervised recovery policy, and hysteretic control arbitration. The monitor predicts near-term behavioral-deviation events, and recovery supervision comes from successful expert continuations at online trigger states. We evaluate separately trained models on the known-task, goal-observable Meta-World MT10 and MT50 suites using 50 episodes per task. At the strongest perturbation, three MT10 detector/recovery seeds average 60.8\% ± 4.9\% task-macro success versus 40.8\% ± 3.6\% for the seed-matched original heuristic gate; four MT50 seeds average 48.75\% ± 1.05\% versus 35.10\% ± 0.94\%. Clean reference-model success is 97.6\% and 92.24\%. A canonical reference-model occupancy-matched control shows that the trigger-specific effect is task-set dependent: the MT10 difference is -0.2 pp [−3.6, 3.0], whereas MT50 retains +11.32 pp [9.44, 13.16].
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -195,10 +195,10 @@ This decomposition retains the direction of every discordant episode and prevent
 \label{sec:results}
 
 \subsection{Clean Performance Is Largely Preserved}
-At $\noise=0$, MT-ACT obtains 97.4\% success on MT10 and 91.64\% on MT50; REIM obtains 97.6\% [96.2, 98.8] and 92.24\% [91.4, 93.04]. The point differences are +0.2 and +0.6 points. Heuristic+Recovery is higher at 98.0\% and 94.0\%, whereas REIM's advantage emerges under stronger perturbations. On clean episodes, REIM intervenes in 46.0\%/28.64\% of MT10/MT50 episodes but occupies only 18.70\%/16.83\% of executed steps.
+At $\noise=0$, MT-ACT obtains 97.4\% success on MT10 and 91.64\% on MT50; REIM obtains 97.6\% [96.2, 98.8] and 92.24\% [91.4, 93.04]. The point differences are +0.2 and +0.6 pp. Heuristic+Recovery is higher at 98.0\% and 94.0\%, whereas REIM's advantage emerges under stronger perturbations. On clean episodes, REIM intervenes in 46.0\%/28.64\% of MT10/MT50 episodes but occupies only 18.70\%/16.83\% of executed steps.
 
 \subsection{A Common Perturbation Sweep Links MT10 and MT50}
-Figure~\ref{fig:robustness} applies one perturbation definition and budget to fixed reference models from both suites. At $\noise=0.10$, Heuristic+Recovery has the higher point estimate (49.8\% versus 45.4\% on MT10; 35.84\% versus 34.88\% on MT50). REIM has higher point estimates from $\noise=0.20$ onward and reaches advantages of 16.6 and 15.56 points at $\noise=0.40$, while ACT falls to 6.0\% and 2.04\%. REIM success rises with disturbance strength as control shifts toward recovery: occupancy increases from 37.35\% to 69.21\% on MT10 and from 45.09\% to 67.40\% on MT50 between $\noise=0.10$ and $0.40$. The trend reflects the closed-loop switching response.
+Figure~\ref{fig:robustness} applies one perturbation definition and budget to fixed reference models from both suites. At $\noise=0.10$, Heuristic+Recovery has the higher point estimate (49.8\% versus 45.4\% on MT10; 35.84\% versus 34.88\% on MT50). REIM has higher point estimates from $\noise=0.20$ onward and reaches advantages of 16.6 and 15.56 pp at $\noise=0.40$, while ACT falls to 6.0\% and 2.04\%. REIM success rises with disturbance strength as control shifts toward recovery: occupancy increases from 37.35\% to 69.21\% on MT10 and from 45.09\% to 67.40\% on MT50 between $\noise=0.10$ and $0.40$. The trend reflects the closed-loop switching response.
 
 \begin{figure}[!t]
   \centering
@@ -210,13 +210,13 @@ Figure~\ref{fig:robustness} applies one perturbation definition and budget to fi
 \subsection{Strong Perturbations: Net Gains with Two-Sided Effects}
 Figure~\ref{fig:strong}(a) gives the reference-model comparison at $\noise=0.40$. REIM reaches 63.0\% [60.2, 65.6] on MT10 and 49.52\% [48.16, 50.92] on MT50, versus 46.4\% [43.2, 49.8] and 33.96\% [32.52, 35.44] for Heuristic+Recovery. Because $\pi_R$ is shared, the difference is attributable to the arbitration configuration, including when and how long recovery is used.
 
-The paired decomposition in Fig.~\ref{fig:strong}(b) shows 115 rescued and 32 harmed MT10 episodes, a net $+16.60$ points (paired 95\% CI [12.80, 20.60]). MT50 has 610 rescued and 221 harmed episodes, a net $+15.56$ points [13.68, 17.44]. These gains accompany intervention rates of 93.4\% and 98.68\% and occupancies of 69.21\% and 67.40\%.
+The paired decomposition in Fig.~\ref{fig:strong}(b) shows 115 rescued and 32 harmed MT10 episodes, a net $+16.60$ pp (paired 95\% CI [12.80, 20.60]). MT50 has 610 rescued and 221 harmed episodes, a net $+15.56$ pp [13.68, 17.44]. These gains accompany intervention rates of 93.4\% and 98.68\% and occupancies of 69.21\% and 67.40\%.
 
 The occupancy-matched confirmation separates usage from trigger selection. Table~\ref{tab:occ-match} summarizes the canonical seed-42 comparison; the learned trigger adds value at the broader task-set scale, but not on MT10 under this protocol.
 
 \begin{table}[!t]
 \centering
-\caption{Canonical seed-42 occupancy-matched confirmation at $\noise=0.40$ (percentages).}
+\caption{Canonical seed-42 occupancy-matched confirmation at $\noise=0.40$ (MT10 $n=500$, MT50 $n=2500$ paired episodes; percentages; R/H = REIM/matched heuristic; pp = percentage points).}
 \label{tab:occ-match}
 \scriptsize
 \setlength{\tabcolsep}{2.0pt}
@@ -233,14 +233,14 @@ MT50 & 49.52/38.20 & 67.40/67.68 & +11.32 [+9.44, +13.16] \\
 \begin{figure}[!t]
   \centering
   \includegraphics[width=\columnwidth]{Figure3_paired_effects.pdf}
-  \caption{Strong-perturbation results for the original fixed heuristic gate. (a) Success with 95\% bootstrap intervals. (b) Paired rescued/harmed outcomes normalized by the number of paired episodes. The occupancy-matched confirmation is reported in the text.}
+  \caption{Strong-perturbation results for the original fixed heuristic gate. (a) Success with 95\% bootstrap intervals. (b) Paired rescued/harmed outcomes normalized by the number of paired episodes. The occupancy-matched confirmation is summarized in Table~\ref{tab:occ-match}.}
   \label{fig:strong}
 \end{figure}
 
 \subsection{Benefits Vary Across Task Families}
 Figure~\ref{fig:per-task} shows that REIM improves 7/10 MT10 tasks and 32/50 MT50 tasks, ties 3 MT50 tasks, and is worse on the remaining 3 and 15 tasks. Both shared and MT50-specific families appear on either side of the diagonal, so the aggregate gain is distributed but not universal.
 
-Door-open improves by 82 points in both suites, while MT50 stick-push, coffee-pull, and coffee-push decline by 50, 28, and 26 points. The negative cases are consistent with mistimed switching or recovery states poorly covered by successful continuations; the present experiment does not separate these mechanisms.
+Door-open improves by 82 pp in both suites, while MT50 stick-push, coffee-pull, and coffee-push decline by 50, 28, and 26 pp. The negative cases are consistent with mistimed switching or recovery states poorly covered by successful continuations; the present experiment does not separate these mechanisms.
 
 \begin{figure}[!t]
   \centering
@@ -271,7 +271,7 @@ MT50 (4 seeds) & 0 & $92.36\pm0.35$ & $93.46\pm0.62$ \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:seeds} varies detector and recovery optimization seeds while fixing ACT, recovery-collection banks, thresholds, and 50-episode-per-task evaluation banks. REIM exceeds its same-seed original heuristic baseline for every MT10 and MT50 seed at $\noise=0.40$; the mean advantages are 20.0 and 13.65 points. At $\noise=0.10$, both suite means remain below the heuristic, confirming that the gain is specific to stronger perturbations.
+Table~\ref{tab:seeds} varies detector and recovery optimization seeds while fixing ACT, recovery-collection banks, thresholds, and 50-episode-per-task evaluation banks. MT10 uses seeds 42/43/44 and MT50 uses seeds 42/43/44/45. REIM exceeds its same-seed original heuristic baseline for every suite seed at $\noise=0.40$; the mean advantages are 20.0 and 13.65 pp. At $\noise=0.10$, both suite means remain below the heuristic, confirming that the gain is specific to stronger perturbations.
 
 \section{Discussion and Limitations}
 \label{sec:discussion}
